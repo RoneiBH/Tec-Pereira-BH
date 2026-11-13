@@ -1,156 +1,2894 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="dark scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Tec Pereira BH - Conserto e manutenção de celulares, notebooks, computadores, criação de sites e sistemas web.">
-  <meta name="keywords" content="conserto celular, manutenção notebook, criação de sites, sistema web, Tec Pereira BH">
-  <meta name="author" content="Tec Pereira BH">
-  <link rel="icon" type="image/png" href="favicon/favicon-96x96.png" sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="favicon/favicon.svg" />
-  <link rel="shortcut icon" href="favicon/apple-touch-icon.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="favicon/" />
-  <link rel="manifest" href="/site.webmanifest" />
-  
-  <title>Tec Pereira BH</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tech Pereira | Ronei Pereira — Sites, Sistemas Web, Apps & Manutenção TI</title>
+  <meta name="description" content="Ronei Pereira (Tech Pereira) — Formado em Análise e Desenvolvimento de Sistemas e Pós-Graduado em Gestão de Tecnologia. Criação de Sites, Sistemas Web, Apps Mobile e Manutenção de Computadores e Notebooks." />
+
+  <!-- Fontes Google: Space Grotesk, Plus Jakarta Sans e JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Space Grotesk"', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            obsidian: '#050811',
+            deep: '#0b1120',
+            surface: '#0f172a',
+            cyanNeon: '#00f0ff',
+            violetNeon: '#7c3aed',
+            emeraldNeon: '#10b981',
+          },
+          boxShadow: {
+            'neon-cyan': '0 0 28px rgba(0, 240, 255, 0.28)',
+            'neon-violet': '0 0 28px rgba(124, 58, 237, 0.28)',
+            'neon-emerald': '0 0 28px rgba(16, 185, 129, 0.28)',
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Three.js r128 para cenários e modelos 3D interativos -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      color: #333;
+    :root {
+      --bg-primary: #050811;
+      --bg-secondary: #0b1120;
+      --cyan-neon: #00f0ff;
+      --violet-neon: #7c3aed;
+      --emerald-neon: #10b981;
     }
-    header {
-      background: #0d47a1;
-      color: #fff;
-      padding: 2rem;
-      text-align: center;
+
+    * {
+      box-sizing: border-box;
     }
-    .container {
-      width: 90%;
-      max-width: 1200px;
-      margin: 2rem auto;
+
+    html, body {
+      background-color: var(--bg-primary);
+      color: #f8fafc;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
     }
-    h2 {
-      color: #0d47a1;
-      border-bottom: 2px solid #0d47a1;
-      padding-bottom: 0.5rem;
+
+    /* Canvas 3D Global Fixo no Fundo */
+    #bg-3d-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
     }
-    .services {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1rem;
+
+    /* Gradiente de texto futurista */
+    .text-gradient-tech {
+      background: linear-gradient(135deg, #00f0ff 0%, #60a5fa 45%, #a855f7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    .card {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      padding: 1.5rem;
-      text-align: center;
-      transition: transform 0.3s ease;
+
+    /* Cards Glassmorphism com brilho dinâmico e perspectiva 3D */
+    .glass-card {
+      background: linear-gradient(160deg, rgba(15, 23, 42, 0.78) 0%, rgba(8, 13, 26, 0.90) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      position: relative;
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+      transform-style: preserve-3d;
     }
-    .card:hover {
-      transform: translateY(-5px);
+
+    .glass-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: radial-gradient(
+        420px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(0, 240, 255, 0.35),
+        rgba(124, 58, 237, 0.18) 45%,
+        transparent 75%
+      );
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
-    .card img {
-      width: 200px;
-      border-radius: 50px;
-      height: auto;
-      margin-bottom: 1rem;
+
+    .glass-card:hover::before {
+      opacity: 1;
     }
-    .card h3 {
-      margin: 0.5rem 0;
-      color: #0d47a1;
+
+    .glass-card:hover {
+      border-color: rgba(0, 240, 255, 0.34);
+      box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 240, 255, 0.12);
     }
-    .whatsapp {
-      text-align: center;
-      margin-top: 3rem;
+
+    /* Pop-out 3D interno nos cards */
+    .tilt-3d-pop {
+      transform: translateZ(18px);
     }
-    .whatsapp a {
-      background: #25D366;
-      color: white;
-      padding: 1rem 2rem;
-      border-radius: 50px;
-      text-decoration: none;
-      font-size: 1.2rem;
-      display: inline-block;
-      transition: background 0.3s ease;
+
+    /* Palcos 3D Interativos */
+    .stage-3d-grab {
+      cursor: grab;
+      touch-action: pan-y;
     }
-    .whatsapp a:hover {
-      background: #1ebc59;
+    .stage-3d-grab:active {
+      cursor: grabbing;
     }
-    footer {
-      background: #0d47a1;
-      color: #fff;
-      text-align: center;
-      padding: 1rem;
-      margin-top: 3rem;
+
+    /* Botão Primário Neon */
+    .btn-neon-primary {
+      background: linear-gradient(135deg, #00f0ff 0%, #0284c7 50%, #7c3aed 100%);
+      background-size: 200% 200%;
+      color: #030712;
+      font-weight: 700;
+      transition: all 0.35s ease;
+      box-shadow: 0 0 24px rgba(0, 240, 255, 0.32);
+    }
+    .btn-neon-primary:hover {
+      background-position: 100% 50%;
+      transform: translateY(-2px);
+      box-shadow: 0 0 34px rgba(0, 240, 255, 0.5);
+    }
+
+    /* Animação de revelação ao rolar */
+    .reveal-on-scroll {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal-on-scroll.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Pulso de status online */
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+      50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+    }
+    .status-dot {
+      animation: pulseGlow 2.2s infinite;
+    }
+
+    /* Barra de rolagem estilizada */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #050811;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00f0ff;
     }
   </style>
 </head>
-<body>
-  <header>
-    <h1>Tec Pereira BH</h1>
-    <p>Conserto e manutenção de celulares,notebooks,computadores,criação de sites e sistema web</p>
+<body class="antialiased selection:bg-cyanNeon selection:text-obsidian">
+
+  <!-- Canvas 3D Global de Fundo -->
+  <canvas id="bg-3d-canvas" aria-hidden="true"></canvas>
+
+  <!-- Toast de Notificação Customizado (Substitui alert/confirm) -->
+  <div id="toast-notification" class="fixed bottom-24 right-5 z-50 pointer-events-none opacity-0 translate-y-4 transition-all duration-300 max-w-sm">
+    <div class="bg-slate-900/95 border border-cyanNeon/40 backdrop-blur-xl rounded-2xl px-4 py-3 shadow-2xl flex items-center gap-3">
+      <span class="w-2.5 h-2.5 rounded-full bg-cyanNeon shrink-0"></span>
+      <p id="toast-message" class="text-xs sm:text-sm text-slate-100 font-medium"></p>
+    </div>
+  </div>
+
+  <!-- HEADER / NAVEGAÇÃO FIXA -->
+  <header class="fixed top-0 inset-x-0 z-40 bg-obsidian/80 backdrop-blur-xl border-b border-slate-800/70">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+      <!-- Marca Tech Pereira -->
+      <a href="#inicio" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyanNeon/20 to-violetNeon/30 border border-cyanNeon/40 flex items-center justify-center shadow-neon-cyan group-hover:scale-105 transition-transform">
+          <svg class="w-5 h-5 text-cyanNeon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 21 7 21 17 12 22 3 17 3 7 12 2"></polygon>
+            <polyline points="7.5 10 12 12.5 16.5 10"></polyline>
+            <line x1="12" y1="22" x2="12" y2="12.5"></line>
+          </svg>
+        </div>
+        <div>
+          <span class="font-display font-bold text-lg sm:text-xl tracking-tight text-white block leading-none">
+            Tech <span class="text-cyanNeon">Pereira</span>
+          </span>
+          <span class="font-mono text-[10px] sm:text-[11px] text-slate-400 tracking-wider uppercase">
+            Ronei Pereira • Engenharia TI
+          </span>
+        </div>
+      </a>
+
+      <!-- Menu Desktop -->
+      <nav class="hidden lg:flex items-center gap-7 text-sm font-medium text-slate-300">
+        <a href="#autoridade" class="hover:text-cyanNeon transition-colors">Formação & Autoridade</a>
+        <a href="#servicos" class="hover:text-cyanNeon transition-colors">Serviços</a>
+        <a href="#simulador" class="hover:text-cyanNeon transition-colors">Simulador de Escopo</a>
+        <a href="#portfolio" class="hover:text-cyanNeon transition-colors">Portfólio 3D</a>
+        <a href="#processo" class="hover:text-cyanNeon transition-colors">Método</a>
+      </nav>
+
+      <!-- CTA Header + Botão Menu Mobile -->
+      <div class="flex items-center gap-3">
+        <a href="#contato" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cyanNeon/10 hover:bg-cyanNeon/20 border border-cyanNeon/40 text-cyanNeon font-mono text-xs font-semibold transition-all">
+          <span class="w-2 h-2 rounded-full bg-emeraldNeon status-dot"></span>
+          Solicitar Orçamento
+        </a>
+
+        <button id="mobile-menu-btn" type="button" aria-label="Abrir menu" class="lg:hidden p-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 text-slate-200 hover:text-cyanNeon hover:border-cyanNeon/40 transition-colors">
+          <svg id="menu-icon-open" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <svg id="menu-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Menu Gaveta Mobile -->
+    <div id="mobile-menu" class="hidden lg:hidden bg-deep/95 backdrop-blur-2xl border-b border-slate-800 px-4 pt-3 pb-6 space-y-2">
+      <a href="#autoridade" class="mobile-nav-link block px-4 py-3 rounded-xl text-slate-200 hover:bg-slate-800/70 hover:text-cyanNeon font-medium">Formação & Autoridade</a>
+      <a href="#servicos" class="mobile-nav-link block px-4 py-3 rounded-xl text-slate-200 hover:bg-slate-800/70 hover:text-cyanNeon font-medium">Serviços Especializados</a>
+      <a href="#simulador" class="mobile-nav-link block px-4 py-3 rounded-xl text-slate-200 hover:bg-slate-800/70 hover:text-cyanNeon font-medium">Simulador de Escopo</a>
+      <a href="#portfolio" class="mobile-nav-link block px-4 py-3 rounded-xl text-slate-200 hover:bg-slate-800/70 hover:text-cyanNeon font-medium">Portfólio 3D</a>
+      <a href="#processo" class="mobile-nav-link block px-4 py-3 rounded-xl text-slate-200 hover:bg-slate-800/70 hover:text-cyanNeon font-medium">Processo de Trabalho</a>
+      <div class="pt-2">
+        <a href="#contato" class="mobile-nav-link block w-full text-center py-3.5 rounded-xl btn-neon-primary font-display text-sm">
+          Iniciar Meu Projeto Agora →
+        </a>
+      </div>
+    </div>
   </header>
 
-  <main class="container">
-    <section>
-      <h2>Serviços</h2>
-      <div class="services">
-        <div class="card">
-          <img src="img/Samsung.png" alt="Telefone">
-          <h3>Smartphone</h3>
-          <p>Troca de tela, conector, bateria, limpeza e muito mais.</p>
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="relative z-10 pt-24 sm:pt-28">
+
+    <!-- 1. HERO SECTION COM ESTÚDIO 3D INTERATIVO MULTI-MODELOS -->
+    <section id="inicio" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-16 lg:py-16">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+
+        <!-- Coluna Esquerda: Proposta de Valor & Credenciais -->
+        <div class="lg:col-span-6 space-y-6">
+          <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-emeraldNeon/10 border border-emeraldNeon/30 text-emeraldNeon font-mono text-[11px] sm:text-xs tracking-wide">
+            <span class="w-2 h-2 rounded-full bg-emeraldNeon status-dot"></span>
+            ADS • PÓS-GRADUADO EM GESTÃO DE TECNOLOGIA | BELO HORIZONTE - MG
+          </div>
+
+          <h1 class="font-display font-bold text-3xl sm:text-5xl lg:text-[52px] leading-[1.12] tracking-tight text-white">
+            Engenharia Digital em <span class="text-gradient-tech">Sites, Sistemas, Apps</span> e Manutenção Especializada.
+          </h1>
+
+          <p class="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl">
+            Unindo a precisão técnica da <strong class="text-white font-semibold">Análise e Desenvolvimento de Sistemas</strong> à visão estratégica da <strong class="text-cyanNeon font-semibold">Pós-Graduação em Gestão de Tecnologia</strong> para criar soluções digitais de alta conversão e manter computadores e notebooks em performance máxima.
+          </p>
+
+          <!-- Botões de Ação -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
+            <a href="#simulador" class="btn-neon-primary px-6 py-4 rounded-2xl text-center font-display text-sm sm:text-base flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              Simular Meu Projeto Agora
+            </a>
+            <a href="#servicos" class="px-6 py-4 rounded-2xl bg-slate-900/80 hover:bg-slate-800/90 border border-slate-700/80 hover:border-cyanNeon/40 text-white font-semibold text-sm sm:text-base text-center transition-all">
+              Explorar Soluções ↓
+            </a>
+          </div>
+
+          <!-- 3 Pilares Rápidos -->
+          <div class="grid grid-cols-3 gap-3 sm:gap-5 pt-4 border-t border-slate-800/80">
+            <div>
+              <p class="font-display font-bold text-lg sm:text-2xl text-white">Full-Stack</p>
+              <p class="text-xs text-slate-400">Sites, Sistemas & Apps</p>
+            </div>
+            <div>
+              <p class="font-display font-bold text-lg sm:text-2xl text-cyanNeon">ADS + Pós</p>
+              <p class="text-xs text-slate-400">Engenharia & Gestão TI</p>
+            </div>
+            <div>
+              <p class="font-display font-bold text-lg sm:text-2xl text-emeraldNeon">Hardware Lab</p>
+              <p class="text-xs text-slate-400">Upgrades & Diagnóstico</p>
+            </div>
+          </div>
         </div>
-        <div class="card">
-          <img src="img/Notebook.png" alt="Notebook">
-          <h3>Notebooks</h3>
-          <p>Formatação, troca de HD, upgrades e manutenção preventiva.</p>
+
+        <!-- Coluna Direita: Estúdio 3D Interativo (Notebook, Sistema SaaS, Smartphone, Placa-Mãe) -->
+        <div class="lg:col-span-6">
+          <div class="glass-card rounded-3xl p-4 sm:p-5 border border-cyanNeon/25 shadow-2xl overflow-hidden">
+
+            <!-- Barra Superior de Controle 3D -->
+            <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-800/80">
+              <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-950/90 border border-cyanNeon/30 font-mono text-[10px] sm:text-[11px] text-cyanNeon">
+                <span class="w-2 h-2 rounded-full bg-cyanNeon animate-pulse"></span>
+                3D INTERATIVO • ARRASTE 360°
+              </div>
+
+              <div class="flex items-center gap-1.5 sm:gap-2">
+                <!-- Zoom 3D -->
+                <div class="inline-flex items-center rounded-full bg-slate-950/90 border border-slate-700/80 px-1.5 py-1 font-mono text-xs">
+                  <button id="hero-3d-zoom-out" type="button" aria-label="Diminuir zoom 3D" class="w-6 h-6 rounded-full hover:bg-slate-800 text-slate-300 hover:text-cyanNeon transition-colors">−</button>
+                  <span class="px-1.5 text-[10px] text-slate-400">3D</span>
+                  <button id="hero-3d-zoom-in" type="button" aria-label="Aumentar zoom 3D" class="w-6 h-6 rounded-full hover:bg-slate-800 text-slate-300 hover:text-cyanNeon transition-colors">+</button>
+                </div>
+
+                <!-- Botão Pulso Energético -->
+                <button id="hero-3d-pulse-btn" type="button" class="px-3 py-1.5 rounded-full bg-cyanNeon/10 hover:bg-cyanNeon/20 border border-cyanNeon/40 font-mono text-[10px] sm:text-[11px] font-semibold text-cyanNeon transition-all">
+                  PULSO
+                </button>
+
+                <!-- Botão Modo Turbo -->
+                <button id="hero-3d-turbo-btn" type="button" class="px-3 py-1.5 rounded-full bg-violetNeon/15 hover:bg-violetNeon/25 border border-violetNeon/40 font-mono text-[10px] sm:text-[11px] font-semibold text-violet-300 transition-all">
+                  ⚡ TURBO: OFF
+                </button>
+              </div>
+            </div>
+
+            <!-- Viewport Exclusiva do Canvas 3D (Delimita o 3D para não vazar sobre textos) -->
+            <div id="hero-3d-stage" class="relative w-full h-60 sm:h-72 my-2 rounded-2xl bg-gradient-to-b from-slate-950/60 via-slate-900/30 to-slate-950/70 border border-slate-800/70 overflow-hidden stage-3d-grab">
+              <canvas id="hero-3d-canvas" class="w-full h-full block"></canvas>
+              <span id="hero-3d-model-badge" class="absolute bottom-2.5 right-3 px-2.5 py-1 rounded-lg bg-slate-950/85 border border-slate-700/80 font-mono text-[10px] text-slate-300 pointer-events-none">
+                MODELO: NOTEBOOK HOLOGRÁFICO 3D
+              </span>
+            </div>
+
+            <!-- Painel Inferior de Seleção de Serviço & Métricas -->
+            <div class="rounded-2xl bg-slate-950/85 border border-slate-800/90 p-3.5 sm:p-4 space-y-3.5">
+              <!-- Abas de Alternância dos 4 Modelos 3D -->
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5" role="tablist">
+                <button type="button" data-hero-tab="sites" class="hero-tab-btn px-2.5 py-2 rounded-xl font-display text-xs font-bold transition-all bg-cyanNeon text-obsidian shadow-neon-cyan">
+                  Sites & Vendas
+                </button>
+                <button type="button" data-hero-tab="sistemas" class="hero-tab-btn px-2.5 py-2 rounded-xl font-display text-xs font-semibold transition-all bg-slate-900 text-slate-300 hover:text-white border border-slate-800">
+                  Sistemas SaaS
+                </button>
+                <button type="button" data-hero-tab="apps" class="hero-tab-btn px-2.5 py-2 rounded-xl font-display text-xs font-semibold transition-all bg-slate-900 text-slate-300 hover:text-white border border-slate-800">
+                  Apps Mobile
+                </button>
+                <button type="button" data-hero-tab="hardware" class="hero-tab-btn px-2.5 py-2 rounded-xl font-display text-xs font-semibold transition-all bg-slate-900 text-slate-300 hover:text-white border border-slate-800">
+                  Hardware & PCs
+                </button>
+              </div>
+
+              <!-- Informações Dinâmicas do Modelo Ativo -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+                <div class="space-y-1">
+                  <p id="hero-panel-kicker" class="font-mono text-[10px] sm:text-[11px] text-cyanNeon uppercase tracking-wider">
+                    ALTA CONVERSÃO & SEO 100/100
+                  </p>
+                  <h2 id="hero-panel-title" class="font-display font-bold text-base sm:text-lg text-white leading-snug">
+                    Sites & Landing Pages que transformam visitantes em clientes
+                  </h2>
+                </div>
+
+                <div class="flex items-center gap-2 shrink-0">
+                  <div class="px-3 py-2 rounded-xl bg-slate-900/95 border border-slate-800 text-center min-w-[88px]">
+                    <span id="hero-metric-1-label" class="block font-mono text-[9px] text-slate-400 uppercase">VELOCIDADE</span>
+                    <span id="hero-metric-1-val" class="font-display font-bold text-sm text-cyanNeon">&lt; 0.8s</span>
+                  </div>
+                  <div class="px-3 py-2 rounded-xl bg-slate-900/95 border border-slate-800 text-center min-w-[96px]">
+                    <span id="hero-metric-2-label" class="block font-mono text-[9px] text-slate-400 uppercase">IMPACTO</span>
+                    <span id="hero-metric-2-val" class="font-display font-bold text-sm text-emeraldNeon">+3.4x Leads</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Stack & Atalho para o Simulador -->
+              <div class="pt-2.5 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs">
+                <span id="hero-panel-stack" class="font-mono text-[11px] text-slate-400">
+                  Stack: Next.js • Tailwind • SEO Avançado • WhatsApp API
+                </span>
+                <button id="hero-simulate-shortcut" type="button" data-service-target="sites" class="font-display font-bold text-cyanNeon hover:text-white transition-colors inline-flex items-center gap-1">
+                  Simular este serviço →
+                </button>
+              </div>
+            </div>
+
+          </div>
         </div>
-        <div class="card">
-          <img src="img/Computador.png" alt="Computador">
-          <h3>Computadores</h3>
-          <p>Montagem, limpeza, reparos e configuração personalizada.</p>
+
+      </div>
+    </section>
+
+    <!-- 2. AUTORIDADE & FORMAÇÃO ACADÊMICA -->
+    <section id="autoridade" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 reveal-on-scroll">
+      <div class="max-w-3xl mb-10 space-y-3">
+        <span class="inline-block px-3 py-1 rounded-full bg-violetNeon/15 border border-violetNeon/35 font-mono text-xs text-violet-300 uppercase tracking-wider">
+          FORMAÇÃO ACADÊMICA & DIFERENCIAL ESTRATÉGICO
+        </span>
+        <p class="text-slate-300 text-base sm:text-lg leading-relaxed">
+          Cada projeto e atendimento técnico é conduzido diretamente por <strong class="text-white">Ronei Pereira</strong>, combinando rigor de engenharia de software, arquitetura de hardware e gestão orientada a retorno sobre investimento.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Card 1: ADS -->
+        <div class="glass-card rounded-3xl p-6 sm:p-7 space-y-4">
+          <div class="w-16 h-16 rounded-2xl bg-cyanNeon/10 border border-cyanNeon/35 overflow-hidden shadow-neon-cyan tilt-3d-pop">
+            <canvas class="authority-3d-canvas w-full h-full block" data-auth-icon="ads"></canvas>
+          </div>
+          <span class="font-mono text-[11px] text-cyanNeon uppercase tracking-wider block">Graduação Superior</span>
+          <h3 class="font-display font-bold text-xl text-white tilt-3d-pop">Análise e Desenvolvimento de Sistemas</h3>
+          <p class="text-sm text-slate-300 leading-relaxed">
+            Código limpo, bancos de dados modelados para escalar, APIs seguras e interfaces responsivas projetadas para máxima velocidade em qualquer tela.
+          </p>
         </div>
-        <div class="card">
-          <img src="img/Windows.png" alt="Windows">
-          <h3>Atualização Windows</h3>
-          <p>Atualizamos seu sistema.</p>
+
+        <!-- Card 2: Pós-Graduação -->
+        <div class="glass-card rounded-3xl p-6 sm:p-7 space-y-4">
+          <div class="w-16 h-16 rounded-2xl bg-violetNeon/15 border border-violetNeon/35 overflow-hidden shadow-neon-violet tilt-3d-pop">
+            <canvas class="authority-3d-canvas w-full h-full block" data-auth-icon="gestao"></canvas>
+          </div>
+          <span class="font-mono text-[11px] text-violet-300 uppercase tracking-wider block">Especialização</span>
+          <h3 class="font-display font-bold text-xl text-white tilt-3d-pop">Pós-Graduado em Gestão de Tecnologia</h3>
+          <p class="text-sm text-slate-300 leading-relaxed">
+            Planejamento ágil, cronogramas previsíveis, governança de segurança da informação e foco absoluto em gerar vendas e produtividade para o seu negócio.
+          </p>
         </div>
-        <div class="card">
-          <img src="img/Iphone.png" alt="iPhone">
-          <h3>Atualização iPhone</h3>
-          <p>iOS atualizado com segurança.</p>
-        </div>
-        <div class="card">
-          <img src="https://cdn-icons-png.flaticon.com/512/888/888879.png" alt="Android">
-          <h3>Atualização Android</h3>
-          <p>Atualize seu Android.</p>
-        </div>
-        <div class="card">
-          <img src="img/Landing page.png" alt="Android">
-          <h3>Criação de sites</h3>
-          <p>Landing Page profissional.</p>
-        </div>
-        <div class="card">
-          <img src="img/Sistema web.png" alt="Android">
-          <h3>Sistema Web</h3>
-          <p>Sistema web para sua empresa.</p>
+
+        <!-- Card 3: Infraestrutura & Suporte -->
+        <div class="glass-card rounded-3xl p-6 sm:p-7 space-y-4">
+          <div class="w-16 h-16 rounded-2xl bg-emeraldNeon/10 border border-emeraldNeon/35 overflow-hidden shadow-neon-emerald tilt-3d-pop">
+            <canvas class="authority-3d-canvas w-full h-full block" data-auth-icon="ecossistema"></canvas>
+          </div>
+          <span class="font-mono text-[11px] text-emeraldNeon uppercase tracking-wider block">Software + Hardware</span>
+          <h3 class="font-display font-bold text-xl text-white tilt-3d-pop">Ecossistema Tecnológico Completo</h3>
+          <p class="text-sm text-slate-300 leading-relaxed">
+            Do sistema em nuvem e aplicativo mobile até a otimização física de computadores e notebooks em Belo Horizonte e suporte remoto especializado.
+          </p>
         </div>
       </div>
     </section>
 
-    <section class="whatsapp">
-      <h2>Orçamento e Contato</h2>
-      <p>Fale conosco agora mesmo pelo WhatsApp e faça seu orçamento gratuito.</p>
-      <a href="https://wa.me/5531920048260" target="_blank">Falar no WhatsApp</a>
+    <!-- 3. SEÇÃO DE SERVIÇOS (4 SOLUÇÕES COMPLETAS) -->
+    <section id="servicos" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 reveal-on-scroll">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+        <div class="space-y-2.5">
+          <span class="inline-block px-3 py-1 rounded-full bg-cyanNeon/10 border border-cyanNeon/30 font-mono text-xs text-cyanNeon uppercase tracking-wider">
+            SOLUÇÕES SOB MEDIDA
+          </span>
+          <h2 class="font-display font-bold text-3xl sm:text-4xl text-white">
+            Serviços de Alta Performance para <span class="text-gradient-tech">Impulsionar Sua Operação</span>
+          </h2>
+        </div>
+        <p class="text-sm text-slate-400 max-w-md">
+          Selecione qualquer solução abaixo para configurar automaticamente o escopo e prazo estimado no simulador.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Serviço 1: Sites & Landing Pages -->
+        <article class="glass-card rounded-3xl p-6 flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded-lg bg-cyanNeon/10 border border-cyanNeon/30 font-mono text-[11px] text-cyanNeon">01 • WEB</span>
+              <span class="font-mono text-[11px] text-slate-400">SEO 99+</span>
+            </div>
+            <div class="w-16 h-16 rounded-2xl bg-cyanNeon/10 border border-cyanNeon/35 overflow-hidden shadow-neon-cyan tilt-3d-pop">
+              <canvas class="service-3d-canvas w-full h-full block" data-service-3d="sites"></canvas>
+            </div>
+            <h3 class="font-display font-bold text-xl text-white tilt-3d-pop">Criação de Sites & Landing Pages</h3>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              Sites institucionais modernos e páginas de vendas ultra-rápidas desenhadas para ranquear no Google e converter visitantes em clientes no WhatsApp.
+            </p>
+            <ul class="space-y-2 text-xs text-slate-300 pt-1">
+              <li class="flex items-center gap-2"><span class="text-cyanNeon">✓</span> Design Exclusivo & Mobile-First</li>
+              <li class="flex items-center gap-2"><span class="text-cyanNeon">✓</span> Otimização Core Web Vitals & SEO</li>
+              <li class="flex items-center gap-2"><span class="text-cyanNeon">✓</span> Integração com Pixel, Analytics e CRM</li>
+            </ul>
+          </div>
+          <button type="button" data-select-service="sites" class="select-service-btn w-full py-3 px-4 rounded-xl bg-cyanNeon/10 hover:bg-cyanNeon text-cyanNeon hover:text-obsidian border border-cyanNeon/35 font-display font-bold text-xs transition-all">
+            Quero este serviço →
+          </button>
+        </article>
+
+        <!-- Serviço 2: Sistemas Web -->
+        <article class="glass-card rounded-3xl p-6 flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded-lg bg-violetNeon/15 border border-violetNeon/35 font-mono text-[11px] text-violet-300">02 • SAAS</span>
+              <span class="font-mono text-[11px] text-slate-400">CLOUD API</span>
+            </div>
+            <div class="w-16 h-16 rounded-2xl bg-violetNeon/15 border border-violetNeon/35 overflow-hidden shadow-neon-violet tilt-3d-pop">
+              <canvas class="service-3d-canvas w-full h-full block" data-service-3d="sistemas"></canvas>
+            </div>
+            <h3 class="font-display font-bold text-xl text-white tilt-3d-pop">Sistemas Web Sob Medida</h3>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              Plataformas administrativas, ERPs personalizados, controle financeiro, ordens de serviço e automação de processos acessíveis de qualquer lugar.
+            </p>
+            <ul class="space-y-2 text-xs text-slate-300 pt-1">
+              <li class="flex items-center gap-2"><span class="text-violet-400">✓</span> Dashboards Gerenciais em Tempo Real</li>
+              <li class="flex items-center gap-2"><span class="text-violet-400">✓</span> Controle de Permissões & Segurança</li>
+              <li class="flex items-center gap-2"><span class="text-violet-400">✓</span> Integração via APIs & Automação</li>
+            </ul>
+          </div>
+          <button type="button" data-select-service="sistemas" class="select-service-btn w-full py-3 px-4 rounded-xl bg-violetNeon/15 hover:bg-violetNeon text-violet-300 hover:text-white border border-violetNeon/40 font-display font-bold text-xs transition-all">
+            Quero este serviço →
+          </button>
+        </article>
+
+        <!-- Serviço 3: Apps Mobile -->
+        <article class="glass-card rounded-3xl p-6 flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded-lg bg-emeraldNeon/15 border border-emeraldNeon/35 font-mono text-[11px] text-emeraldNeon">03 • MOBILE</span>
+              <span class="font-mono text-[11px] text-slate-400">iOS & ANDROID</span>
+            </div>
+            <div class="w-16 h-16 rounded-2xl bg-emeraldNeon/10 border border-emeraldNeon/35 overflow-hidden shadow-neon-emerald tilt-3d-pop">
+              <canvas class="service-3d-canvas w-full h-full block" data-service-3d="apps"></canvas>
+            </div>
+            <h3 class="font-display font-bold text-xl text-white tilt-3d-pop">Aplicativos para Smartphones</h3>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              Apps nativos e híbridos (Android, iOS e PWA) com experiência fluida, notificações push, geolocalização e painel web integrado.
+            </p>
+            <ul class="space-y-2 text-xs text-slate-300 pt-1">
+              <li class="flex items-center gap-2"><span class="text-emeraldNeon">✓</span> Interface Intuitiva & Alta Fluidez</li>
+              <li class="flex items-center gap-2"><span class="text-emeraldNeon">✓</span> Push Notifications & Geolocalização</li>
+              <li class="flex items-center gap-2"><span class="text-emeraldNeon">✓</span> Publicação nas Lojas & Painel Admin</li>
+            </ul>
+          </div>
+          <button type="button" data-select-service="apps" class="select-service-btn w-full py-3 px-4 rounded-xl bg-emeraldNeon/15 hover:bg-emeraldNeon text-emeraldNeon hover:text-obsidian border border-emeraldNeon/40 font-display font-bold text-xs transition-all">
+            Quero este serviço →
+          </button>
+        </article>
+
+        <!-- Serviço 4: Manutenção de Computadores e Notebooks -->
+        <article class="glass-card rounded-3xl p-6 flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded-lg bg-amber-500/15 border border-amber-400/35 font-mono text-[11px] text-amber-300">04 • HARDWARE</span>
+              <span class="font-mono text-[11px] text-slate-400">BH & REMOTO</span>
+            </div>
+            <div class="w-16 h-16 rounded-2xl bg-amber-500/15 border border-amber-400/35 overflow-hidden shadow-lg tilt-3d-pop">
+              <canvas class="service-3d-canvas w-full h-full block" data-service-3d="hardware"></canvas>
+            </div>
+            <h3 class="font-display font-bold text-xl text-white tilt-3d-pop">Manutenção de Computadores & Notebooks</h3>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              Diagnóstico preciso de hardware, upgrade de SSD NVMe e memória RAM, limpeza interna preventiva, troca de pasta térmica e formatação com backup seguro.
+            </p>
+            <ul class="space-y-2 text-xs text-slate-300 pt-1">
+              <li class="flex items-center gap-2"><span class="text-amber-300">✓</span> Upgrade SSD NVMe & Expansão RAM</li>
+              <li class="flex items-center gap-2"><span class="text-amber-300">✓</span> Limpeza Térmica & Troca de Pasta</li>
+              <li class="flex items-center gap-2"><span class="text-amber-300">✓</span> Formatação Otimizada & Remoção Vírus</li>
+            </ul>
+          </div>
+          <button type="button" data-select-service="hardware" class="select-service-btn w-full py-3 px-4 rounded-xl bg-amber-500/15 hover:bg-amber-400 text-amber-300 hover:text-obsidian border border-amber-400/40 font-display font-bold text-xs transition-all">
+            Quero este serviço →
+          </button>
+        </article>
+      </div>
     </section>
+
+    <!-- 4. SIMULADOR INTERATIVO DE ESCOPO & BLUEPRINT 3D -->
+    <section id="simulador" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 reveal-on-scroll">
+      <div class="text-center max-w-3xl mx-auto mb-12 space-y-3">
+        <span class="inline-block px-3 py-1 rounded-full bg-cyanNeon/10 border border-cyanNeon/30 font-mono text-xs text-cyanNeon uppercase tracking-wider">
+          SIMULADOR INTERATIVO DE PROJETO & DIAGNÓSTICO
+        </span>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl text-white">
+          Monte o Escopo do Seu <span class="text-gradient-tech">Projeto ou Atendimento</span>
+        </h2>
+        <p class="text-sm sm:text-base text-slate-300">
+          Personalize os módulos desejados e visualize em tempo real a maquete 3D, a arquitetura recomendada e o prazo estimado.
+        </p>
+      </div>
+
+      <div class="glass-card rounded-3xl p-5 sm:p-8 border border-slate-800/90">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+
+          <!-- Coluna Esquerda: Controles do Simulador -->
+          <div class="lg:col-span-7 flex flex-col justify-between space-y-6">
+            <div class="space-y-6">
+              <!-- Passo 01 -->
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <label class="font-display font-bold text-base sm:text-lg text-white flex items-center gap-2.5">
+                    <span class="px-2 py-0.5 rounded-md bg-cyanNeon/15 border border-cyanNeon/40 font-mono text-xs text-cyanNeon">01</span>
+                    Escolha o Tipo de Solução
+                  </label>
+                  <span class="font-mono text-[11px] text-slate-400">Obrigatório</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="sim-solution-grid">
+                  <button type="button" data-sim-solution="sites" class="sim-solution-card text-left p-4 rounded-2xl border border-cyanNeon bg-cyanNeon/10 transition-all">
+                    <div class="flex items-center justify-between mb-1">
+                      <span class="font-display font-bold text-sm text-white">Sites & Landing Pages</span>
+                      <span class="sim-radio w-5 h-5 rounded-full bg-cyanNeon text-obsidian flex items-center justify-center text-xs font-bold">✓</span>
+                    </div>
+                    <p class="text-xs text-slate-300">Landing Page de alta conversão ou Site Institucional completo com SEO 99+.</p>
+                  </button>
+
+                  <button type="button" data-sim-solution="sistemas" class="sim-solution-card text-left p-4 rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-slate-700 transition-all">
+                    <div class="flex items-center justify-between mb-1">
+                      <span class="font-display font-bold text-sm text-white">Sistemas Web / SaaS</span>
+                      <span class="sim-radio w-5 h-5 rounded-full border border-slate-600 text-slate-400 flex items-center justify-center text-xs">✓</span>
+                    </div>
+                    <p class="text-xs text-slate-400">ERP sob medida, Dashboards gerenciais, APIs e automação de processos.</p>
+                  </button>
+
+                  <button type="button" data-sim-solution="apps" class="sim-solution-card text-left p-4 rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-slate-700 transition-all">
+                    <div class="flex items-center justify-between mb-1">
+                      <span class="font-display font-bold text-sm text-white">Apps Mobile</span>
+                      <span class="sim-radio w-5 h-5 rounded-full border border-slate-600 text-slate-400 flex items-center justify-center text-xs">✓</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Aplicativo Android & iOS moderno com integração em nuvem e UX fluida.</p>
+                  </button>
+
+                  <button type="button" data-sim-solution="hardware" class="sim-solution-card text-left p-4 rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-slate-700 transition-all">
+                    <div class="flex items-center justify-between mb-1">
+                      <span class="font-display font-bold text-sm text-white">Manutenção de PCs & Notebooks</span>
+                      <span class="sim-radio w-5 h-5 rounded-full border border-slate-600 text-slate-400 flex items-center justify-center text-xs">✓</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Upgrades SSD NVMe/RAM, limpeza térmica, formatação e diagnóstico em BH.</p>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Passo 02: Checkboxes Dinâmicos -->
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <label id="sim-features-heading" class="font-display font-bold text-base sm:text-lg text-white flex items-center gap-2.5">
+                    <span class="px-2 py-0.5 rounded-md bg-violetNeon/20 border border-violetNeon/40 font-mono text-xs text-violet-300">02</span>
+                    Selecione os Recursos do Projeto
+                  </label>
+                  <span class="font-mono text-[11px] text-slate-400">Múltipla escolha</span>
+                </div>
+
+                <div id="sim-features-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <!-- Preenchido dinamicamente via JavaScript -->
+                </div>
+              </div>
+
+              <!-- Passo 03: Objetivo & Ritmo de Entrega -->
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <label class="font-display font-bold text-base sm:text-lg text-white flex items-center gap-2.5">
+                    <span class="px-2 py-0.5 rounded-md bg-emeraldNeon/15 border border-emeraldNeon/40 font-mono text-xs text-emeraldNeon">03</span>
+                    Objetivo & Ritmo de Entrega
+                  </label>
+                  <span class="font-mono text-[11px] text-slate-400">Prioridade</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5" id="sim-priority-grid">
+                  <button type="button" data-sim-priority="Vender Mais & Escalar" class="sim-priority-btn px-3.5 py-2.5 rounded-xl border border-cyanNeon bg-cyanNeon/10 text-cyanNeon font-mono text-xs font-semibold text-center transition-all">
+                    🚀 Vender Mais
+                  </button>
+                  <button type="button" data-sim-priority="Automatizar & Organizar" class="sim-priority-btn px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-900/70 text-slate-300 hover:border-slate-700 font-mono text-xs font-semibold text-center transition-all">
+                    ⚙️ Automatizar
+                  </button>
+                  <button type="button" data-sim-priority="Urgência / SLA Prioritário" class="sim-priority-btn px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-900/70 text-slate-300 hover:border-slate-700 font-mono text-xs font-semibold text-center transition-all">
+                    ⚡ Urgência SLA
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Faixa de Garantias Técnicas Inclusas -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-slate-800/80">
+              <div class="p-3 rounded-2xl bg-slate-950/75 border border-slate-800/90 flex items-center gap-2.5">
+                <span class="text-cyanNeon font-mono text-sm">🔒</span>
+                <div>
+                  <p class="font-display font-bold text-xs text-white">Segurança & Sigilo</p>
+                  <p class="text-[11px] text-slate-400">Proteção total de dados</p>
+                </div>
+              </div>
+              <div class="p-3 rounded-2xl bg-slate-950/75 border border-slate-800/90 flex items-center gap-2.5">
+                <span class="text-violet-400 font-mono text-sm">🎓</span>
+                <div>
+                  <p class="font-display font-bold text-xs text-white">ADS + Pós Gestão</p>
+                  <p class="text-[11px] text-slate-400">Engenharia sem intermediários</p>
+                </div>
+              </div>
+              <div class="p-3 rounded-2xl bg-slate-950/75 border border-slate-800/90 flex items-center gap-2.5">
+                <span class="text-emeraldNeon font-mono text-sm">🛡️</span>
+                <div>
+                  <p class="font-display font-bold text-xs text-white">Garantia & Suporte</p>
+                  <p class="text-[11px] text-slate-400">Acompanhamento pós-entrega</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Coluna Direita: Blueprint 3D Ao Vivo & Resumo Gerado -->
+          <div class="lg:col-span-5">
+            <div class="h-full rounded-2xl bg-slate-950/90 border border-slate-800 p-5 flex flex-col justify-between space-y-4">
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <span class="font-mono text-[11px] text-cyanNeon uppercase tracking-wider">
+                    BLUEPRINT 3D & DIAGNÓSTICO EM TEMPO REAL
+                  </span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-emeraldNeon status-dot"></span>
+                </div>
+
+                <!-- Maquete 3D Ao Vivo do Escopo -->
+                <div class="relative h-36 rounded-2xl bg-slate-900/80 border border-slate-800 overflow-hidden stage-3d-grab">
+                  <span class="absolute top-2.5 left-3 font-mono text-[10px] text-slate-400 pointer-events-none">
+                    MAQUETE 3D AO VIVO • ARRASTE
+                  </span>
+                  <canvas id="sim-3d-canvas" class="w-full h-full block"></canvas>
+                  <span id="sim-3d-count-badge" class="absolute bottom-2.5 right-3 px-2.5 py-0.5 rounded-md bg-cyanNeon/10 border border-cyanNeon/30 font-mono text-[10px] text-cyanNeon pointer-events-none">
+                    3 MÓDULOS 3D ATIVOS
+                  </span>
+                </div>
+
+                <!-- Prazo Estimado & Nível -->
+                <div class="grid grid-cols-2 gap-3">
+                  <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800">
+                    <span class="block font-mono text-[10px] text-slate-400 uppercase mb-1">PRAZO ESTIMADO</span>
+                    <span id="sim-timeline" class="font-display font-bold text-base sm:text-lg text-white">11 a 19 dias úteis</span>
+                  </div>
+                  <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800">
+                    <span class="block font-mono text-[10px] text-slate-400 uppercase mb-1">NÍVEL DE PRIORIDADE</span>
+                    <span id="sim-level" class="font-display font-bold text-sm sm:text-base text-violet-300">Alta Conversão & SEO</span>
+                  </div>
+                </div>
+
+                <!-- Arquitetura Recomendada -->
+                <div class="space-y-1.5">
+                  <span class="block font-mono text-[10px] text-slate-400 uppercase">ARQUITETURA RECOMENDADA:</span>
+                  <div class="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 text-xs text-slate-200 leading-relaxed">
+                    <p id="sim-architecture">Front-End Ultra-Rápido (Next.js / Tailwind) + CDN Global + Certificado SSL + SEO Técnico Core Web Vitals 99+.</p>
+                  </div>
+                </div>
+
+                <!-- Impacto Estratégico -->
+                <div class="space-y-1.5">
+                  <span class="block font-mono text-[10px] text-slate-400 uppercase">IMPACTO & BENEFÍCIOS ESTRATÉGICOS:</span>
+                  <div class="p-3.5 rounded-2xl bg-emeraldNeon/5 border border-emeraldNeon/25 text-xs text-emerald-200 leading-relaxed">
+                    <p id="sim-benefits">Aumento expressivo na conversão de leads, posicionamento profissional imediato no Google e carregamento instantâneo em celulares.</p>
+                  </div>
+                </div>
+
+                <!-- Resumo do Escopo Gerado -->
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <span class="font-mono text-[10px] text-slate-400 uppercase">RESUMO DO ESCOPO GERADO:</span>
+                    <button id="copy-scope-btn" type="button" class="font-mono text-[11px] text-cyanNeon hover:underline">
+                      Copiar resumo
+                    </button>
+                  </div>
+                  <pre id="sim-summary-output" class="p-3.5 rounded-2xl bg-slate-900/95 border border-slate-800 font-mono text-[11px] text-slate-300 whitespace-pre-wrap leading-relaxed"></pre>
+                </div>
+              </div>
+
+              <!-- Botão Enviar Escopo -->
+              <button id="apply-scope-btn" type="button" class="w-full py-4 px-5 rounded-2xl btn-neon-primary font-display text-sm sm:text-base text-center">
+                Enviar Escopo para Orçamento →
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. PORTFÓLIO & ESTUDOS DE CASO EM 3D -->
+    <section id="portfolio" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 reveal-on-scroll">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+        <div class="space-y-2.5">
+          <span class="inline-block px-3 py-1 rounded-full bg-violetNeon/15 border border-violetNeon/35 font-mono text-xs text-violet-300 uppercase tracking-wider">
+            PORTFÓLIO & ESTUDOS DE CASO 3D
+          </span>
+          <h2 class="font-display font-bold text-3xl sm:text-4xl text-white">
+            Engenharia Aplicada em <span class="text-gradient-tech">Projetos Reais</span>
+          </h2>
+        </div>
+        <p class="text-sm text-slate-400 max-w-md">
+          Gire os modelos 3D em cada estudo de caso e clique para inspecionar o desafio, a solução técnica e os resultados alcançados.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Projeto 1 -->
+        <article class="glass-card rounded-3xl p-5 flex flex-col justify-between space-y-5">
+          <div class="space-y-4">
+            <div class="rounded-2xl bg-slate-950/90 border border-slate-800/90 p-3 flex flex-col justify-between">
+              <div class="flex items-center justify-between gap-1">
+                <span class="px-2 py-0.5 rounded-md bg-cyanNeon/10 border border-cyanNeon/30 font-mono text-[10px] text-cyanNeon">SAAS ERP • CLOUD</span>
+                <span class="font-mono text-[10px] text-emeraldNeon">• +68% PRODUTIV.</span>
+              </div>
+              <div class="relative w-full h-36 my-1.5 overflow-hidden stage-3d-grab">
+                <canvas class="portfolio-3d-canvas w-full h-full block" data-portfolio-3d="erp"></canvas>
+              </div>
+              <div class="px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between font-mono text-[10px]">
+                <span class="text-slate-300">O.S. 148 • SLA 99.2%</span>
+                <span class="text-cyanNeon">3D • ARRASTE</span>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <span class="font-mono text-[10px] text-cyanNeon uppercase tracking-wider">SISTEMA WEB & GESTÃO</span>
+              <h3 class="font-display font-bold text-lg text-white leading-snug tilt-3d-pop">Sistema de Gestão & Ordem de Serviço</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Plataforma web completa para controle de ordens de serviço, estoque, fluxo financeiro e alertas automáticos via WhatsApp.
+              </p>
+            </div>
+
+            <div class="flex flex-wrap gap-1.5 font-mono text-[10px]">
+              <span class="px-2 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-300">Node.js</span>
+              <span class="px-2 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-300">PostgreSQL</span>
+              <span class="px-2 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-300">API WhatsApp</span>
+            </div>
+          </div>
+
+          <button type="button" data-case-id="erp" class="open-case-btn w-full py-3 rounded-xl bg-slate-900 hover:bg-cyanNeon/15 border border-slate-700 hover:border-cyanNeon/40 text-white hover:text-cyanNeon font-display font-bold text-xs transition-all">
+            Ver Estudo de Caso 👁️
+          </button>
+        </article>
+
+        <!-- Projeto 2 -->
+        <article class="glass-card rounded-3xl p-5 flex flex-col justify-between space-y-5">
+          <div class="space-y-4">
+            <div class="rounded-2xl bg-slate-950/90 border border-slate-800/90 p-3 flex flex-col justify-between">
+              <div class="flex items-center justify-between gap-1">
+                <span class="px-2 py-0.5 rounded-md bg-emeraldNeon/10 border border-emeraldNeon/30 font-mono text-[10px] text-emeraldNeon">APP MOBILE PWA</span>
+                <span class="font-mono text-[10px] text-cyanNeon">• 15K+ ACESSOS</span>
+              </div>
+              <div class="relative w-full h-36 my-1.5 overflow-hidden stage-3d-grab">
+                <canvas class="portfolio-3d-canvas w-full h-full block" data-portfolio-3d="mobile"></canvas>
+              </div>
+              <div class="px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between font-mono text-[10px]">
+                <span class="text-slate-300">iOS & Android • ★ 4.9</span>
+                <span class="text-emeraldNeon">3D • ARRASTE</span>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <span class="font-mono text-[10px] text-emeraldNeon uppercase tracking-wider">APLICATIVO MOBILE & PWA</span>
+              <h3 class="font-display font-bold text-lg text-white leading-snug tilt-3d-pop">Plataforma Mobile PWA & Guia Comercial</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Aplicativo instalável sem burocracia de lojas, com busca inteligente por geolocalização, avaliações verificadas e painel para lojistas.
+              </p>
+            </div>
+
+            <div class="flex flex-wrap gap-1.5 font-mono text-[10px]">
+              <span class="px-2 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-300">PWA Mobile</span>
+              <span class="px-2 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-300">GPS API</span>
+              <span class="px-2 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-300">Push API</span>
+            </div>
+          </div>
+
+          <button type="button" data-case-id="mobile" class="open-case-btn w-full py-3 rounded-xl bg-slate-900 hover:bg-emeraldNeon/15 border border-slate-700 hover:border-emeraldNeon/40 text-white hover:text-emeraldNeon font-display font-bold text-xs transition-all">
+            Ver Estudo de Caso 👁️
+          </button>
+        </article>
+
+        <!-- Projeto 3 -->
+        <article class="glass-card rounded-3xl p-5 flex flex-col justify-between space-y-5">
+          <div class="space-y-4">
+            <div class="rounded-2xl bg-slate-950/90 border border-slate-800/90 p-3 flex flex-col justify-between">
+              <div class="flex items-center justify-between gap-1">
+                <span class="px-2 py-0.5 rounded-md bg-violetNeon/15 border border-violetNeon/35 font-mono text-[10px] text-violet-300">HIGH-CONVERSION LP</span>
+                <span class="font-mono text-[10px] text-emeraldNeon">• 3.4x LEADS</span>
+              </div>
+              <div class="relative w-full h-36 my-1.5 overflow-hidden stage-3d-grab">
+                <canvas class="portfolio-3d-canvas w-full h-full block" data-portfolio-3d="landing"></canvas>
+              </div>
+              <div class="px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between font-mono text-[10px]">
+                <span class="text-slate-300">PageSpeed 100 • CPL -54%</span>
+                <span class="text-violet-300">3D • ARRASTE</span>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <span class="font-mono text-[10px] text-violet-300 uppercase tracking-wider">SITES & VENDAS ONLINE</span>
+              <h3 class="font-display font-bold text-lg text-white leading-snug tilt-3d-pop">Landing Page Corporativa de Alta Conversão</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Página estratégica para tráfego pago (Google e Meta Ads), com carregamento abaixo de 0.8s e funil de captura integrado ao CRM.
+              </p>
+            </div>
+
+            <div class="flex flex-wrap gap-1.5 font-mono text-[10px]">
+              <span class="px-2 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-300">UI/UX</span>
+              <span class="px-2 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-300">SEO 100</span>
+              <span class="px-2 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-300">Webhook CRM</span>
+            </div>
+          </div>
+
+          <button type="button" data-case-id="landing" class="open-case-btn w-full py-3 rounded-xl bg-slate-900 hover:bg-violetNeon/15 border border-slate-700 hover:border-violetNeon/40 text-white hover:text-violet-300 font-display font-bold text-xs transition-all">
+            Ver Estudo de Caso 👁️
+          </button>
+        </article>
+
+        <!-- Projeto 4 -->
+        <article class="glass-card rounded-3xl p-5 flex flex-col justify-between space-y-5">
+          <div class="space-y-4">
+            <div class="rounded-2xl bg-slate-950/90 border border-slate-800/90 p-3 flex flex-col justify-between">
+              <div class="flex items-center justify-between gap-1">
+                <span class="px-2 py-0.5 rounded-md bg-amber-500/15 border border-amber-400/35 font-mono text-[10px] text-amber-300">HARDWARE & UPGRADE</span>
+                <span class="font-mono text-[10px] text-cyanNeon">• BOOT 6.8s</span>
+              </div>
+              <div class="relative w-full h-36 my-1.5 overflow-hidden stage-3d-grab">
+                <canvas class="portfolio-3d-canvas w-full h-full block" data-portfolio-3d="hardware"></canvas>
+              </div>
+              <div class="px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between font-mono text-[10px]">
+                <span class="text-slate-300">NVMe 5.200 MB/s • 42°C</span>
+                <span class="text-amber-300">3D • ARRASTE</span>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <span class="font-mono text-[10px] text-amber-300 uppercase tracking-wider">INFRAESTRUTURA & HARDWARE</span>
+              <h3 class="font-display font-bold text-lg text-white leading-snug tilt-3d-pop">Modernização & Upgrade de Estações de Trabalho</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Revitalização completa de notebooks e desktops corporativos em BH com SSD NVMe, expansão de RAM, gestão térmica e sistema otimizado.
+              </p>
+            </div>
+
+            <div class="flex flex-wrap gap-1.5 font-mono text-[10px]">
+              <span class="px-2 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-300">SSD NVMe</span>
+              <span class="px-2 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-300">Pasta Térmica</span>
+              <span class="px-2 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-300">Backup & OS</span>
+            </div>
+          </div>
+
+          <button type="button" data-case-id="hardware" class="open-case-btn w-full py-3 rounded-xl bg-slate-900 hover:bg-amber-500/15 border border-slate-700 hover:border-amber-400/40 text-white hover:text-amber-300 font-display font-bold text-xs transition-all">
+            Ver Estudo de Caso 👁️
+          </button>
+        </article>
+      </div>
+    </section>
+
+    <!-- 6. PROCESSO DE TRABALHO EM 4 ETAPAS -->
+    <section id="processo" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 reveal-on-scroll">
+      <div class="text-center max-w-2xl mx-auto mb-12 space-y-3">
+        <span class="inline-block px-3 py-1 rounded-full bg-emeraldNeon/10 border border-emeraldNeon/30 font-mono text-xs text-emeraldNeon uppercase tracking-wider">
+          METODOLOGIA DE EXECUÇÃO
+        </span>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl text-white">
+          Do Diagnóstico à Entrega com <span class="text-gradient-tech">Transparência Total</span>
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="glass-card rounded-3xl p-6 space-y-3">
+          <span class="font-mono text-2xl font-bold text-cyanNeon">01</span>
+          <h3 class="font-display font-bold text-lg text-white">Diagnóstico & Estratégia</h3>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            Mapeamento detalhado dos objetivos do seu negócio ou bancada técnica do equipamento, definindo escopo claro e cronograma real.
+          </p>
+        </div>
+
+        <div class="glass-card rounded-3xl p-6 space-y-3">
+          <span class="font-mono text-2xl font-bold text-violet-400">02</span>
+          <h3 class="font-display font-bold text-lg text-white">Arquitetura & Protótipo</h3>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            Desenho da experiência do usuário (UI/UX), modelagem de banco de dados ou especificação exata de componentes compatíveis.
+          </p>
+        </div>
+
+        <div class="glass-card rounded-3xl p-6 space-y-3">
+          <span class="font-mono text-2xl font-bold text-emeraldNeon">03</span>
+          <h3 class="font-display font-bold text-lg text-white">Engenharia & Testes</h3>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            Desenvolvimento ágil com entregas parciais validáveis, testes de performance, segurança e estresse térmico de hardware.
+          </p>
+        </div>
+
+        <div class="glass-card rounded-3xl p-6 space-y-3">
+          <span class="font-mono text-2xl font-bold text-amber-300">04</span>
+          <h3 class="font-display font-bold text-lg text-white">Deploy & Suporte</h3>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            Publicação em produção, treinamento de uso, documentação técnica e acompanhamento contínuo para evolução segura.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. CONTATO & CONVERSÃO DIRETA -->
+    <section id="contato" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 pb-24 reveal-on-scroll">
+      <div class="glass-card rounded-3xl p-6 sm:p-10 border border-cyanNeon/25">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+
+          <!-- Coluna Esquerda: Chamada & Canais Diretos -->
+          <div class="lg:col-span-5 space-y-6">
+            <span class="inline-block px-3 py-1 rounded-full bg-cyanNeon/10 border border-cyanNeon/30 font-mono text-xs text-cyanNeon uppercase tracking-wider">
+              VAMOS TIRAR SEU PROJETO DO PAPEL
+            </span>
+            <h2 class="font-display font-bold text-3xl sm:text-4xl text-white leading-tight">
+              Pronto para Elevar o Nível Tecnológico da Sua Empresa?
+            </h2>
+            <p class="text-sm sm:text-base text-slate-300 leading-relaxed">
+              Preencha o formulário ou chame diretamente no WhatsApp. Você falará diretamente com <strong class="text-white">Ronei Pereira</strong> para receber uma proposta clara e sob medida.
+            </p>
+
+            <div class="space-y-3 pt-2">
+              <div class="p-4 rounded-2xl bg-slate-950/85 border border-slate-800 flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-emeraldNeon/15 border border-emeraldNeon/35 flex items-center justify-center text-emeraldNeon shrink-0">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-display font-bold text-sm text-white">Base em Belo Horizonte - MG</p>
+                  <p class="text-xs text-slate-400">Projetos web/mobile para todo o Brasil & Hardware em BH</p>
+                </div>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-950/85 border border-slate-800 flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-cyanNeon/15 border border-cyanNeon/35 flex items-center justify-center text-cyanNeon shrink-0">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-display font-bold text-sm text-white">Resposta Rápida & Consultiva</p>
+                  <p class="text-xs text-slate-400">Análise técnica gratuita da sua necessidade</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Coluna Direita: Formulário de Solicitação -->
+          <div class="lg:col-span-7">
+            <form id="contact-form" class="space-y-4 bg-slate-950/85 border border-slate-800 rounded-2xl p-5 sm:p-7">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                  <label for="client-name" class="block font-mono text-xs text-slate-300">Seu Nome ou Empresa *</label>
+                  <input id="client-name" type="text" required placeholder="Ex: Carlos Mendes / Clínica Vida" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700/80 focus:border-cyanNeon focus:outline-none text-sm text-white placeholder-slate-500" />
+                </div>
+                <div class="space-y-1.5">
+                  <label for="client-whatsapp" class="block font-mono text-xs text-slate-300">WhatsApp para Contato *</label>
+                  <input id="client-whatsapp" type="tel" required placeholder="(31) 99999-9999" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700/80 focus:border-cyanNeon focus:outline-none text-sm text-white placeholder-slate-500" />
+                </div>
+              </div>
+
+              <div class="space-y-1.5">
+                <label for="client-service" class="block font-mono text-xs text-slate-300">Serviço Desejado *</label>
+                <select id="client-service" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700/80 focus:border-cyanNeon focus:outline-none text-sm text-white">
+                  <option value="Sites & Landing Pages de Alta Conversão">Criação de Sites & Landing Pages</option>
+                  <option value="Sistemas Web / SaaS Sob Medida">Sistemas Web / SaaS Sob Medida</option>
+                  <option value="Aplicativos Mobile (Android & iOS)">Aplicativos para Smartphones (Android & iOS)</option>
+                  <option value="Manutenção de Computadores & Notebooks">Manutenção de Computadores & Notebooks</option>
+                </select>
+              </div>
+
+              <div class="space-y-1.5">
+                <label for="client-details" class="block font-mono text-xs text-slate-300">Detalhes do Projeto ou Escopo Simulado *</label>
+                <textarea id="client-details" rows="4" required placeholder="Descreva sua ideia, problema a resolver ou use o simulador acima para preencher automaticamente..." class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700/80 focus:border-cyanNeon focus:outline-none text-sm text-white placeholder-slate-500"></textarea>
+              </div>
+
+              <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                <button type="submit" class="flex-1 py-4 px-6 rounded-xl btn-neon-primary font-display text-sm sm:text-base text-center">
+                  Enviar Solicitação via WhatsApp →
+                </button>
+                <button type="button" id="direct-whatsapp-btn" class="py-4 px-5 rounded-xl bg-emeraldNeon/15 hover:bg-emeraldNeon/25 border border-emeraldNeon/40 text-emeraldNeon font-display font-bold text-sm text-center transition-all">
+                  Conversar Agora
+                </button>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <footer>
-    <p>&copy; 2025 Tec Pereira BH. Todos os direitos reservados.</p>
+  <!-- FOOTER -->
+  <footer class="relative z-10 border-t border-slate-800/80 bg-obsidian/90 backdrop-blur-xl py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+      <div class="flex items-center gap-2.5">
+        <span class="font-display font-bold text-sm text-white">Tech <span class="text-cyanNeon">Pereira</span></span>
+        <span>•</span>
+        <span>Ronei Pereira — ADS & Pós-Graduado em Gestão de Tecnologia</span>
+      </div>
+      <div class="font-mono text-[11px] text-slate-400">
+        Belo Horizonte - MG • Todos os direitos reservados © <span id="current-year">2026</span>
+      </div>
+    </div>
   </footer>
+
+  <!-- BOTÃO FLUTUANTE DE WHATSAPP -->
+  <button id="floating-whatsapp-btn" type="button" aria-label="Falar no WhatsApp" class="fixed bottom-5 right-5 z-40 flex items-center gap-2.5 px-4 py-3.5 rounded-full bg-emeraldNeon text-obsidian font-display font-bold text-xs sm:text-sm shadow-neon-emerald hover:scale-105 transition-transform">
+    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M20.52 3.48A11.86 11.86 0 0012.07 0C5.49 0 .16 5.33.16 11.9c0 2.1.55 4.15 1.59 5.95L0 24l6.33-1.66a11.86 11.86 0 005.74 1.46h.01c6.57 0 11.9-5.33 11.9-11.9 0-3.18-1.24-6.17-3.46-8.42zM12.08 21.8h-.01a9.87 9.87 0 01-5.03-1.38l-.36-.21-3.76.99 1-3.66-.24-.38a9.86 9.86 0 01-1.51-5.26c0-5.45 4.44-9.89 9.9-9.89 2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 012.9 7c0 5.46-4.44 9.89-9.88 9.89zm5.43-7.41c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/>
+    </svg>
+    <span class="hidden sm:inline">Orçamento Rápido</span>
+  </button>
+
+  <!-- MODAL DE ESTUDO DE CASO -->
+  <div id="case-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-obsidian/85 backdrop-blur-xl">
+    <div class="glass-card rounded-3xl max-w-2xl w-full p-6 sm:p-8 border border-cyanNeon/35 shadow-2xl space-y-5 relative max-h-[90vh] overflow-y-auto">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <span id="modal-case-tag" class="font-mono text-xs text-cyanNeon uppercase tracking-wider">ESTUDO DE CASO</span>
+          <h3 id="modal-case-title" class="font-display font-bold text-2xl text-white mt-1">Título do Projeto</h3>
+        </div>
+        <button id="close-case-modal" type="button" aria-label="Fechar modal" class="p-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 hover:text-white">
+          ✕
+        </button>
+      </div>
+
+      <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+        <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800">
+          <h4 class="font-display font-bold text-white mb-1">🎯 O Desafio do Cliente</h4>
+          <p id="modal-case-challenge"></p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800">
+          <h4 class="font-display font-bold text-cyanNeon mb-1">⚙️ Engenharia & Solução Implementada</h4>
+          <p id="modal-case-solution"></p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-emeraldNeon/10 border border-emeraldNeon/30">
+          <h4 class="font-display font-bold text-emeraldNeon mb-1">📈 Resultados Alcançados</h4>
+          <p id="modal-case-results" class="text-emerald-100"></p>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row justify-end gap-3 pt-2">
+        <button id="modal-close-secondary" type="button" class="px-5 py-3 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 font-semibold text-xs">
+          Fechar
+        </button>
+        <button id="modal-request-similar" type="button" class="px-6 py-3 rounded-xl btn-neon-primary font-display text-xs sm:text-sm">
+          Quero uma Solução Semelhante →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS DA APLICAÇÃO & ENGINES 3D (THREE.JS) -->
+  <script>
+    (function () {
+      const WHATSAPP_NUMBER = '5531999999999';
+
+      // Utilitário de Toast Customizado (Sem alert/confirm)
+      let toastTimeout = null;
+      function showToast(message) {
+        const toastEl = document.getElementById('toast-notification');
+        const msgEl = document.getElementById('toast-message');
+        if (!toastEl || !msgEl) return;
+        msgEl.textContent = message;
+        toastEl.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+          toastEl.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+        }, 3200);
+      }
+
+      // Dados dos 4 modelos do Hero
+      const HERO_DATA = {
+        sites: {
+          badge: 'MODELO: NOTEBOOK HOLOGRÁFICO 3D',
+          kicker: 'ALTA CONVERSÃO & SEO 100/100',
+          title: 'Sites & Landing Pages que transformam visitantes em clientes',
+          m1Label: 'VELOCIDADE',
+          m1Val: '< 0.8s',
+          m2Label: 'IMPACTO',
+          m2Val: '+3.4x Leads',
+          stack: 'Stack: Next.js • Tailwind • SEO Avançado • WhatsApp API',
+          colorHex: 0x00f0ff,
+          tabClass: 'bg-cyanNeon text-obsidian shadow-neon-cyan'
+        },
+        sistemas: {
+          badge: 'MODELO: SISTEMA WEB / ERP 3D',
+          kicker: 'AUTOMAÇÃO EMPRESARIAL & CLOUD',
+          title: 'Sistemas Web & ERPs sob medida para escalar sua operação',
+          m1Label: 'UPTIME SLA',
+          m1Val: '99.9%',
+          m2Label: 'EFICIÊNCIA',
+          m2Val: '+68% Produtiv.',
+          stack: 'Stack: Node.js • PostgreSQL • Dashboards BI • APIs REST',
+          colorHex: 0x7c3aed,
+          tabClass: 'bg-violetNeon text-white shadow-neon-violet'
+        },
+        apps: {
+          badge: 'MODELO: SMARTPHONE HOLOGRÁFICO 3D',
+          kicker: 'EXPERIÊNCIA MOBILE ANDROID & iOS',
+          title: 'Aplicativos modernos na palma da mão dos seus clientes',
+          m1Label: 'FLUIDEZ UX',
+          m1Val: '60 FPS',
+          m2Label: 'ENGAJAMENTO',
+          m2Val: 'Push + GPS',
+          stack: 'Stack: React Native • PWA • Firebase • Notificações Push',
+          colorHex: 0x10b981,
+          tabClass: 'bg-emeraldNeon text-obsidian shadow-neon-emerald'
+        },
+        hardware: {
+          badge: 'MODELO: PLACA-MÃE ATX HOLOGRÁFICA 3D',
+          kicker: 'LABORATÓRIO DE HARDWARE & PERFORMANCE',
+          title: 'Upgrades NVMe, Limpeza Térmica e Manutenção de PCs e Notebooks',
+          m1Label: 'BOOT OS',
+          m1Val: '6.8 seg',
+          m2Label: 'GANHO REAL',
+          m2Val: '+850% Veloc.',
+          stack: 'Lab: SSD NVMe Gen4 • RAM Dual-Ch • Pasta Térmica • BH/MG',
+          colorHex: 0xf59e0b,
+          tabClass: 'bg-amber-400 text-obsidian shadow-lg'
+        }
+      };
+
+      // Dados do Simulador de Escopo
+      const SIMULATOR_CONFIG = {
+        sites: {
+          title: 'Sites & Landing Pages de Alta Conversão',
+          baseDays: [7, 12],
+          level: 'Alta Conversão & SEO',
+          architecture: 'Front-End Ultra-Rápido (Next.js / Tailwind) + CDN Global + Certificado SSL + SEO Técnico Core Web Vitals 99+.',
+          benefits: 'Aumento expressivo na conversão de leads, posicionamento profissional imediato no Google e carregamento instantâneo em celulares.',
+          features: [
+            { id: 'design', name: 'Design Exclusivo High-Tech', desc: 'Identidade visual futurista e foco em conversão', days: [2, 3], checked: true },
+            { id: 'wpp', name: 'Integração WhatsApp/API', desc: 'Botões inteligentes e captura direta de leads', days: [1, 2], checked: true },
+            { id: 'cms', name: 'Painel Administrativo (CMS)', desc: 'Edição fácil de textos, banners e conteúdos', days: [2, 4], checked: false },
+            { id: 'seo', name: 'SEO Técnico Avançado', desc: 'Otimização completa para buscas no Google', days: [1, 2], checked: true }
+          ]
+        },
+        sistemas: {
+          title: 'Sistemas Web / SaaS Sob Medida',
+          baseDays: [15, 25],
+          level: 'Automação & Escala Cloud',
+          architecture: 'Arquitetura Full-Stack (Node.js / TypeScript) + Banco Relacional PostgreSQL + Autenticação JWT + Backups Automatizados.',
+          benefits: 'Eliminação de planilhas manuais, controle financeiro e operacional centralizado com indicadores em tempo real.',
+          features: [
+            { id: 'dash', name: 'Dashboards & Relatórios BI', desc: 'Gráficos financeiros e operacionais em tempo real', days: [3, 5], checked: true },
+            { id: 'auth', name: 'Níveis de Acesso & Auditoria', desc: 'Perfis de administrador, equipe e histórico', days: [2, 4], checked: true },
+            { id: 'api', name: 'Integrações Externas (API)', desc: 'Pagamentos PIX/Cartão, WhatsApp ou ERP', days: [3, 6], checked: true },
+            { id: 'multi', name: 'Arquitetura Multi-Empresa', desc: 'Suporte a filiais ou modelo SaaS', days: [4, 7], checked: false }
+          ]
+        },
+        apps: {
+          title: 'Aplicativos Mobile (Android & iOS)',
+          baseDays: [18, 28],
+          level: 'Mobile First & Engajamento',
+          architecture: 'Aplicativo Híbrido/Nativo (React Native / PWA) + Backend Cloud em Tempo Real + Sistema de Notificações Push.',
+          benefits: 'Presença direta no smartphone do cliente com experiência fluida, retenção recorrente e sincronização instantânea.',
+          features: [
+            { id: 'push', name: 'Notificações Push Inteligentes', desc: 'Alertas promocionais e transacionais no celular', days: [2, 3], checked: true },
+            { id: 'gps', name: 'Geolocalização & Mapas', desc: 'Busca por proximidade e rotas integradas', days: [3, 5], checked: true },
+            { id: 'admin', name: 'Painel Web de Gestão do App', desc: 'Controle de usuários, pedidos e conteúdos', days: [4, 6], checked: true },
+            { id: 'store', name: 'Publicação Google Play & App Store', desc: 'Configuração completa para as lojas oficiais', days: [3, 5], checked: false }
+          ]
+        },
+        hardware: {
+          title: 'Manutenção Especializada de PCs & Notebooks',
+          baseDays: [1, 2],
+          level: 'Performance & Diagnóstico Lab',
+          architecture: 'Bancada ESD Segura + Clonagem/Instalação Limpa OS + Ajuste Térmico de Alta Condutividade + Testes de Estresse.',
+          benefits: 'Equipamento até 8x mais rápido, temperaturas controladas, vida útil estendida e preservação total dos seus arquivos.',
+          features: [
+            { id: 'ssd', name: 'Upgrade SSD NVMe & Memória RAM', desc: 'Instalação e migração de sistema ultra-rápida', days: [0, 1], checked: true },
+            { id: 'termica', name: 'Limpeza Interna & Pasta Térmica', desc: 'Remoção de poeira e pasta de alta performance', days: [0, 1], checked: true },
+            { id: 'os', name: 'Formatação Otimizada + Backup', desc: 'Sistema limpo, drivers oficiais e backup seguro', days: [1, 1], checked: true },
+            { id: 'diag', name: 'Diagnóstico Avançado de Placa/Fonte', desc: 'Testes completos de estabilidade e componentes', days: [0, 1], checked: false }
+          ]
+        }
+      };
+
+      // Dados dos Estudos de Caso do Modal
+      const CASE_STUDIES = {
+        erp: {
+          tag: 'SISTEMA WEB & GESTÃO • SAAS ERP',
+          title: 'Sistema de Gestão & Ordem de Serviço',
+          challenge: 'A empresa operava com planilhas desconexas e blocos de papel, gerando atrasos no atendimento, perda de histórico técnico e falhas no controle de estoque e faturamento.',
+          solution: 'Desenvolvimento de um sistema web completo em nuvem com abertura digital de O.S., baixa automática de peças no estoque, painel financeiro e disparo automático de status pelo WhatsApp para cada cliente.',
+          results: 'Aumento de 68% na produtividade da equipe técnica, redução de 90% nos erros de estoque e visibilidade financeira em tempo real pelo celular do gestor.',
+          serviceOption: 'Sistemas Web / SaaS Sob Medida'
+        },
+        mobile: {
+          tag: 'APLICATIVO MOBILE & PWA • GEOLOCALIZAÇÃO',
+          title: 'Plataforma Mobile PWA & Guia Comercial',
+          challenge: 'O cliente precisava lançar um guia comercial interativo na região sem exigir que os usuários baixassem arquivos pesados nas lojas de aplicativos.',
+          solution: 'Engenharia de um Progressive Web App (PWA) instalável com 1 toque, busca por proximidade via GPS, cupons digitais com QR Code e painel exclusivo para os lojistas gerenciarem ofertas.',
+          results: 'Mais de 15.000 acessos orgânicos nos primeiros meses, avaliação média de 4.9 estrelas pelos usuários e alta taxa de retenção via notificações push.',
+          serviceOption: 'Aplicativos Mobile (Android & iOS)'
+        },
+        landing: {
+          tag: 'SITES & VENDAS ONLINE • ALTA CONVERSÃO',
+          title: 'Landing Page Corporativa de Alta Conversão',
+          challenge: 'As campanhas de tráfego pago tinham alto custo por clique, mas a página antiga demorava mais de 5 segundos para abrir no celular, desperdiçando orçamento.',
+          solution: 'Reconstrução completa da arquitetura front-end com foco em Core Web Vitals, carregamento abaixo de 0.8 segundos, copywriting persuasivo e rastreamento avançado de eventos.',
+          results: 'Multiplicação de 3.4x na geração de leads qualificados e redução de 54% no Custo por Lead (CPL) logo nas primeiras semanas.',
+          serviceOption: 'Sites & Landing Pages de Alta Conversão'
+        },
+        hardware: {
+          tag: 'INFRAESTRUTURA & HARDWARE • BELO HORIZONTE - MG',
+          title: 'Modernização & Upgrade de Estações de Trabalho',
+          challenge: 'Estações de trabalho e notebooks da equipe apresentavam travamentos constantes, superaquecimento e tempo de inicialização superior a 3 minutos.',
+          solution: 'Diagnóstico individual completo, instalação de unidades SSD NVMe Gen4 (5.200 MB/s), expansão de memória RAM em Dual-Channel, higienização interna e substituição da pasta térmica.',
+          results: 'Tempo de inicialização reduzido para 6.8 segundos, queda de 24°C na temperatura em carga máxima e ganho real de até 850% na velocidade de leitura de dados.',
+          serviceOption: 'Manutenção de Computadores & Notebooks'
+        }
+      };
+
+      // Estado Global de Cores & Controladores 3D
+      let globalBgSceneColor = null;
+      let heroSceneController = null;
+      let simSceneController = null;
+
+      // Utilitário de Wireframe com EdgesGeometry
+      function createWireBox(w, h, d, colorHex, opacity = 0.85) {
+        const geo = new THREE.BoxGeometry(w, h, d);
+        const edges = new THREE.EdgesGeometry(geo);
+        const mat = new THREE.LineBasicMaterial({ color: colorHex, transparent: true, opacity });
+        return new THREE.LineSegments(edges, mat);
+      }
+
+      // =========================================================================
+      // 1. MOTOR 3D GLOBAL DE FUNDO (GRADE CIBERNÉTICA + PONTINHOS EM MOVIMENTO)
+      // =========================================================================
+      function initGlobalBackground3D() {
+        const canvas = document.getElementById('bg-3d-canvas');
+        if (!canvas || typeof THREE === 'undefined') return;
+
+        try {
+          const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          renderer.setSize(window.innerWidth, window.innerHeight);
+
+          const bgScene = new THREE.Scene();
+          const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 120);
+          camera.position.set(0, 3.2, 14);
+          camera.lookAt(0, 0, -10);
+
+          // Grade Cibernética em Perspectiva
+          const gridHelper = new THREE.GridHelper(90, 45, 0x00f0ff, 0x1e293b);
+          gridHelper.position.y = -4.5;
+          gridHelper.material.transparent = true;
+          gridHelper.material.opacity = 0.22;
+          bgScene.add(gridHelper);
+
+          // Campo de Partículas 3D Profundo (Pontinhos em Movimento Moderado)
+          const bgStarCount = 420;
+          const bgStarPos = new Float32Array(bgStarCount * 3);
+          const bgStarVel = new Float32Array(bgStarCount * 3);
+          for (let i = 0; i < bgStarCount * 3; i += 3) {
+            bgStarPos[i] = (Math.random() - 0.5) * 48;
+            bgStarPos[i + 1] = (Math.random() - 0.3) * 24;
+            bgStarPos[i + 2] = (Math.random() - 0.5) * 70 - 15;
+
+            bgStarVel[i] = (Math.random() - 0.5) * 0.024;
+            bgStarVel[i + 1] = (Math.random() - 0.5) * 0.018;
+            bgStarVel[i + 2] = 0.032 + Math.random() * 0.028;
+          }
+
+          const bgStarGeo = new THREE.BufferGeometry();
+          bgStarGeo.setAttribute('position', new THREE.BufferAttribute(bgStarPos, 3));
+          const bgStarMat = new THREE.PointsMaterial({
+            color: 0x00f0ff,
+            size: 0.12,
+            transparent: true,
+            opacity: 0.68
+          });
+          const bgStars = new THREE.Points(bgStarGeo, bgStarMat);
+          bgScene.add(bgStars);
+
+          let pointerX = 0;
+          let pointerY = 0;
+          window.addEventListener('pointermove', (e) => {
+            pointerX = (e.clientX / window.innerWidth - 0.5) * 2;
+            pointerY = (e.clientY / window.innerHeight - 0.5) * 2;
+          }, { passive: true });
+
+          window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+          });
+
+          let bgTick = 0;
+          function animateGlobalBg() {
+            requestAnimationFrame(animateGlobalBg);
+            bgTick += 0.012;
+
+            // Movimento contínuo da grade 3D
+            gridHelper.position.z = ((bgTick * 2.2) % 2);
+
+            // Movimento contínuo e moderado dos pontinhos luminosos 3D
+            const positionsArr = bgStarGeo.attributes.position.array;
+            for (let i = 0; i < bgStarCount * 3; i += 3) {
+              positionsArr[i] += bgStarVel[i];
+              positionsArr[i + 1] += bgStarVel[i + 1] + Math.sin(bgTick + i) * 0.003;
+              positionsArr[i + 2] += bgStarVel[i + 2];
+
+              if (positionsArr[i] > 24) positionsArr[i] = -24;
+              else if (positionsArr[i] < -24) positionsArr[i] = 24;
+
+              if (positionsArr[i + 1] > 16) positionsArr[i + 1] = -8;
+              else if (positionsArr[i + 1] < -8) positionsArr[i + 1] = 16;
+
+              if (positionsArr[i + 2] > 14) positionsArr[i + 2] = -56;
+            }
+            bgStarGeo.attributes.position.needsUpdate = true;
+
+            if (globalBgSceneColor) {
+              bgStarMat.color.lerp(globalBgSceneColor, 0.05);
+            }
+
+            const scrollRatio = window.scrollY / Math.max(1, document.body.scrollHeight - window.innerHeight);
+            camera.position.x += (pointerX * 1.4 - camera.position.x) * 0.04;
+            camera.position.y += (3.2 - pointerY * 0.9 - scrollRatio * 1.8 - camera.position.y) * 0.04;
+
+            renderer.render(bgScene, camera);
+          }
+
+          animateGlobalBg();
+        } catch (err) {
+          console.error('Erro ao inicializar cenário 3D global:', err);
+        }
+      }
+
+      // =========================================================================
+      // 2. CONSTRUTORES DOS 4 MODELOS 3D DETALHADOS DO HERO
+      // =========================================================================
+      function buildNotebook3DModel() {
+        const group = new THREE.Group();
+        const animParts = {};
+
+        // Base do notebook
+        const baseMesh = new THREE.Mesh(
+          new THREE.BoxGeometry(2.5, 0.11, 1.75),
+          new THREE.MeshBasicMaterial({ color: 0x061626, transparent: true, opacity: 0.85 })
+        );
+        baseMesh.position.set(0, -0.58, 0.25);
+        baseMesh.add(createWireBox(2.5, 0.11, 1.75, 0x00f0ff, 0.95));
+        group.add(baseMesh);
+
+        // Teclado retroiluminado & Trackpad
+        const kbWire = createWireBox(2.15, 0.02, 0.95, 0x38bdf8, 0.7);
+        kbWire.position.set(0, -0.51, 0.08);
+        group.add(kbWire);
+
+        const trackpad = createWireBox(0.68, 0.02, 0.42, 0x7c3aed, 0.9);
+        trackpad.position.set(0, -0.51, 0.82);
+        group.add(trackpad);
+
+        // Tampa articulada & Tela
+        const lidGroup = new THREE.Group();
+        lidGroup.position.set(0, -0.52, -0.6);
+        lidGroup.rotation.x = -0.22;
+
+        const screenFrame = new THREE.Mesh(
+          new THREE.BoxGeometry(2.5, 1.62, 0.08),
+          new THREE.MeshBasicMaterial({ color: 0x041220, transparent: true, opacity: 0.88 })
+        );
+        screenFrame.position.set(0, 0.81, 0);
+        screenFrame.add(createWireBox(2.5, 1.62, 0.08, 0x00f0ff, 0.95));
+        lidGroup.add(screenFrame);
+
+        // Display interno luminoso
+        const displayPlane = new THREE.Mesh(
+          new THREE.PlaneGeometry(2.26, 1.38),
+          new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.14, side: THREE.DoubleSide })
+        );
+        displayPlane.position.set(0, 0.81, 0.05);
+        lidGroup.add(displayPlane);
+
+        // Emblema hexagonal na tampa traseira (visível ao girar 360°)
+        const backEmblem = new THREE.Mesh(
+          new THREE.RingGeometry(0.18, 0.26, 6),
+          new THREE.MeshBasicMaterial({ color: 0x00f0ff, side: THREE.DoubleSide })
+        );
+        backEmblem.position.set(0, 0.81, -0.05);
+        lidGroup.add(backEmblem);
+
+        // Cards UI flutuantes na frente da tela
+        const floatingCards = new THREE.Group();
+        const card1 = createWireBox(0.95, 0.55, 0.03, 0x00f0ff, 0.9);
+        card1.position.set(-0.55, 0.9, 0.22);
+        const card2 = createWireBox(0.85, 0.72, 0.03, 0xa855f7, 0.9);
+        card2.position.set(0.55, 0.82, 0.28);
+        const ctaBar = new THREE.Mesh(
+          new THREE.BoxGeometry(0.75, 0.16, 0.03),
+          new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.65 })
+        );
+        ctaBar.position.set(-0.55, 0.45, 0.24);
+        floatingCards.add(card1, card2, ctaBar);
+        lidGroup.add(floatingCards);
+
+        group.add(lidGroup);
+        animParts.floatingCards = floatingCards;
+        animParts.backEmblem = backEmblem;
+
+        return {
+          group,
+          update(t, speed) {
+            floatingCards.position.z = Math.sin(t * 2.2 * speed) * 0.05;
+            backEmblem.rotation.z = t * 0.8 * speed;
+          }
+        };
+      }
+
+      function buildSystemERP3DModel() {
+        const group = new THREE.Group();
+
+        // Janela Principal do Sistema Web / ERP
+        const mainWin = new THREE.Mesh(
+          new THREE.BoxGeometry(2.6, 1.65, 0.08),
+          new THREE.MeshBasicMaterial({ color: 0x120b29, transparent: true, opacity: 0.86 })
+        );
+        mainWin.add(createWireBox(2.6, 1.65, 0.08, 0x8b5cf6, 0.95));
+        group.add(mainWin);
+
+        // Sidebar esquerda
+        const sidebar = createWireBox(0.52, 1.48, 0.04, 0x00f0ff, 0.8);
+        sidebar.position.set(-0.96, 0, 0.08);
+        group.add(sidebar);
+
+        // 3 Cards de KPI flutuantes
+        for (let i = 0; i < 3; i++) {
+          const kpi = createWireBox(0.56, 0.34, 0.05, i === 1 ? 0x10b981 : 0x00f0ff, 0.9);
+          kpi.position.set(-0.32 + i * 0.64, 0.52, 0.14);
+          group.add(kpi);
+        }
+
+        // Gráfico de Barras 3D Volumétrico Animado
+        const bars = [];
+        const barColors = [0x7c3aed, 0x00f0ff, 0x10b981, 0x38bdf8, 0xa855f7];
+        for (let i = 0; i < 5; i++) {
+          const barGeo = new THREE.BoxGeometry(0.18, 0.7, 0.18);
+          const barMat = new THREE.MeshBasicMaterial({ color: barColors[i], transparent: true, opacity: 0.65 });
+          const bar = new THREE.Mesh(barGeo, barMat);
+          bar.add(createWireBox(0.18, 0.7, 0.18, 0xffffff, 0.5));
+          bar.position.set(-0.55 + i * 0.28, -0.25, 0.18);
+          group.add(bar);
+          bars.push(bar);
+        }
+
+        // Donut Gauge Giratório à direita
+        const donut = new THREE.Mesh(
+          new THREE.TorusGeometry(0.28, 0.06, 10, 24),
+          new THREE.MeshBasicMaterial({ color: 0x10b981, wireframe: true })
+        );
+        donut.position.set(0.92, -0.22, 0.18);
+        group.add(donut);
+
+        // Cluster Traseiro de Banco de Dados Cloud (visível em 360°)
+        const dbCluster = new THREE.Group();
+        dbCluster.position.set(0, 0, -0.35);
+        for (let d = 0; d < 3; d++) {
+          const disc = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.45, 0.45, 0.14, 18),
+            new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true, transparent: true, opacity: 0.75 })
+          );
+          disc.position.y = -0.3 + d * 0.3;
+          dbCluster.add(disc);
+        }
+        group.add(dbCluster);
+
+        return {
+          group,
+          update(t, speed) {
+            bars.forEach((b, idx) => {
+              const s = 0.55 + Math.abs(Math.sin(t * 2.1 * speed + idx * 0.9)) * 0.75;
+              b.scale.y = s;
+              b.position.y = -0.58 + (0.7 * s) / 2;
+            });
+            donut.rotation.z = t * 1.4 * speed;
+            dbCluster.rotation.y = -t * 0.9 * speed;
+          }
+        };
+      }
+
+      function buildSmartphone3DModel() {
+        const group = new THREE.Group();
+
+        // Corpo fino do Smartphone
+        const bodyMesh = new THREE.Mesh(
+          new THREE.BoxGeometry(1.12, 2.18, 0.12),
+          new THREE.MeshBasicMaterial({ color: 0x041d18, transparent: true, opacity: 0.9 })
+        );
+        bodyMesh.add(createWireBox(1.12, 2.18, 0.12, 0x10b981, 0.95));
+        group.add(bodyMesh);
+
+        // Tela OLED & Dynamic Island
+        const screen = new THREE.Mesh(
+          new THREE.PlaneGeometry(1.0, 2.02),
+          new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.14, side: THREE.DoubleSide })
+        );
+        screen.position.z = 0.065;
+        group.add(screen);
+
+        const dynamicIsland = new THREE.Mesh(
+          new THREE.BoxGeometry(0.32, 0.07, 0.02),
+          new THREE.MeshBasicMaterial({ color: 0x00f0ff })
+        );
+        dynamicIsland.position.set(0, 0.88, 0.08);
+        group.add(dynamicIsland);
+
+        // Widgets & Grade de Ícones flutuando em camadas 3D
+        const uiLayer = new THREE.Group();
+        const heroWidget = createWireBox(0.84, 0.54, 0.04, 0x00f0ff, 0.92);
+        heroWidget.position.set(0, 0.42, 0.16);
+        uiLayer.add(heroWidget);
+
+        for (let r = 0; r < 2; r++) {
+          for (let c = 0; c < 2; c++) {
+            const appIcon = createWireBox(0.34, 0.34, 0.04, (r + c) % 2 === 0 ? 0x10b981 : 0xa855f7, 0.9);
+            appIcon.position.set(-0.23 + c * 0.46, -0.15 - r * 0.45, 0.18);
+            uiLayer.add(appIcon);
+          }
+        }
+        group.add(uiLayer);
+
+        // Módulo Traseiro de Câmera Tripla (visível em 360°)
+        const camIsland = createWireBox(0.46, 0.52, 0.05, 0x00f0ff, 0.95);
+        camIsland.position.set(-0.24, 0.68, -0.08);
+        group.add(camIsland);
+
+        const lensPositions = [[-0.32, 0.78], [-0.32, 0.58], [-0.15, 0.68]];
+        lensPositions.forEach(([lx, ly]) => {
+          const lens = new THREE.Mesh(
+            new THREE.RingGeometry(0.04, 0.075, 16),
+            new THREE.MeshBasicMaterial({ color: 0x10b981, side: THREE.DoubleSide })
+          );
+          lens.position.set(lx, ly, -0.11);
+          group.add(lens);
+        });
+
+        // Anel orbital de sinal GPS / Push
+        const signalRing = new THREE.Mesh(
+          new THREE.TorusGeometry(1.38, 0.015, 8, 48),
+          new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.45 })
+        );
+        signalRing.rotation.x = Math.PI / 2.4;
+        group.add(signalRing);
+
+        return {
+          group,
+          update(t, speed) {
+            uiLayer.position.z = Math.sin(t * 2.4 * speed) * 0.04;
+            signalRing.rotation.z = t * 0.9 * speed;
+          }
+        };
+      }
+
+      function buildMotherboard3DModel() {
+        const group = new THREE.Group();
+        group.rotation.x = 0.48;
+
+        // PCB Principal ATX
+        const pcb = new THREE.Mesh(
+          new THREE.BoxGeometry(2.35, 0.09, 2.05),
+          new THREE.MeshBasicMaterial({ color: 0x1a1306, transparent: true, opacity: 0.9 })
+        );
+        pcb.add(createWireBox(2.35, 0.09, 2.05, 0xf59e0b, 0.95));
+        group.add(pcb);
+
+        // Painel Traseiro I/O Shield
+        const ioShield = createWireBox(0.32, 0.44, 0.95, 0x00f0ff, 0.9);
+        ioShield.position.set(-0.98, 0.26, -0.45);
+        group.add(ioShield);
+
+        // Dissipadores VRM em L
+        const vrmTop = createWireBox(0.95, 0.26, 0.22, 0xf59e0b, 0.9);
+        vrmTop.position.set(-0.22, 0.17, -0.82);
+        const vrmLeft = createWireBox(0.22, 0.26, 0.78, 0xf59e0b, 0.9);
+        vrmLeft.position.set(-0.74, 0.17, -0.32);
+        group.add(vrmTop, vrmLeft);
+
+        // Soquete CPU + Cooler Giratório
+        const cpuSocket = createWireBox(0.68, 0.14, 0.68, 0x00f0ff, 0.95);
+        cpuSocket.position.set(-0.18, 0.11, -0.22);
+        group.add(cpuSocket);
+
+        const coolerFan = new THREE.Group();
+        coolerFan.position.set(-0.18, 0.24, -0.22);
+        const fanRing = new THREE.Mesh(
+          new THREE.TorusGeometry(0.32, 0.03, 8, 24),
+          new THREE.MeshBasicMaterial({ color: 0x00f0ff })
+        );
+        fanRing.rotation.x = Math.PI / 2;
+        coolerFan.add(fanRing);
+
+        for (let b = 0; b < 6; b++) {
+          const blade = new THREE.Mesh(
+            new THREE.BoxGeometry(0.56, 0.02, 0.07),
+            new THREE.MeshBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.85 })
+          );
+          blade.rotation.y = (b * Math.PI) / 3;
+          coolerFan.add(blade);
+        }
+        group.add(coolerFan);
+
+        // 4 Slots DDR5 com 2 Pentes RAM Iluminados
+        for (let s = 0; s < 4; s++) {
+          const isPopulated = s === 1 || s === 3;
+          const ramStick = createWireBox(
+            0.07,
+            isPopulated ? 0.36 : 0.12,
+            0.96,
+            isPopulated ? 0x00f0ff : 0x64748b,
+            isPopulated ? 0.95 : 0.55
+          );
+          ramStick.position.set(0.45 + s * 0.15, isPopulated ? 0.22 : 0.1, -0.25);
+          group.add(ramStick);
+        }
+
+        // Slot SSD NVMe M.2
+        const nvmeDrive = new THREE.Mesh(
+          new THREE.BoxGeometry(0.76, 0.06, 0.24),
+          new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.45 })
+        );
+        nvmeDrive.add(createWireBox(0.76, 0.06, 0.24, 0x10b981, 0.95));
+        nvmeDrive.position.set(-0.15, 0.09, 0.34);
+        group.add(nvmeDrive);
+
+        // 2 Slots PCIe x16 + Chipset PCH
+        const pcie1 = createWireBox(1.18, 0.11, 0.12, 0xa855f7, 0.9);
+        pcie1.position.set(-0.28, 0.1, 0.62);
+        const pcie2 = createWireBox(1.18, 0.11, 0.12, 0xa855f7, 0.75);
+        pcie2.position.set(-0.28, 0.1, 0.84);
+        const pchChip = createWireBox(0.46, 0.12, 0.46, 0xf59e0b, 0.95);
+        pchChip.position.set(0.68, 0.1, 0.68);
+        group.add(pcie1, pcie2, pchChip);
+
+        // Pulso de dados percorrendo o barramento
+        const dataPulse = new THREE.Mesh(
+          new THREE.SphereGeometry(0.055, 8, 8),
+          new THREE.MeshBasicMaterial({ color: 0x00f0ff })
+        );
+        dataPulse.position.set(-0.18, 0.12, 0.22);
+        group.add(dataPulse);
+
+        return {
+          group,
+          update(t, speed) {
+            coolerFan.rotation.y = t * 5.2 * speed;
+            dataPulse.position.x = -0.18 + Math.sin(t * 3.5 * speed) * 0.65;
+          }
+        };
+      }
+
+      // =========================================================================
+      // 3. ESTÚDIO 3D INTERATIVO DO HERO (MULTI-MODELOS + DRAG + ZOOM + TURBO)
+      // =========================================================================
+      function initHero3DStage() {
+        const stage = document.getElementById('hero-3d-stage');
+        const canvas = document.getElementById('hero-3d-canvas');
+        if (!stage || !canvas || typeof THREE === 'undefined') return null;
+
+        try {
+          const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+          const scene = new THREE.Scene();
+          const camera = new THREE.PerspectiveCamera(42, 1.5, 0.1, 50);
+          let targetZoom = 4.6;
+          camera.position.set(0, 0.35, targetZoom);
+
+          const pivot = new THREE.Group();
+          scene.add(pivot);
+
+          // Anel orbital externo
+          const outerOrbit = new THREE.Mesh(
+            new THREE.TorusGeometry(1.75, 0.012, 8, 64),
+            new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.35 })
+          );
+          outerOrbit.rotation.x = Math.PI / 2.2;
+          outerOrbit.rotation.y = 0.25;
+          scene.add(outerOrbit);
+
+          // Instancia os 4 modelos
+          const models = {
+            sites: buildNotebook3DModel(),
+            sistemas: buildSystemERP3DModel(),
+            apps: buildSmartphone3DModel(),
+            hardware: buildMotherboard3DModel()
+          };
+
+          Object.keys(models).forEach((key) => {
+            models[key].group.visible = key === 'sites';
+            pivot.add(models[key].group);
+          });
+
+          let activeModelKey = 'sites';
+          let turboMode = false;
+          let pulseBoost = 0;
+
+          // Controle de arraste 360° (Mouse & Touch)
+          let isDragging = false;
+          let prevX = 0;
+          let prevY = 0;
+          let rotY = 0.35;
+          let rotX = 0.12;
+
+          stage.addEventListener('pointerdown', (e) => {
+            isDragging = true;
+            prevX = e.clientX;
+            prevY = e.clientY;
+          });
+
+          window.addEventListener('pointermove', (e) => {
+            if (!isDragging) return;
+            const dx = e.clientX - prevX;
+            const dy = e.clientY - prevY;
+            prevX = e.clientX;
+            prevY = e.clientY;
+            rotY += dx * 0.011;
+            rotX = Math.max(-0.65, Math.min(0.65, rotX + dy * 0.008));
+          }, { passive: true });
+
+          window.addEventListener('pointerup', () => {
+            isDragging = false;
+          });
+
+          // Controles de Zoom, Pulso e Modo Turbo
+          const zoomInBtn = document.getElementById('hero-3d-zoom-in');
+          const zoomOutBtn = document.getElementById('hero-3d-zoom-out');
+          const pulseBtn = document.getElementById('hero-3d-pulse-btn');
+          const turboBtn = document.getElementById('hero-3d-turbo-btn');
+
+          if (zoomInBtn) {
+            zoomInBtn.addEventListener('click', () => {
+              targetZoom = Math.max(3.3, targetZoom - 0.45);
+            });
+          }
+          if (zoomOutBtn) {
+            zoomOutBtn.addEventListener('click', () => {
+              targetZoom = Math.min(6.2, targetZoom + 0.45);
+            });
+          }
+          if (pulseBtn) {
+            pulseBtn.addEventListener('click', () => {
+              pulseBoost = 1.0;
+              showToast('Pulso de telemetria 3D ativado!');
+            });
+          }
+          if (turboBtn) {
+            turboBtn.addEventListener('click', () => {
+              turboMode = !turboMode;
+              turboBtn.textContent = turboMode ? '⚡ TURBO: ON' : '⚡ TURBO: OFF';
+              turboBtn.classList.toggle('bg-cyanNeon', turboMode);
+              turboBtn.classList.toggle('text-obsidian', turboMode);
+              showToast(turboMode ? 'Modo Turbo 3D ativado!' : 'Modo Turbo 3D desativado.');
+            });
+          }
+
+          // ResizeObserver automático
+          function resizeHeroStage() {
+            const w = stage.clientWidth || 400;
+            const h = stage.clientHeight || 260;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h, false);
+          }
+          resizeHeroStage();
+          if (typeof ResizeObserver !== 'undefined') {
+            new ResizeObserver(resizeHeroStage).observe(stage);
+          }
+
+          let clock = 0;
+          function animateHero() {
+            requestAnimationFrame(animateHero);
+            const speed = (turboMode ? 2.6 : 1.0) + pulseBoost * 2.5;
+            clock += 0.016;
+
+            if (!isDragging) {
+              rotY += 0.007 * speed;
+            }
+
+            if (pulseBoost > 0) {
+              pulseBoost = Math.max(0, pulseBoost - 0.025);
+            }
+
+            const pulseScale = 1 + pulseBoost * 0.14;
+            pivot.scale.set(pulseScale, pulseScale, pulseScale);
+            pivot.rotation.y += (rotY - pivot.rotation.y) * 0.12;
+            pivot.rotation.x += (rotX - pivot.rotation.x) * 0.12;
+
+            outerOrbit.rotation.z += 0.006 * speed;
+            camera.position.z += (targetZoom - camera.position.z) * 0.1;
+
+            if (models[activeModelKey]) {
+              models[activeModelKey].update(clock, speed);
+            }
+
+            renderer.render(scene, camera);
+          }
+          animateHero();
+
+          return {
+            setModel(key) {
+              if (!models[key]) return;
+              activeModelKey = key;
+              Object.keys(models).forEach((k) => {
+                models[k].group.visible = k === key;
+              });
+              const hex = HERO_DATA[key].colorHex;
+              outerOrbit.material.color.setHex(hex);
+              globalBgSceneColor = new THREE.Color(hex);
+              pulseBoost = 0.65;
+            }
+          };
+        } catch (err) {
+          console.error('Erro no estúdio 3D do Hero:', err);
+          return null;
+        }
+      }
+
+      // =========================================================================
+      // 4. MAQUETE 3D AO VIVO DO SIMULADOR DE ESCOPO
+      // =========================================================================
+      function initSimulator3D() {
+        const canvas = document.getElementById('sim-3d-canvas');
+        if (!canvas || typeof THREE === 'undefined') return null;
+
+        try {
+          const container = canvas.parentElement;
+          const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+          const scene = new THREE.Scene();
+          const camera = new THREE.PerspectiveCamera(42, 2.2, 0.1, 40);
+          camera.position.set(0, 0.4, 4.4);
+
+          const pivot = new THREE.Group();
+          scene.add(pivot);
+
+          // Núcleo geodésico central
+          const coreMesh = new THREE.Mesh(
+            new THREE.IcosahedronGeometry(0.68, 1),
+            new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true })
+          );
+          pivot.add(coreMesh);
+
+          const orbitRing = new THREE.Mesh(
+            new THREE.TorusGeometry(1.25, 0.012, 8, 48),
+            new THREE.MeshBasicMaterial({ color: 0x7c3aed, transparent: true, opacity: 0.55 })
+          );
+          orbitRing.rotation.x = Math.PI / 2.2;
+          pivot.add(orbitRing);
+
+          // Até 6 módulos orbitais dinâmicos
+          const satellites = [];
+          for (let i = 0; i < 6; i++) {
+            const sat = createWireBox(0.28, 0.28, 0.28, i % 2 === 0 ? 0x00f0ff : 0x10b981, 0.95);
+            pivot.add(sat);
+            satellites.push(sat);
+          }
+
+          let activeSatelliteCount = 3;
+          let isDragging = false;
+          let prevX = 0;
+          let rotY = 0;
+
+          container.addEventListener('pointerdown', (e) => {
+            isDragging = true;
+            prevX = e.clientX;
+          });
+          window.addEventListener('pointermove', (e) => {
+            if (!isDragging) return;
+            rotY += (e.clientX - prevX) * 0.015;
+            prevX = e.clientX;
+          }, { passive: true });
+          window.addEventListener('pointerup', () => {
+            isDragging = false;
+          });
+
+          function resizeSim3D() {
+            const w = container.clientWidth || 320;
+            const h = container.clientHeight || 140;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h, false);
+          }
+          resizeSim3D();
+          if (typeof ResizeObserver !== 'undefined') {
+            new ResizeObserver(resizeSim3D).observe(container);
+          }
+
+          let t = 0;
+          function animateSim3D() {
+            requestAnimationFrame(animateSim3D);
+            t += 0.02;
+            if (!isDragging) rotY += 0.008;
+            pivot.rotation.y = rotY;
+            coreMesh.rotation.x = t * 0.5;
+
+            satellites.forEach((sat, idx) => {
+              sat.visible = idx < activeSatelliteCount;
+              if (sat.visible) {
+                const angle = t + (idx * Math.PI * 2) / Math.max(1, activeSatelliteCount);
+                sat.position.set(Math.cos(angle) * 1.25, Math.sin(angle * 1.5) * 0.25, Math.sin(angle) * 1.25);
+                sat.rotation.y = -t * 1.4;
+              }
+            });
+
+            renderer.render(scene, camera);
+          }
+          animateSim3D();
+
+          return {
+            setModuleCount(count, colorHex) {
+              activeSatelliteCount = Math.max(1, Math.min(6, count));
+              if (colorHex) coreMesh.material.color.setHex(colorHex);
+            }
+          };
+        } catch (err) {
+          console.error('Erro na maquete 3D do simulador:', err);
+          return null;
+        }
+      }
+
+      // =========================================================================
+      // 5. VITRINES 3D DOS 4 CARDS DO PORTFÓLIO (ENQUADRADOS SEM VAZAR)
+      // =========================================================================
+      function initPortfolio3D() {
+        const canvases = document.querySelectorAll('.portfolio-3d-canvas');
+        if (!canvases.length || typeof THREE === 'undefined') return;
+
+        canvases.forEach((canvas) => {
+          try {
+            const type = canvas.getAttribute('data-portfolio-3d');
+            const stage = canvas.parentElement;
+            const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(40, 1.8, 0.1, 30);
+            camera.position.set(0, 0.35, 3.8);
+
+            const pivot = new THREE.Group();
+            pivot.scale.set(0.76, 0.76, 0.76);
+            scene.add(pivot);
+
+            let extraAnimator = null;
+
+            if (type === 'erp') {
+              const base = createWireBox(1.6, 0.08, 1.1, 0x00f0ff, 0.75);
+              base.position.y = -0.45;
+              pivot.add(base);
+
+              const bars = [];
+              const cols = [0x7c3aed, 0x00f0ff, 0x10b981, 0x38bdf8];
+              for (let i = 0; i < 4; i++) {
+                const bar = createWireBox(0.24, 0.85, 0.24, cols[i], 0.95);
+                bar.position.set(-0.48 + i * 0.32, 0, 0);
+                pivot.add(bar);
+                bars.push(bar);
+              }
+              extraAnimator = (t) => {
+                bars.forEach((b, idx) => {
+                  const s = 0.5 + Math.abs(Math.sin(t * 2 + idx)) * 0.7;
+                  b.scale.y = s;
+                  b.position.y = -0.4 + (0.85 * s) / 2;
+                });
+              };
+            } else if (type === 'mobile') {
+              const phone = createWireBox(0.88, 1.55, 0.12, 0x10b981, 0.95);
+              const badge = createWireBox(0.55, 0.4, 0.05, 0x00f0ff, 0.9);
+              badge.position.set(0, 0.2, 0.14);
+              const ring = new THREE.Mesh(
+                new THREE.TorusGeometry(0.95, 0.015, 8, 36),
+                new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.5 })
+              );
+              ring.rotation.x = Math.PI / 2.3;
+              pivot.add(phone, badge, ring);
+            } else if (type === 'landing') {
+              for (let l = 0; l < 3; l++) {
+                const layer = createWireBox(1.5 - l * 0.35, 0.12, 0.95 - l * 0.2, l === 0 ? 0xa855f7 : 0x00f0ff, 0.9);
+                layer.position.y = 0.35 - l * 0.36;
+                pivot.add(layer);
+              }
+            } else {
+              const ssd = createWireBox(1.35, 0.12, 0.5, 0xf59e0b, 0.95);
+              ssd.position.set(0, -0.25, 0.2);
+              const fan = new THREE.Mesh(
+                new THREE.TorusGeometry(0.45, 0.05, 8, 20),
+                new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true })
+              );
+              fan.rotation.x = Math.PI / 2;
+              fan.position.set(0, 0.25, -0.15);
+              pivot.add(ssd, fan);
+              extraAnimator = (t) => {
+                fan.rotation.z = t * 4;
+              };
+            }
+
+            let isDragging = false;
+            let prevX = 0;
+            let rotY = 0.4;
+
+            stage.addEventListener('pointerdown', (e) => {
+              isDragging = true;
+              prevX = e.clientX;
+            });
+            window.addEventListener('pointermove', (e) => {
+              if (!isDragging) return;
+              rotY += (e.clientX - prevX) * 0.015;
+              prevX = e.clientX;
+            }, { passive: true });
+            window.addEventListener('pointerup', () => {
+              isDragging = false;
+            });
+
+            function resizeCard3D() {
+              const w = stage.clientWidth || 240;
+              const h = stage.clientHeight || 140;
+              camera.aspect = w / h;
+              camera.updateProjectionMatrix();
+              renderer.setSize(w, h, false);
+            }
+            resizeCard3D();
+            if (typeof ResizeObserver !== 'undefined') {
+              new ResizeObserver(resizeCard3D).observe(stage);
+            }
+
+            let tick = 0;
+            function animateCard3D() {
+              requestAnimationFrame(animateCard3D);
+              tick += 0.018;
+              if (!isDragging) rotY += 0.01;
+              pivot.rotation.y = rotY;
+              pivot.rotation.x = 0.22;
+              if (extraAnimator) extraAnimator(tick);
+              renderer.render(scene, camera);
+            }
+            animateCard3D();
+          } catch (err) {
+            console.error('Erro no 3D do portfólio:', err);
+          }
+        });
+      }
+
+      // =========================================================================
+      // 5B. ÍCONES 3D ANIMADOS NOS CARDS DE FORMAÇÃO & AUTORIDADE
+      // =========================================================================
+      function initAuthorityIcons3D() {
+        const iconCanvases = document.querySelectorAll('.authority-3d-canvas');
+        if (!iconCanvases.length || typeof THREE === 'undefined') return;
+
+        iconCanvases.forEach((canvas) => {
+          try {
+            const type = canvas.getAttribute('data-auth-icon');
+            const box = canvas.parentElement;
+            const parentCard = box.closest('.glass-card');
+
+            const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 20);
+            camera.position.set(0, 0.25, 3.3);
+
+            const pivot = new THREE.Group();
+            scene.add(pivot);
+
+            let extraAnim = null;
+
+            if (type === 'ads') {
+              // Símbolo 3D de Código </> + Núcleo Octaedro Holográfico
+              const core = new THREE.Mesh(
+                new THREE.OctahedronGeometry(0.36, 0),
+                new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true })
+              );
+              pivot.add(core);
+
+              const makeBracket = (dir) => {
+                const bGroup = new THREE.Group();
+                const topArm = createWireBox(0.55, 0.12, 0.14, 0x38bdf8, 0.95);
+                topArm.position.set(0, 0.2, 0);
+                topArm.rotation.z = dir * 0.68;
+
+                const botArm = createWireBox(0.55, 0.12, 0.14, 0x38bdf8, 0.95);
+                botArm.position.set(0, -0.2, 0);
+                botArm.rotation.z = -dir * 0.68;
+
+                bGroup.add(topArm, botArm);
+                bGroup.position.x = dir * 0.68;
+                return bGroup;
+              };
+
+              pivot.add(makeBracket(-1), makeBracket(1));
+
+              extraAnim = (t) => {
+                core.rotation.y = -t * 1.6;
+                core.rotation.x = t * 1.1;
+              };
+            } else if (type === 'gestao') {
+              // Gráfico de Crescimento 3D Volumétrico + Anel Estratégico Orbital
+              const barHeights = [0.55, 0.88, 1.22];
+              const barColors = [0x7c3aed, 0xa855f7, 0x00f0ff];
+              const bars = [];
+
+              barHeights.forEach((h, idx) => {
+                const barMesh = new THREE.Mesh(
+                  new THREE.BoxGeometry(0.28, h, 0.28),
+                  new THREE.MeshBasicMaterial({ color: barColors[idx], transparent: true, opacity: 0.45 })
+                );
+                barMesh.add(createWireBox(0.28, h, 0.28, barColors[idx], 0.98));
+                barMesh.position.set(-0.44 + idx * 0.44, -0.55 + h / 2, 0);
+                pivot.add(barMesh);
+                bars.push({ mesh: barMesh, baseH: h });
+              });
+
+              const ring = new THREE.Mesh(
+                new THREE.TorusGeometry(0.95, 0.02, 8, 36),
+                new THREE.MeshBasicMaterial({ color: 0xa855f7, transparent: true, opacity: 0.65 })
+              );
+              ring.rotation.x = Math.PI / 2.3;
+              pivot.add(ring);
+
+              extraAnim = (t) => {
+                ring.rotation.z = t * 1.3;
+                bars.forEach((b, i) => {
+                  const pulse = 0.85 + Math.abs(Math.sin(t * 2 + i * 0.8)) * 0.3;
+                  b.mesh.scale.y = pulse;
+                  b.mesh.position.y = -0.55 + (b.baseH * pulse) / 2;
+                });
+              };
+            } else {
+              // Microchip Processador 3D com Pinos e Núcleo Energético
+              const chipBody = new THREE.Mesh(
+                new THREE.BoxGeometry(1.05, 0.22, 1.05),
+                new THREE.MeshBasicMaterial({ color: 0x042f2e, transparent: true, opacity: 0.85 })
+              );
+              chipBody.add(createWireBox(1.05, 0.22, 1.05, 0x10b981, 0.98));
+              pivot.add(chipBody);
+
+              const dieCore = createWireBox(0.5, 0.28, 0.5, 0x00f0ff, 0.98);
+              pivot.add(dieCore);
+
+              // Pinos laterais nas 4 bordas
+              for (let p = -1; p <= 1; p++) {
+                const offset = p * 0.28;
+                const pinN = createWireBox(0.08, 0.08, 0.22, 0x10b981, 0.9);
+                pinN.position.set(offset, 0, -0.64);
+                const pinS = createWireBox(0.08, 0.08, 0.22, 0x10b981, 0.9);
+                pinS.position.set(offset, 0, 0.64);
+                const pinW = createWireBox(0.22, 0.08, 0.08, 0x10b981, 0.9);
+                pinW.position.set(-0.64, 0, offset);
+                const pinE = createWireBox(0.22, 0.08, 0.08, 0x10b981, 0.9);
+                pinE.position.set(0.64, 0, offset);
+                pivot.add(pinN, pinS, pinW, pinE);
+              }
+
+              pivot.rotation.x = 0.55;
+            }
+
+            let isHovered = false;
+            if (parentCard) {
+              parentCard.addEventListener('pointerenter', () => { isHovered = true; });
+              parentCard.addEventListener('pointerleave', () => { isHovered = false; });
+            }
+
+            function resizeIcon3D() {
+              const w = box.clientWidth || 64;
+              const h = box.clientHeight || 64;
+              camera.aspect = w / h;
+              camera.updateProjectionMatrix();
+              renderer.setSize(w, h, false);
+            }
+            resizeIcon3D();
+            if (typeof ResizeObserver !== 'undefined') {
+              new ResizeObserver(resizeIcon3D).observe(box);
+            }
+
+            let tick = 0;
+            function animateIcon3D() {
+              requestAnimationFrame(animateIcon3D);
+              const speed = isHovered ? 2.4 : 1.0;
+              tick += 0.02 * speed;
+              pivot.rotation.y += 0.016 * speed;
+              if (type !== 'ecossistema') {
+                pivot.rotation.x = Math.sin(tick * 0.6) * 0.2;
+              }
+              if (extraAnim) extraAnim(tick);
+              renderer.render(scene, camera);
+            }
+            animateIcon3D();
+          } catch (err) {
+            console.error('Erro no ícone 3D de autoridade:', err);
+          }
+        });
+      }
+
+      // =========================================================================
+      // 5C. ÍCONES 3D ANIMADOS NOS 4 CARDS DE SERVIÇOS
+      // =========================================================================
+      function initServiceIcons3D() {
+        const serviceCanvases = document.querySelectorAll('.service-3d-canvas');
+        if (!serviceCanvases.length || typeof THREE === 'undefined') return;
+
+        serviceCanvases.forEach((canvas) => {
+          try {
+            const type = canvas.getAttribute('data-service-3d');
+            const box = canvas.parentElement;
+            const parentCard = box.closest('.glass-card');
+
+            const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 20);
+            camera.position.set(0, 0.25, 3.4);
+
+            const pivot = new THREE.Group();
+            scene.add(pivot);
+
+            let extraAnim = null;
+
+            if (type === 'sites') {
+              // Janela Web 3D + Globo Wireframe Orbital
+              const browserFrame = createWireBox(1.25, 0.85, 0.1, 0x00f0ff, 0.98);
+              const topBar = createWireBox(1.15, 0.14, 0.04, 0x38bdf8, 0.9);
+              topBar.position.set(0, 0.28, 0.08);
+              const ctaBlock = createWireBox(0.55, 0.24, 0.05, 0x10b981, 0.95);
+              ctaBlock.position.set(-0.22, -0.1, 0.1);
+              const globe = new THREE.Mesh(
+                new THREE.SphereGeometry(0.42, 12, 10),
+                new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true, transparent: true, opacity: 0.65 })
+              );
+              globe.position.set(0.35, -0.08, -0.18);
+              pivot.add(browserFrame, topBar, ctaBlock, globe);
+
+              extraAnim = (t) => {
+                globe.rotation.y = -t * 1.4;
+                ctaBlock.position.z = 0.1 + Math.sin(t * 2.4) * 0.04;
+              };
+            } else if (type === 'sistemas') {
+              // Cluster de Servidores Cloud 3D + Anel de API
+              const racks = [];
+              for (let r = 0; r < 3; r++) {
+                const rack = new THREE.Mesh(
+                  new THREE.BoxGeometry(1.15, 0.24, 0.82),
+                  new THREE.MeshBasicMaterial({ color: 0x1e1035, transparent: true, opacity: 0.85 })
+                );
+                rack.add(createWireBox(1.15, 0.24, 0.82, r === 1 ? 0x00f0ff : 0xa855f7, 0.98));
+                rack.position.y = -0.38 + r * 0.38;
+                pivot.add(rack);
+                racks.push(rack);
+              }
+              const apiRing = new THREE.Mesh(
+                new THREE.TorusGeometry(0.95, 0.02, 8, 36),
+                new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.65 })
+              );
+              apiRing.rotation.x = Math.PI / 2.3;
+              pivot.add(apiRing);
+
+              extraAnim = (t) => {
+                apiRing.rotation.z = t * 1.5;
+                racks.forEach((rk, i) => {
+                  rk.position.x = Math.sin(t * 2 + i * 1.1) * 0.05;
+                });
+              };
+            } else if (type === 'apps') {
+              // Smartphone 3D + Anel de Notificação Push
+              const phone = new THREE.Mesh(
+                new THREE.BoxGeometry(0.76, 1.38, 0.12),
+                new THREE.MeshBasicMaterial({ color: 0x042f2e, transparent: true, opacity: 0.88 })
+              );
+              phone.add(createWireBox(0.76, 1.38, 0.12, 0x10b981, 0.98));
+              const widget = createWireBox(0.52, 0.42, 0.05, 0x00f0ff, 0.95);
+              widget.position.set(0, 0.16, 0.12);
+              const pushRing = new THREE.Mesh(
+                new THREE.TorusGeometry(0.92, 0.02, 8, 36),
+                new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.65 })
+              );
+              pushRing.rotation.x = Math.PI / 2.2;
+              pivot.add(phone, widget, pushRing);
+
+              extraAnim = (t) => {
+                widget.position.z = 0.12 + Math.sin(t * 2.6) * 0.04;
+                pushRing.rotation.z = -t * 1.4;
+              };
+            } else {
+              // Cooler / Turbina de Hardware 3D sobre Dissipador
+              const heatsink = createWireBox(1.18, 0.24, 1.18, 0xf59e0b, 0.95);
+              heatsink.position.y = -0.22;
+              pivot.add(heatsink);
+
+              const fanGroup = new THREE.Group();
+              fanGroup.position.y = 0.08;
+              const shroud = new THREE.Mesh(
+                new THREE.TorusGeometry(0.52, 0.04, 8, 28),
+                new THREE.MeshBasicMaterial({ color: 0x00f0ff })
+              );
+              shroud.rotation.x = Math.PI / 2;
+              fanGroup.add(shroud);
+
+              for (let b = 0; b < 6; b++) {
+                const blade = new THREE.Mesh(
+                  new THREE.BoxGeometry(0.92, 0.03, 0.11),
+                  new THREE.MeshBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.9 })
+                );
+                blade.rotation.y = (b * Math.PI) / 3;
+                fanGroup.add(blade);
+              }
+              pivot.add(fanGroup);
+              pivot.rotation.x = 0.52;
+
+              extraAnim = (t) => {
+                fanGroup.rotation.y = t * 5.0;
+              };
+            }
+
+            let isHovered = false;
+            if (parentCard) {
+              parentCard.addEventListener('pointerenter', () => { isHovered = true; });
+              parentCard.addEventListener('pointerleave', () => { isHovered = false; });
+            }
+
+            function resizeServiceIcon3D() {
+              const w = box.clientWidth || 64;
+              const h = box.clientHeight || 64;
+              camera.aspect = w / h;
+              camera.updateProjectionMatrix();
+              renderer.setSize(w, h, false);
+            }
+            resizeServiceIcon3D();
+            if (typeof ResizeObserver !== 'undefined') {
+              new ResizeObserver(resizeServiceIcon3D).observe(box);
+            }
+
+            let tick = 0;
+            function animateServiceIcon3D() {
+              requestAnimationFrame(animateServiceIcon3D);
+              const speed = isHovered ? 2.4 : 1.0;
+              tick += 0.02 * speed;
+              pivot.rotation.y += 0.016 * speed;
+              if (type !== 'hardware') {
+                pivot.rotation.x = Math.sin(tick * 0.6) * 0.18;
+              }
+              if (extraAnim) extraAnim(tick);
+              renderer.render(scene, camera);
+            }
+            animateServiceIcon3D();
+          } catch (err) {
+            console.error('Erro no ícone 3D de serviço:', err);
+          }
+        });
+      }
+
+      // =========================================================================
+      // 6. INTERATIVIDADE DO HERO, SIMULADOR DE ESCOPO, MODAL & FORMULÁRIO
+      // =========================================================================
+      function initUIControllers() {
+        // Atualiza ano no rodapé
+        const yearEl = document.getElementById('current-year');
+        if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+        // Menu Mobile
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const iconOpen = document.getElementById('menu-icon-open');
+        const iconClose = document.getElementById('menu-icon-close');
+
+        if (mobileBtn && mobileMenu) {
+          mobileBtn.addEventListener('click', () => {
+            const isHidden = mobileMenu.classList.toggle('hidden');
+            if (iconOpen) iconOpen.classList.toggle('hidden', !isHidden);
+            if (iconClose) iconClose.classList.toggle('hidden', isHidden);
+          });
+
+          document.querySelectorAll('.mobile-nav-link').forEach((link) => {
+            link.addEventListener('click', () => {
+              mobileMenu.classList.add('hidden');
+              if (iconOpen) iconOpen.classList.remove('hidden');
+              if (iconClose) iconClose.classList.add('hidden');
+            });
+          });
+        }
+
+        // Abas do Hero Studio 3D
+        const heroTabs = document.querySelectorAll('.hero-tab-btn');
+        const heroShortcut = document.getElementById('hero-simulate-shortcut');
+
+        function selectHeroTab(key) {
+          const data = HERO_DATA[key];
+          if (!data) return;
+
+          heroTabs.forEach((btn) => {
+            const isActive = btn.getAttribute('data-hero-tab') === key;
+            btn.className = 'hero-tab-btn px-2.5 py-2 rounded-xl font-display text-xs transition-all ' +
+              (isActive ? `font-bold ${data.tabClass}` : 'font-semibold bg-slate-900 text-slate-300 hover:text-white border border-slate-800');
+          });
+
+          const badgeEl = document.getElementById('hero-3d-model-badge');
+          const kickerEl = document.getElementById('hero-panel-kicker');
+          const titleEl = document.getElementById('hero-panel-title');
+          const m1LabelEl = document.getElementById('hero-metric-1-label');
+          const m1ValEl = document.getElementById('hero-metric-1-val');
+          const m2LabelEl = document.getElementById('hero-metric-2-label');
+          const m2ValEl = document.getElementById('hero-metric-2-val');
+          const stackEl = document.getElementById('hero-panel-stack');
+
+          if (badgeEl) badgeEl.textContent = data.badge;
+          if (kickerEl) kickerEl.textContent = data.kicker;
+          if (titleEl) titleEl.textContent = data.title;
+          if (m1LabelEl) m1LabelEl.textContent = data.m1Label;
+          if (m1ValEl) m1ValEl.textContent = data.m1Val;
+          if (m2LabelEl) m2LabelEl.textContent = data.m2Label;
+          if (m2ValEl) m2ValEl.textContent = data.m2Val;
+          if (stackEl) stackEl.textContent = data.stack;
+          if (heroShortcut) heroShortcut.setAttribute('data-service-target', key);
+
+          if (heroSceneController) {
+            heroSceneController.setModel(key);
+          }
+        }
+
+        heroTabs.forEach((btn) => {
+          btn.addEventListener('click', () => {
+            selectHeroTab(btn.getAttribute('data-hero-tab'));
+          });
+        });
+
+        // Estado do Simulador de Escopo
+        let currentSolution = 'sites';
+        let currentPriority = 'Vender Mais & Escalar';
+        const selectedFeaturesMap = {};
+
+        Object.keys(SIMULATOR_CONFIG).forEach((k) => {
+          selectedFeaturesMap[k] = new Set(
+            SIMULATOR_CONFIG[k].features.filter((f) => f.checked).map((f) => f.id)
+          );
+        });
+
+        const featuresContainer = document.getElementById('sim-features-container');
+        const solutionCards = document.querySelectorAll('.sim-solution-card');
+        const priorityBtns = document.querySelectorAll('.sim-priority-btn');
+
+        function renderSimulatorFeatures() {
+          const cfg = SIMULATOR_CONFIG[currentSolution];
+          if (!cfg || !featuresContainer) return;
+
+          featuresContainer.innerHTML = '';
+          const activeSet = selectedFeaturesMap[currentSolution];
+
+          cfg.features.forEach((feat) => {
+            const isChecked = activeSet.has(feat.id);
+            const label = document.createElement('button');
+            label.type = 'button';
+            label.className = `text-left p-3.5 rounded-2xl border transition-all flex items-start justify-between gap-3 ${
+              isChecked
+                ? 'border-cyanNeon bg-cyanNeon/10 text-white'
+                : 'border-slate-800 bg-slate-900/60 text-slate-300 hover:border-slate-700'
+            }`;
+
+            label.innerHTML = `
+              <div>
+                <span class="font-display font-bold text-xs sm:text-sm block text-white">${feat.name}</span>
+                <span class="text-[11px] text-slate-400 block mt-0.5">${feat.desc}</span>
+              </div>
+              <span class="w-5 h-5 rounded-md shrink-0 flex items-center justify-center text-xs font-bold ${
+                isChecked ? 'bg-cyanNeon text-obsidian' : 'border border-slate-600 text-transparent'
+              }">✓</span>
+            `;
+
+            label.addEventListener('click', () => {
+              if (activeSet.has(feat.id)) {
+                activeSet.delete(feat.id);
+              } else {
+                activeSet.add(feat.id);
+              }
+              renderSimulatorFeatures();
+              updateSimulatorSummary();
+            });
+
+            featuresContainer.appendChild(label);
+          });
+        }
+
+        function updateSimulatorSummary() {
+          const cfg = SIMULATOR_CONFIG[currentSolution];
+          if (!cfg) return;
+
+          const activeSet = selectedFeaturesMap[currentSolution];
+          let minDays = cfg.baseDays[0];
+          let maxDays = cfg.baseDays[1];
+          const chosenNames = [];
+
+          cfg.features.forEach((feat) => {
+            if (activeSet.has(feat.id)) {
+              minDays += feat.days[0];
+              maxDays += feat.days[1];
+              chosenNames.push(feat.name);
+            }
+          });
+
+          if (currentPriority.includes('Urgência')) {
+            minDays = Math.max(1, Math.round(minDays * 0.75));
+            maxDays = Math.max(1, Math.round(maxDays * 0.8));
+          }
+
+          const timelineText = currentSolution === 'hardware'
+            ? `${minDays} a ${maxDays} dia(s) útil(eis)`
+            : `${minDays} a ${maxDays} dias úteis`;
+
+          const timelineEl = document.getElementById('sim-timeline');
+          const levelEl = document.getElementById('sim-level');
+          const archEl = document.getElementById('sim-architecture');
+          const benefitsEl = document.getElementById('sim-benefits');
+          const summaryEl = document.getElementById('sim-summary-output');
+          const badge3dEl = document.getElementById('sim-3d-count-badge');
+
+          if (timelineEl) timelineEl.textContent = timelineText;
+          if (levelEl) levelEl.textContent = cfg.level;
+          if (archEl) archEl.textContent = cfg.architecture;
+          if (benefitsEl) benefitsEl.textContent = cfg.benefits;
+
+          const activeCount = Math.max(1, chosenNames.length);
+          if (badge3dEl) badge3dEl.textContent = `${activeCount} MÓDULO(S) 3D ATIVO(S)`;
+          if (simSceneController) {
+            simSceneController.setModuleCount(activeCount, HERO_DATA[currentSolution].colorHex);
+          }
+
+          const scopeText =
+            `• Serviço: ${cfg.title}\n` +
+            `• Recursos: ${chosenNames.length ? chosenNames.join(', ') : 'Escopo Base Essencial'}\n` +
+            `• Objetivo: ${currentPriority}\n` +
+            `• Prazo Estimado: ${timelineText}`;
+
+          if (summaryEl) summaryEl.textContent = scopeText;
+        }
+
+        function setSimulatorSolution(solKey) {
+          if (!SIMULATOR_CONFIG[solKey]) return;
+          currentSolution = solKey;
+
+          solutionCards.forEach((card) => {
+            const isSelected = card.getAttribute('data-sim-solution') === solKey;
+            const radio = card.querySelector('.sim-radio');
+            if (isSelected) {
+              card.className = 'sim-solution-card text-left p-4 rounded-2xl border border-cyanNeon bg-cyanNeon/10 transition-all';
+              if (radio) radio.className = 'sim-radio w-5 h-5 rounded-full bg-cyanNeon text-obsidian flex items-center justify-center text-xs font-bold';
+            } else {
+              card.className = 'sim-solution-card text-left p-4 rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-slate-700 transition-all';
+              if (radio) radio.className = 'sim-radio w-5 h-5 rounded-full border border-slate-600 text-slate-400 flex items-center justify-center text-xs';
+            }
+          });
+
+          renderSimulatorFeatures();
+          updateSimulatorSummary();
+        }
+
+        solutionCards.forEach((card) => {
+          card.addEventListener('click', () => {
+            setSimulatorSolution(card.getAttribute('data-sim-solution'));
+          });
+        });
+
+        priorityBtns.forEach((btn) => {
+          btn.addEventListener('click', () => {
+            currentPriority = btn.getAttribute('data-sim-priority');
+            priorityBtns.forEach((b) => {
+              const active = b === btn;
+              b.className = active
+                ? 'sim-priority-btn px-3.5 py-2.5 rounded-xl border border-cyanNeon bg-cyanNeon/10 text-cyanNeon font-mono text-xs font-semibold text-center transition-all'
+                : 'sim-priority-btn px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-900/70 text-slate-300 hover:border-slate-700 font-mono text-xs font-semibold text-center transition-all';
+            });
+            updateSimulatorSummary();
+          });
+        });
+
+        // Atalhos dos cards de serviço e do Hero para o Simulador
+        document.querySelectorAll('.select-service-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const target = btn.getAttribute('data-select-service');
+            setSimulatorSolution(target);
+            selectHeroTab(target);
+            const simSection = document.getElementById('simulador');
+            if (simSection) simSection.scrollIntoView({ behavior: 'smooth' });
+            showToast('Serviço selecionado no simulador!');
+          });
+        });
+
+        if (heroShortcut) {
+          heroShortcut.addEventListener('click', () => {
+            const target = heroShortcut.getAttribute('data-service-target') || 'sites';
+            setSimulatorSolution(target);
+            const simSection = document.getElementById('simulador');
+            if (simSection) simSection.scrollIntoView({ behavior: 'smooth' });
+          });
+        }
+
+        // Copiar Resumo (document.execCommand fallback seguro em iframes)
+        const copyBtn = document.getElementById('copy-scope-btn');
+        if (copyBtn) {
+          copyBtn.addEventListener('click', () => {
+            const summaryEl = document.getElementById('sim-summary-output');
+            if (!summaryEl) return;
+            const tempTextarea = document.createElement('textarea');
+            tempTextarea.value = summaryEl.textContent;
+            document.body.appendChild(tempTextarea);
+            tempTextarea.select();
+            try {
+              document.execCommand('copy');
+              showToast('Resumo do escopo copiado!');
+            } catch (e) {
+              showToast('Não foi possível copiar automaticamente.');
+            }
+            document.body.removeChild(tempTextarea);
+          });
+        }
+
+        // Aplicar Escopo no Formulário de Contato
+        const applyScopeBtn = document.getElementById('apply-scope-btn');
+        if (applyScopeBtn) {
+          applyScopeBtn.addEventListener('click', () => {
+            const cfg = SIMULATOR_CONFIG[currentSolution];
+            const summaryEl = document.getElementById('sim-summary-output');
+            const serviceSelect = document.getElementById('client-service');
+            const detailsArea = document.getElementById('client-details');
+            const contactSection = document.getElementById('contato');
+
+            if (serviceSelect && cfg) serviceSelect.value = cfg.title;
+            if (detailsArea && summaryEl) {
+              detailsArea.value = `Olá Ronei! Simulei o seguinte escopo no site da Tech Pereira:\n\n${summaryEl.textContent}\n\nGostaria de receber uma proposta.`;
+            }
+            if (contactSection) contactSection.scrollIntoView({ behavior: 'smooth' });
+            showToast('Escopo transferido para o formulário de orçamento!');
+          });
+        }
+
+        // Inicializa estado padrão do simulador
+        setSimulatorSolution('sites');
+
+        // Modal de Estudos de Caso
+        const caseModal = document.getElementById('case-modal');
+        let activeCaseServiceOption = '';
+
+        function openCaseModal(caseId) {
+          const item = CASE_STUDIES[caseId];
+          if (!item || !caseModal) return;
+
+          const tagEl = document.getElementById('modal-case-tag');
+          const titleEl = document.getElementById('modal-case-title');
+          const challengeEl = document.getElementById('modal-case-challenge');
+          const solutionEl = document.getElementById('modal-case-solution');
+          const resultsEl = document.getElementById('modal-case-results');
+
+          if (tagEl) tagEl.textContent = item.tag;
+          if (titleEl) titleEl.textContent = item.title;
+          if (challengeEl) challengeEl.textContent = item.challenge;
+          if (solutionEl) solutionEl.textContent = item.solution;
+          if (resultsEl) resultsEl.textContent = item.results;
+          activeCaseServiceOption = item.serviceOption;
+
+          caseModal.classList.remove('hidden');
+          caseModal.classList.add('flex');
+        }
+
+        function closeCaseModal() {
+          if (!caseModal) return;
+          caseModal.classList.add('hidden');
+          caseModal.classList.remove('flex');
+        }
+
+        document.querySelectorAll('.open-case-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            openCaseModal(btn.getAttribute('data-case-id'));
+          });
+        });
+
+        const closeModalBtn = document.getElementById('close-case-modal');
+        const closeModalSecBtn = document.getElementById('modal-close-secondary');
+        const reqSimilarBtn = document.getElementById('modal-request-similar');
+
+        if (closeModalBtn) closeModalBtn.addEventListener('click', closeCaseModal);
+        if (closeModalSecBtn) closeModalSecBtn.addEventListener('click', closeCaseModal);
+        if (caseModal) {
+          caseModal.addEventListener('click', (e) => {
+            if (e.target === caseModal) closeCaseModal();
+          });
+        }
+        if (reqSimilarBtn) {
+          reqSimilarBtn.addEventListener('click', () => {
+            closeCaseModal();
+            const serviceSelect = document.getElementById('client-service');
+            const detailsArea = document.getElementById('client-details');
+            const contactSection = document.getElementById('contato');
+            if (serviceSelect && activeCaseServiceOption) serviceSelect.value = activeCaseServiceOption;
+            if (detailsArea) {
+              detailsArea.value = `Olá Ronei! Vi o estudo de caso "${document.getElementById('modal-case-title')?.textContent || ''}" no seu portfólio e gostaria de uma solução semelhante.`;
+            }
+            if (contactSection) contactSection.scrollIntoView({ behavior: 'smooth' });
+          });
+        }
+
+        // Envio do Formulário & WhatsApp
+        function openWhatsAppWithText(text) {
+          const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+          window.open(url, '_blank', 'noopener,noreferrer');
+        }
+
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+          contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('client-name')?.value.trim() || '';
+            const phone = document.getElementById('client-whatsapp')?.value.trim() || '';
+            const service = document.getElementById('client-service')?.value || '';
+            const details = document.getElementById('client-details')?.value.trim() || '';
+
+            const message =
+              `Olá Ronei (Tech Pereira)! Gostaria de solicitar um orçamento:\n\n` +
+              `*Nome/Empresa:* ${name}\n` +
+              `*WhatsApp:* ${phone}\n` +
+              `*Serviço:* ${service}\n` +
+              `*Detalhes:* ${details}`;
+
+            showToast('Redirecionando para o WhatsApp da Tech Pereira...');
+            openWhatsAppWithText(message);
+          });
+        }
+
+        const directWppBtn = document.getElementById('direct-whatsapp-btn');
+        const floatingWppBtn = document.getElementById('floating-whatsapp-btn');
+        const defaultWppMsg = 'Olá Ronei (Tech Pereira)! Vim pelo seu site e gostaria de conversar sobre um projeto / serviço de TI.';
+
+        if (directWppBtn) {
+          directWppBtn.addEventListener('click', () => openWhatsAppWithText(defaultWppMsg));
+        }
+        if (floatingWppBtn) {
+          floatingWppBtn.addEventListener('click', () => openWhatsAppWithText(defaultWppMsg));
+        }
+
+        // Efeito de brilho radial + perspectiva 3D nos cards Glassmorphism
+        document.querySelectorAll('.glass-card').forEach((card) => {
+          card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+          });
+        });
+
+        // IntersectionObserver para revelar seções suavemente
+        const revealElements = document.querySelectorAll('.reveal-on-scroll');
+        if ('IntersectionObserver' in window) {
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.08 });
+
+          revealElements.forEach((el) => observer.observe(el));
+        }
+
+        // Garantia de segurança para nunca manter seções ocultas
+        setTimeout(() => {
+          revealElements.forEach((el) => el.classList.add('is-visible'));
+        }, 900);
+      }
+
+      // Inicialização Segura
+      function bootstrapApp() {
+        initGlobalBackground3D();
+        heroSceneController = initHero3DStage();
+        simSceneController = initSimulator3D();
+        initPortfolio3D();
+        initAuthorityIcons3D();
+        initServiceIcons3D();
+        initUIControllers();
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bootstrapApp);
+      } else {
+        bootstrapApp();
+      }
+    })();
+  </script>
 </body>
 </html>
