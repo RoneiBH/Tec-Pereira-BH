@@ -183,6 +183,27 @@
       box-shadow: 0 0 34px rgba(0, 240, 255, 0.5);
     }
 
+    /* Barra de progresso sutil na borda inferior da aba ativa do Hero */
+    .hero-tab-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      width: 0%;
+      border-radius: 9999px;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    /* Transição suave do conteúdo textual ao alternar modelos 3D */
+    .hero-panel-fade {
+      transition: opacity 0.26s ease, transform 0.26s ease;
+    }
+    .hero-panel-fade.is-switching {
+      opacity: 0.45;
+      transform: translateY(3px);
+    }
+
     /* Animação de revelação ao rolar */
     .reveal-on-scroll {
       opacity: 0;
@@ -356,7 +377,7 @@
 
         <!-- Coluna Direita: Estúdio 3D Interativo (Notebook, Sistema SaaS, Smartphone, Placa-Mãe) -->
         <div class="lg:col-span-6">
-          <div class="glass-card rounded-3xl p-4 sm:p-5 border border-cyanNeon/25 shadow-2xl overflow-hidden">
+          <div id="hero-showcase-card" class="glass-card rounded-3xl p-4 sm:p-5 border border-cyanNeon/25 shadow-2xl overflow-hidden">
 
             <!-- Barra Superior de Controle 3D -->
             <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-800/80">
@@ -394,24 +415,28 @@
 
             <!-- Painel Inferior de Seleção de Serviço & Métricas -->
             <div class="rounded-2xl bg-slate-950/85 border border-slate-800/90 p-3.5 sm:p-4 space-y-3.5">
-              <!-- Abas de Alternância dos 4 Modelos 3D -->
+              <!-- Abas de Alternância dos 4 Modelos 3D com Barra de Progresso -->
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5" role="tablist">
-                <button type="button" data-hero-tab="sites" class="hero-tab-btn px-2.5 py-2 rounded-xl font-display text-xs font-bold transition-all bg-cyanNeon text-obsidian shadow-neon-cyan">
-                  Sites & Vendas
+                <button type="button" data-hero-tab="sites" class="hero-tab-btn relative overflow-hidden px-2.5 py-2.5 rounded-xl font-display text-xs font-bold transition-all bg-cyanNeon text-obsidian shadow-neon-cyan">
+                  <span>Sites & Vendas</span>
+                  <span class="hero-tab-progress bg-obsidian/65" style="width: 0%;"></span>
                 </button>
-                <button type="button" data-hero-tab="sistemas" class="hero-tab-btn px-2.5 py-2 rounded-xl font-display text-xs font-semibold transition-all bg-slate-900 text-slate-300 hover:text-white border border-slate-800">
-                  Sistemas SaaS
+                <button type="button" data-hero-tab="sistemas" class="hero-tab-btn relative overflow-hidden px-2.5 py-2.5 rounded-xl font-display text-xs font-semibold transition-all bg-slate-900 text-slate-300 hover:text-white border border-slate-800">
+                  <span>Sistemas SaaS</span>
+                  <span class="hero-tab-progress bg-cyanNeon" style="width: 0%;"></span>
                 </button>
-                <button type="button" data-hero-tab="apps" class="hero-tab-btn px-2.5 py-2 rounded-xl font-display text-xs font-semibold transition-all bg-slate-900 text-slate-300 hover:text-white border border-slate-800">
-                  Apps Mobile
+                <button type="button" data-hero-tab="apps" class="hero-tab-btn relative overflow-hidden px-2.5 py-2.5 rounded-xl font-display text-xs font-semibold transition-all bg-slate-900 text-slate-300 hover:text-white border border-slate-800">
+                  <span>Apps Mobile</span>
+                  <span class="hero-tab-progress bg-obsidian/65" style="width: 0%;"></span>
                 </button>
-                <button type="button" data-hero-tab="hardware" class="hero-tab-btn px-2.5 py-2 rounded-xl font-display text-xs font-semibold transition-all bg-slate-900 text-slate-300 hover:text-white border border-slate-800">
-                  Hardware & PCs
+                <button type="button" data-hero-tab="hardware" class="hero-tab-btn relative overflow-hidden px-2.5 py-2.5 rounded-xl font-display text-xs font-semibold transition-all bg-slate-900 text-slate-300 hover:text-white border border-slate-800">
+                  <span>Hardware & PCs</span>
+                  <span class="hero-tab-progress bg-obsidian/65" style="width: 0%;"></span>
                 </button>
               </div>
 
               <!-- Informações Dinâmicas do Modelo Ativo -->
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+              <div id="hero-panel-content" class="hero-panel-fade flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
                 <div class="space-y-1">
                   <p id="hero-panel-kicker" class="font-mono text-[10px] sm:text-[11px] text-cyanNeon uppercase tracking-wider">
                     ALTA CONVERSÃO & SEO 100/100
@@ -1197,7 +1222,8 @@
           m2Val: '+3.4x Leads',
           stack: 'Stack: Next.js • Tailwind • SEO Avançado • WhatsApp API',
           colorHex: 0x00f0ff,
-          tabClass: 'bg-cyanNeon text-obsidian shadow-neon-cyan'
+          tabClass: 'bg-cyanNeon text-obsidian shadow-neon-cyan',
+          progressClass: 'bg-obsidian/65'
         },
         sistemas: {
           badge: 'MODELO: SISTEMA WEB / ERP 3D',
@@ -1209,7 +1235,8 @@
           m2Val: '+68% Produtiv.',
           stack: 'Stack: Node.js • PostgreSQL • Dashboards BI • APIs REST',
           colorHex: 0x7c3aed,
-          tabClass: 'bg-violetNeon text-white shadow-neon-violet'
+          tabClass: 'bg-violetNeon text-white shadow-neon-violet',
+          progressClass: 'bg-cyanNeon'
         },
         apps: {
           badge: 'MODELO: SMARTPHONE HOLOGRÁFICO 3D',
@@ -1221,7 +1248,8 @@
           m2Val: 'Push + GPS',
           stack: 'Stack: React Native • PWA • Firebase • Notificações Push',
           colorHex: 0x10b981,
-          tabClass: 'bg-emeraldNeon text-obsidian shadow-neon-emerald'
+          tabClass: 'bg-emeraldNeon text-obsidian shadow-neon-emerald',
+          progressClass: 'bg-obsidian/65'
         },
         hardware: {
           badge: 'MODELO: PLACA-MÃE ATX HOLOGRÁFICA 3D',
@@ -1233,7 +1261,8 @@
           m2Val: '+850% Veloc.',
           stack: 'Lab: SSD NVMe Gen4 • RAM Dual-Ch • Pasta Térmica • BH/MG',
           colorHex: 0xf59e0b,
-          tabClass: 'bg-amber-400 text-obsidian shadow-lg'
+          tabClass: 'bg-amber-400 text-obsidian shadow-lg',
+          progressClass: 'bg-obsidian/65'
         }
       };
 
@@ -1864,6 +1893,7 @@
             let activeModelKey = 'sites';
             let turboMode = false;
             let pulseBoost = 0;
+            let switchScale = 1.0;
             let isDragging = false;
             let prevX = 0;
             let prevY = 0;
@@ -1922,8 +1952,9 @@
                 clock += 0.016;
                 if (!isDragging) rotY += 0.007 * speed;
                 if (pulseBoost > 0) pulseBoost = Math.max(0, pulseBoost - 0.025);
+                switchScale += (1.0 - switchScale) * 0.14;
 
-                const pulseScale = 1 + pulseBoost * 0.14;
+                const pulseScale = switchScale * (1 + pulseBoost * 0.12);
                 pivot.scale.set(pulseScale, pulseScale, pulseScale);
                 pivot.rotation.y += (rotY - pivot.rotation.y) * 0.12;
                 pivot.rotation.x += (rotX - pivot.rotation.x) * 0.12;
@@ -1946,7 +1977,11 @@
                 const hex = HERO_DATA[key].colorHex;
                 outerOrbit.material.color.setHex(hex);
                 globalBgSceneColor = new THREE.Color(hex);
-                pulseBoost = 0.65;
+                switchScale = 0.78;
+                pulseBoost = 0.45;
+              },
+              isDragging() {
+                return isDragging;
               }
             };
           }
@@ -2370,14 +2405,11 @@
             });
           });
 
-          // Loop Unificado Scissor Rendering (60 FPS Mobile & Desktop)
-          const headerEl = document.querySelector('header');
-          function renderAllForegroundViewports() {
-            requestAnimationFrame(renderAllForegroundViewports);
-
-            const screenW = window.innerWidth;
-            const screenH = window.innerHeight;
-            const headerBottom = headerEl ? headerEl.getBoundingClientRect().bottom : 0;
+          // Loop unificado de Scissor Rendering para todos os viewports 3D visíveis na tela
+          function animateUnifiedForeground3D() {
+            requestAnimationFrame(animateUnifiedForeground3D);
+            const canvasHeight = window.innerHeight;
+            const canvasWidth = window.innerWidth;
 
             renderer.setScissorTest(false);
             renderer.clear();
@@ -2385,81 +2417,115 @@
 
             for (let i = 0; i < viewports.length; i++) {
               const vp = viewports[i];
-              vp.update();
+              if (!vp.element) continue;
 
               const rect = vp.element.getBoundingClientRect();
-              if (rect.width <= 0 || rect.height <= 0) continue;
-              if (rect.bottom <= headerBottom || rect.top >= screenH || rect.right <= 0 || rect.left >= screenW) {
+              if (
+                rect.bottom < 0 ||
+                rect.top > canvasHeight ||
+                rect.right < 0 ||
+                rect.left > canvasWidth ||
+                rect.width <= 0 ||
+                rect.height <= 0
+              ) {
                 continue;
               }
 
-              const visibleTop = Math.max(rect.top, headerBottom);
-              const visibleBottom = Math.min(rect.bottom, screenH);
-              const clipHeight = visibleBottom - visibleTop;
-              if (clipHeight <= 0) continue;
+              const width = Math.floor(rect.width);
+              const height = Math.floor(rect.height);
+              const left = Math.floor(rect.left);
+              const bottom = Math.floor(canvasHeight - rect.bottom);
 
-              const vpX = rect.left;
-              const vpY = screenH - rect.bottom;
-              const scissorY = screenH - visibleBottom;
+              renderer.setViewport(left, bottom, width, height);
+              renderer.setScissor(left, bottom, width, height);
 
-              vp.camera.aspect = rect.width / rect.height;
+              vp.camera.aspect = width / height;
               vp.camera.updateProjectionMatrix();
+              vp.update();
 
-              renderer.setViewport(vpX, vpY, rect.width, rect.height);
-              renderer.setScissor(vpX, scissorY, rect.width, clipHeight);
               renderer.render(vp.scene, vp.camera);
             }
           }
 
-          renderAllForegroundViewports();
+          animateUnifiedForeground3D();
         } catch (err) {
-          console.error('Erro na engine 3D unificada:', err);
+          console.error('Erro ao inicializar o motor 3D unificado:', err);
         }
       }
 
       // =========================================================================
-      // 4. INTERATIVIDADE DO HERO, SIMULADOR DE ESCOPO, MODAL & FORMULÁRIO
+      // 4. CONTROLADORES DE UI, MENU MOBILE, SIMULADOR, MODAL E WHATSAPP
       // =========================================================================
       function initUIControllers() {
-        // Atualiza ano no rodapé
+        // Ano atual no rodapé
         const yearEl = document.getElementById('current-year');
-        if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+        if (yearEl) {
+          yearEl.textContent = new Date().getFullYear();
+        }
 
-        // Menu Mobile
-        const mobileBtn = document.getElementById('mobile-menu-btn');
+        // Controle do Menu Mobile
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         const iconOpen = document.getElementById('menu-icon-open');
         const iconClose = document.getElementById('menu-icon-close');
 
-        if (mobileBtn && mobileMenu) {
-          mobileBtn.addEventListener('click', () => {
-            const isHidden = mobileMenu.classList.toggle('hidden');
-            if (iconOpen) iconOpen.classList.toggle('hidden', !isHidden);
-            if (iconClose) iconClose.classList.toggle('hidden', isHidden);
-          });
-
-          document.querySelectorAll('.mobile-nav-link').forEach((link) => {
-            link.addEventListener('click', () => {
-              mobileMenu.classList.add('hidden');
-              if (iconOpen) iconOpen.classList.remove('hidden');
-              if (iconClose) iconClose.classList.add('hidden');
-            });
-          });
+        function toggleMobileMenu(forceClose = false) {
+          if (!mobileMenu) return;
+          const shouldClose = forceClose || !mobileMenu.classList.contains('hidden');
+          mobileMenu.classList.toggle('hidden', shouldClose);
+          if (iconOpen) iconOpen.classList.toggle('hidden', !shouldClose);
+          if (iconClose) iconClose.classList.toggle('hidden', shouldClose);
         }
 
-        // Abas do Hero Studio 3D
+        if (mobileMenuBtn) {
+          mobileMenuBtn.addEventListener('click', () => toggleMobileMenu(false));
+        }
+
+        document.querySelectorAll('.mobile-nav-link').forEach((link) => {
+          link.addEventListener('click', () => toggleMobileMenu(true));
+        });
+
+        // Abas do Hero Studio 3D + Alternância Automática Inteligente (4,5s)
+        const HERO_TAB_ORDER = ['sites', 'sistemas', 'apps', 'hardware'];
+        const HERO_AUTO_INTERVAL_MS = 4500;
+        let currentHeroTabIndex = 0;
+        let heroCycleElapsedMs = 0;
+        let isHeroShowcaseHovered = false;
+        let isHeroShowcaseTouched = false;
+        let heroTouchResumeTimer = null;
+
+        const heroShowcaseCard = document.getElementById('hero-showcase-card');
+        const heroPanelContent = document.getElementById('hero-panel-content');
         const heroTabs = document.querySelectorAll('.hero-tab-btn');
         const heroShortcut = document.getElementById('hero-simulate-shortcut');
 
-        function selectHeroTab(key) {
+        function selectHeroTab(key, resetTimer = true) {
           const data = HERO_DATA[key];
           if (!data) return;
 
+          const idx = HERO_TAB_ORDER.indexOf(key);
+          if (idx !== -1) currentHeroTabIndex = idx;
+          if (resetTimer) heroCycleElapsedMs = 0;
+
           heroTabs.forEach((btn) => {
-            const isActive = btn.getAttribute('data-hero-tab') === key;
-            btn.className = 'hero-tab-btn px-2.5 py-2 rounded-xl font-display text-xs transition-all ' +
+            const tabKey = btn.getAttribute('data-hero-tab');
+            const isActive = tabKey === key;
+            const tabCfg = HERO_DATA[tabKey] || data;
+            btn.className = 'hero-tab-btn relative overflow-hidden px-2.5 py-2.5 rounded-xl font-display text-xs transition-all ' +
               (isActive ? `font-bold ${data.tabClass}` : 'font-semibold bg-slate-900 text-slate-300 hover:text-white border border-slate-800');
+
+            const bar = btn.querySelector('.hero-tab-progress');
+            if (bar) {
+              bar.className = `hero-tab-progress ${tabCfg.progressClass}`;
+              bar.style.width = isActive ? `${Math.min(100, (heroCycleElapsedMs / HERO_AUTO_INTERVAL_MS) * 100)}%` : '0%';
+              bar.style.opacity = isActive ? '1' : '0';
+            }
           });
+
+          if (heroPanelContent) {
+            heroPanelContent.classList.add('is-switching');
+            setTimeout(() => heroPanelContent.classList.remove('is-switching'), 160);
+          }
 
           const badgeEl = document.getElementById('hero-3d-model-badge');
           const kickerEl = document.getElementById('hero-panel-kicker');
@@ -2487,9 +2553,58 @@
 
         heroTabs.forEach((btn) => {
           btn.addEventListener('click', () => {
-            selectHeroTab(btn.getAttribute('data-hero-tab'));
+            selectHeroTab(btn.getAttribute('data-hero-tab'), true);
           });
         });
+
+        // Pausa inteligente ao interagir com mouse/toque na vitrine do Hero
+        if (heroShowcaseCard) {
+          heroShowcaseCard.addEventListener('pointerenter', (e) => {
+            if (e.pointerType === 'mouse') isHeroShowcaseHovered = true;
+          });
+          heroShowcaseCard.addEventListener('pointerleave', (e) => {
+            if (e.pointerType === 'mouse') isHeroShowcaseHovered = false;
+          });
+          heroShowcaseCard.addEventListener('touchstart', () => {
+            clearTimeout(heroTouchResumeTimer);
+            isHeroShowcaseTouched = true;
+          }, { passive: true });
+          heroShowcaseCard.addEventListener('touchend', () => {
+            clearTimeout(heroTouchResumeTimer);
+            heroTouchResumeTimer = setTimeout(() => {
+              isHeroShowcaseTouched = false;
+            }, 1200);
+          }, { passive: true });
+        }
+
+        // Loop suave de 4,5s com barra de progresso na aba ativa
+        let lastHeroCycleFrame = performance.now();
+        function runHeroAutoShowcaseLoop(now) {
+          requestAnimationFrame(runHeroAutoShowcaseLoop);
+          const delta = Math.min(100, now - lastHeroCycleFrame);
+          lastHeroCycleFrame = now;
+
+          const isDragging3D = heroSceneController ? heroSceneController.isDragging() : false;
+          const isPaused = isHeroShowcaseHovered || isHeroShowcaseTouched || isDragging3D || document.hidden;
+
+          if (!isPaused) {
+            heroCycleElapsedMs += delta;
+            const progressPct = Math.min(100, (heroCycleElapsedMs / HERO_AUTO_INTERVAL_MS) * 100);
+
+            const activeKey = HERO_TAB_ORDER[currentHeroTabIndex];
+            const activeBtn = document.querySelector(`.hero-tab-btn[data-hero-tab="${activeKey}"]`);
+            if (activeBtn) {
+              const bar = activeBtn.querySelector('.hero-tab-progress');
+              if (bar) bar.style.width = `${progressPct}%`;
+            }
+
+            if (heroCycleElapsedMs >= HERO_AUTO_INTERVAL_MS) {
+              const nextIndex = (currentHeroTabIndex + 1) % HERO_TAB_ORDER.length;
+              selectHeroTab(HERO_TAB_ORDER[nextIndex], true);
+            }
+          }
+        }
+        requestAnimationFrame(runHeroAutoShowcaseLoop);
 
         // Estado do Simulador de Escopo
         let currentSolution = 'sites';
