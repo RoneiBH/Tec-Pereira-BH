@@ -406,11 +406,15 @@
               </div>
             </div>
 
-            <!-- Viewport Exclusiva do Canvas 3D (Delimita o 3D para não vazar sobre textos) -->
-            <div id="hero-3d-stage" class="relative w-full h-60 sm:h-72 my-2 rounded-2xl bg-gradient-to-b from-slate-950/60 via-slate-900/30 to-slate-950/70 border border-slate-800/70 overflow-hidden stage-3d-grab">
-              <span id="hero-3d-model-badge" class="absolute bottom-2.5 right-3 px-2.5 py-1 rounded-lg bg-slate-950/85 border border-slate-700/80 font-mono text-[10px] text-slate-300 pointer-events-none">
-                MODELO: NOTEBOOK HOLOGRÁFICO 3D
-              </span>
+            <!-- Viewport Exclusiva do Canvas 3D + Barra Inferior Dedicada (Zero sobreposição no mobile) -->
+            <div class="my-2 rounded-2xl bg-gradient-to-b from-slate-950/70 via-slate-900/35 to-slate-950/85 border border-slate-800/70 overflow-hidden">
+              <div id="hero-3d-stage" class="relative w-full h-52 sm:h-64 overflow-hidden stage-3d-grab"></div>
+              <div class="px-3 py-2 bg-slate-950/80 border-t border-slate-800/70 flex items-center justify-between gap-2">
+                <span class="font-mono text-[10px] text-slate-500 uppercase tracking-wider hidden sm:inline">VIEWPORT WEBGL</span>
+                <span id="hero-3d-model-badge" class="ml-auto px-2.5 py-0.5 rounded-md bg-slate-900/95 border border-slate-700/80 font-mono text-[10px] text-slate-300 truncate">
+                  MODELO: NOTEBOOK HOLOGRÁFICO 3D
+                </span>
+              </div>
             </div>
 
             <!-- Painel Inferior de Seleção de Serviço & Métricas -->
@@ -771,14 +775,19 @@
                   <span class="w-2.5 h-2.5 rounded-full bg-emeraldNeon status-dot"></span>
                 </div>
 
-                <!-- Maquete 3D Ao Vivo do Escopo -->
-                <div id="sim-3d-stage" class="relative h-36 rounded-2xl bg-slate-900/80 border border-slate-800 overflow-hidden stage-3d-grab">
-                  <span class="absolute top-2.5 left-3 font-mono text-[10px] text-slate-400 pointer-events-none">
-                    MAQUETE 3D AO VIVO • ARRASTE
-                  </span>
-                  <span id="sim-3d-count-badge" class="absolute bottom-2.5 right-3 px-2.5 py-0.5 rounded-md bg-cyanNeon/10 border border-cyanNeon/30 font-mono text-[10px] text-cyanNeon pointer-events-none">
-                    3 MÓDULOS 3D ATIVOS
-                  </span>
+                <!-- Maquete 3D Ao Vivo do Escopo (Enquadramento Mobile-Safe) -->
+                <div class="rounded-2xl bg-slate-900/80 border border-slate-800 overflow-hidden">
+                  <div class="px-3 pt-2 flex items-center justify-between">
+                    <span class="font-mono text-[10px] text-slate-400">
+                      MAQUETE 3D AO VIVO • ARRASTE
+                    </span>
+                  </div>
+                  <div id="sim-3d-stage" class="relative w-full h-32 overflow-hidden stage-3d-grab"></div>
+                  <div class="px-3 pb-2 flex justify-end">
+                    <span id="sim-3d-count-badge" class="px-2.5 py-0.5 rounded-md bg-cyanNeon/10 border border-cyanNeon/30 font-mono text-[10px] text-cyanNeon">
+                      3 MÓDULOS 3D ATIVOS
+                    </span>
+                  </div>
                 </div>
 
                 <!-- Prazo Estimado & Nível -->
@@ -1373,7 +1382,6 @@
 
       // =========================================================================
       // 1. MOTOR 3D GLOBAL DE FUNDO (GRADE CIBERNÉTICA + PONTINHOS EM MOVIMENTO)
-      //    Inclui fallback automático em Canvas 2D caso WebGL esteja indisponível
       // =========================================================================
       function start2DFallbackParticles(canvas) {
         const ctx = canvas.getContext('2d');
@@ -1516,77 +1524,74 @@
       // =========================================================================
       function buildNotebook3DModel() {
         const group = new THREE.Group();
-        const animParts = {};
 
         // Base do notebook
         const baseMesh = new THREE.Mesh(
-          new THREE.BoxGeometry(2.5, 0.11, 1.75),
+          new THREE.BoxGeometry(2.35, 0.10, 1.65),
           new THREE.MeshBasicMaterial({ color: 0x061626, transparent: true, opacity: 0.85 })
         );
-        baseMesh.position.set(0, -0.58, 0.25);
-        baseMesh.add(createWireBox(2.5, 0.11, 1.75, 0x00f0ff, 0.95));
+        baseMesh.position.set(0, -0.54, 0.22);
+        baseMesh.add(createWireBox(2.35, 0.10, 1.65, 0x00f0ff, 0.95));
         group.add(baseMesh);
 
         // Teclado retroiluminado & Trackpad
-        const kbWire = createWireBox(2.15, 0.02, 0.95, 0x38bdf8, 0.7);
-        kbWire.position.set(0, -0.51, 0.08);
+        const kbWire = createWireBox(2.0, 0.02, 0.88, 0x38bdf8, 0.7);
+        kbWire.position.set(0, -0.48, 0.06);
         group.add(kbWire);
 
-        const trackpad = createWireBox(0.68, 0.02, 0.42, 0x7c3aed, 0.9);
-        trackpad.position.set(0, -0.51, 0.82);
+        const trackpad = createWireBox(0.64, 0.02, 0.38, 0x7c3aed, 0.9);
+        trackpad.position.set(0, -0.48, 0.76);
         group.add(trackpad);
 
         // Tampa articulada & Tela
         const lidGroup = new THREE.Group();
-        lidGroup.position.set(0, -0.52, -0.6);
+        lidGroup.position.set(0, -0.48, -0.56);
         lidGroup.rotation.x = -0.22;
 
         const screenFrame = new THREE.Mesh(
-          new THREE.BoxGeometry(2.5, 1.62, 0.08),
+          new THREE.BoxGeometry(2.35, 1.52, 0.08),
           new THREE.MeshBasicMaterial({ color: 0x041220, transparent: true, opacity: 0.88 })
         );
-        screenFrame.position.set(0, 0.81, 0);
-        screenFrame.add(createWireBox(2.5, 1.62, 0.08, 0x00f0ff, 0.95));
+        screenFrame.position.set(0, 0.76, 0);
+        screenFrame.add(createWireBox(2.35, 1.52, 0.08, 0x00f0ff, 0.95));
         lidGroup.add(screenFrame);
 
         // Display interno luminoso
         const displayPlane = new THREE.Mesh(
-          new THREE.PlaneGeometry(2.26, 1.38),
+          new THREE.PlaneGeometry(2.12, 1.30),
           new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.14, side: THREE.DoubleSide })
         );
-        displayPlane.position.set(0, 0.81, 0.05);
+        displayPlane.position.set(0, 0.76, 0.05);
         lidGroup.add(displayPlane);
 
         // Emblema hexagonal na tampa traseira (visível ao girar 360°)
         const backEmblem = new THREE.Mesh(
-          new THREE.RingGeometry(0.18, 0.26, 6),
+          new THREE.RingGeometry(0.17, 0.25, 6),
           new THREE.MeshBasicMaterial({ color: 0x00f0ff, side: THREE.DoubleSide })
         );
-        backEmblem.position.set(0, 0.81, -0.05);
+        backEmblem.position.set(0, 0.76, -0.05);
         lidGroup.add(backEmblem);
 
         // Cards UI flutuantes na frente da tela
         const floatingCards = new THREE.Group();
-        const card1 = createWireBox(0.95, 0.55, 0.03, 0x00f0ff, 0.9);
-        card1.position.set(-0.55, 0.9, 0.22);
-        const card2 = createWireBox(0.85, 0.72, 0.03, 0xa855f7, 0.9);
-        card2.position.set(0.55, 0.82, 0.28);
+        const card1 = createWireBox(0.88, 0.50, 0.03, 0x00f0ff, 0.9);
+        card1.position.set(-0.50, 0.84, 0.20);
+        const card2 = createWireBox(0.80, 0.66, 0.03, 0xa855f7, 0.9);
+        card2.position.set(0.50, 0.76, 0.25);
         const ctaBar = new THREE.Mesh(
-          new THREE.BoxGeometry(0.75, 0.16, 0.03),
+          new THREE.BoxGeometry(0.70, 0.15, 0.03),
           new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.65 })
         );
-        ctaBar.position.set(-0.55, 0.45, 0.24);
+        ctaBar.position.set(-0.50, 0.42, 0.22);
         floatingCards.add(card1, card2, ctaBar);
         lidGroup.add(floatingCards);
 
         group.add(lidGroup);
-        animParts.floatingCards = floatingCards;
-        animParts.backEmblem = backEmblem;
 
         return {
           group,
           update(t, speed) {
-            floatingCards.position.z = Math.sin(t * 2.2 * speed) * 0.05;
+            floatingCards.position.z = Math.sin(t * 2.2 * speed) * 0.045;
             backEmblem.rotation.z = t * 0.8 * speed;
           }
         };
@@ -1597,21 +1602,21 @@
 
         // Janela Principal do Sistema Web / ERP
         const mainWin = new THREE.Mesh(
-          new THREE.BoxGeometry(2.6, 1.65, 0.08),
+          new THREE.BoxGeometry(2.4, 1.54, 0.08),
           new THREE.MeshBasicMaterial({ color: 0x120b29, transparent: true, opacity: 0.86 })
         );
-        mainWin.add(createWireBox(2.6, 1.65, 0.08, 0x8b5cf6, 0.95));
+        mainWin.add(createWireBox(2.4, 1.54, 0.08, 0x8b5cf6, 0.95));
         group.add(mainWin);
 
         // Sidebar esquerda
-        const sidebar = createWireBox(0.52, 1.48, 0.04, 0x00f0ff, 0.8);
-        sidebar.position.set(-0.96, 0, 0.08);
+        const sidebar = createWireBox(0.48, 1.38, 0.04, 0x00f0ff, 0.8);
+        sidebar.position.set(-0.88, 0, 0.08);
         group.add(sidebar);
 
         // 3 Cards de KPI flutuantes
         for (let i = 0; i < 3; i++) {
-          const kpi = createWireBox(0.56, 0.34, 0.05, i === 1 ? 0x10b981 : 0x00f0ff, 0.9);
-          kpi.position.set(-0.32 + i * 0.64, 0.52, 0.14);
+          const kpi = createWireBox(0.52, 0.31, 0.05, i === 1 ? 0x10b981 : 0x00f0ff, 0.9);
+          kpi.position.set(-0.30 + i * 0.59, 0.48, 0.13);
           group.add(kpi);
         }
 
@@ -1619,32 +1624,32 @@
         const bars = [];
         const barColors = [0x7c3aed, 0x00f0ff, 0x10b981, 0x38bdf8, 0xa855f7];
         for (let i = 0; i < 5; i++) {
-          const barGeo = new THREE.BoxGeometry(0.18, 0.7, 0.18);
+          const barGeo = new THREE.BoxGeometry(0.16, 0.64, 0.16);
           const barMat = new THREE.MeshBasicMaterial({ color: barColors[i], transparent: true, opacity: 0.65 });
           const bar = new THREE.Mesh(barGeo, barMat);
-          bar.add(createWireBox(0.18, 0.7, 0.18, 0xffffff, 0.5));
-          bar.position.set(-0.55 + i * 0.28, -0.25, 0.18);
+          bar.add(createWireBox(0.16, 0.64, 0.16, 0xffffff, 0.5));
+          bar.position.set(-0.50 + i * 0.26, -0.22, 0.16);
           group.add(bar);
           bars.push(bar);
         }
 
         // Donut Gauge Giratório à direita
         const donut = new THREE.Mesh(
-          new THREE.TorusGeometry(0.28, 0.06, 10, 24),
+          new THREE.TorusGeometry(0.25, 0.055, 10, 24),
           new THREE.MeshBasicMaterial({ color: 0x10b981, wireframe: true })
         );
-        donut.position.set(0.92, -0.22, 0.18);
+        donut.position.set(0.84, -0.20, 0.16);
         group.add(donut);
 
         // Cluster Traseiro de Banco de Dados Cloud (visível em 360°)
         const dbCluster = new THREE.Group();
-        dbCluster.position.set(0, 0, -0.35);
+        dbCluster.position.set(0, 0, -0.32);
         for (let d = 0; d < 3; d++) {
           const disc = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.45, 0.45, 0.14, 18),
+            new THREE.CylinderGeometry(0.42, 0.42, 0.13, 18),
             new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true, transparent: true, opacity: 0.75 })
           );
-          disc.position.y = -0.3 + d * 0.3;
+          disc.position.y = -0.28 + d * 0.28;
           dbCluster.add(disc);
         }
         group.add(dbCluster);
@@ -1653,9 +1658,9 @@
           group,
           update(t, speed) {
             bars.forEach((b, idx) => {
-              const s = 0.55 + Math.abs(Math.sin(t * 2.1 * speed + idx * 0.9)) * 0.75;
+              const s = 0.55 + Math.abs(Math.sin(t * 2.1 * speed + idx * 0.9)) * 0.72;
               b.scale.y = s;
-              b.position.y = -0.58 + (0.7 * s) / 2;
+              b.position.y = -0.54 + (0.64 * s) / 2;
             });
             donut.rotation.z = t * 1.4 * speed;
             dbCluster.rotation.y = -t * 0.9 * speed;
@@ -1666,62 +1671,62 @@
       function buildSmartphone3DModel() {
         const group = new THREE.Group();
 
-        // Corpo fino do Smartphone
+        // Corpo fino do Smartphone (proporção equilibrada para telas mobile)
         const bodyMesh = new THREE.Mesh(
-          new THREE.BoxGeometry(1.12, 2.18, 0.12),
+          new THREE.BoxGeometry(0.94, 1.78, 0.11),
           new THREE.MeshBasicMaterial({ color: 0x041d18, transparent: true, opacity: 0.9 })
         );
-        bodyMesh.add(createWireBox(1.12, 2.18, 0.12, 0x10b981, 0.95));
+        bodyMesh.add(createWireBox(0.94, 1.78, 0.11, 0x10b981, 0.95));
         group.add(bodyMesh);
 
         // Tela OLED & Dynamic Island
         const screen = new THREE.Mesh(
-          new THREE.PlaneGeometry(1.0, 2.02),
+          new THREE.PlaneGeometry(0.84, 1.64),
           new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.14, side: THREE.DoubleSide })
         );
-        screen.position.z = 0.065;
+        screen.position.z = 0.06;
         group.add(screen);
 
         const dynamicIsland = new THREE.Mesh(
-          new THREE.BoxGeometry(0.32, 0.07, 0.02),
+          new THREE.BoxGeometry(0.26, 0.055, 0.02),
           new THREE.MeshBasicMaterial({ color: 0x00f0ff })
         );
-        dynamicIsland.position.set(0, 0.88, 0.08);
+        dynamicIsland.position.set(0, 0.71, 0.075);
         group.add(dynamicIsland);
 
         // Widgets & Grade de Ícones flutuando em camadas 3D
         const uiLayer = new THREE.Group();
-        const heroWidget = createWireBox(0.84, 0.54, 0.04, 0x00f0ff, 0.92);
-        heroWidget.position.set(0, 0.42, 0.16);
+        const heroWidget = createWireBox(0.70, 0.44, 0.035, 0x00f0ff, 0.92);
+        heroWidget.position.set(0, 0.34, 0.13);
         uiLayer.add(heroWidget);
 
         for (let r = 0; r < 2; r++) {
           for (let c = 0; c < 2; c++) {
-            const appIcon = createWireBox(0.34, 0.34, 0.04, (r + c) % 2 === 0 ? 0x10b981 : 0xa855f7, 0.9);
-            appIcon.position.set(-0.23 + c * 0.46, -0.15 - r * 0.45, 0.18);
+            const appIcon = createWireBox(0.28, 0.28, 0.035, (r + c) % 2 === 0 ? 0x10b981 : 0xa855f7, 0.9);
+            appIcon.position.set(-0.19 + c * 0.38, -0.12 - r * 0.37, 0.15);
             uiLayer.add(appIcon);
           }
         }
         group.add(uiLayer);
 
         // Módulo Traseiro de Câmera Tripla (visível em 360°)
-        const camIsland = createWireBox(0.46, 0.52, 0.05, 0x00f0ff, 0.95);
-        camIsland.position.set(-0.24, 0.68, -0.08);
+        const camIsland = createWireBox(0.38, 0.43, 0.045, 0x00f0ff, 0.95);
+        camIsland.position.set(-0.19, 0.55, -0.075);
         group.add(camIsland);
 
-        const lensPositions = [[-0.32, 0.78], [-0.32, 0.58], [-0.15, 0.68]];
+        const lensPositions = [[-0.26, 0.63], [-0.26, 0.47], [-0.12, 0.55]];
         lensPositions.forEach(([lx, ly]) => {
           const lens = new THREE.Mesh(
-            new THREE.RingGeometry(0.04, 0.075, 16),
+            new THREE.RingGeometry(0.032, 0.06, 16),
             new THREE.MeshBasicMaterial({ color: 0x10b981, side: THREE.DoubleSide })
           );
-          lens.position.set(lx, ly, -0.11);
+          lens.position.set(lx, ly, -0.102);
           group.add(lens);
         });
 
         // Anel orbital de sinal GPS / Push
         const signalRing = new THREE.Mesh(
-          new THREE.TorusGeometry(1.38, 0.015, 8, 48),
+          new THREE.TorusGeometry(1.12, 0.014, 8, 48),
           new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.45 })
         );
         signalRing.rotation.x = Math.PI / 2.4;
@@ -1730,7 +1735,7 @@
         return {
           group,
           update(t, speed) {
-            uiLayer.position.z = Math.sin(t * 2.4 * speed) * 0.04;
+            uiLayer.position.z = Math.sin(t * 2.4 * speed) * 0.035;
             signalRing.rotation.z = t * 0.9 * speed;
           }
         };
@@ -1738,124 +1743,110 @@
 
       function buildMotherboard3DModel() {
         const group = new THREE.Group();
-        group.rotation.x = 0.48;
 
-        // PCB Principal ATX
-        const pcb = new THREE.Mesh(
-          new THREE.BoxGeometry(2.35, 0.09, 2.05),
-          new THREE.MeshBasicMaterial({ color: 0x1a1306, transparent: true, opacity: 0.9 })
+        // PCB Principal da Placa-Mãe ATX
+        const pcbMesh = new THREE.Mesh(
+          new THREE.BoxGeometry(2.25, 0.09, 1.72),
+          new THREE.MeshBasicMaterial({ color: 0x1a1205, transparent: true, opacity: 0.88 })
         );
-        pcb.add(createWireBox(2.35, 0.09, 2.05, 0xf59e0b, 0.95));
-        group.add(pcb);
+        pcbMesh.position.y = -0.22;
+        pcbMesh.add(createWireBox(2.25, 0.09, 1.72, 0xf59e0b, 0.95));
+        group.add(pcbMesh);
 
         // Painel Traseiro I/O Shield
-        const ioShield = createWireBox(0.32, 0.44, 0.95, 0x00f0ff, 0.9);
-        ioShield.position.set(-0.98, 0.26, -0.45);
+        const ioShield = createWireBox(0.24, 0.44, 0.72, 0x00f0ff, 0.9);
+        ioShield.position.set(-0.96, 0.04, -0.38);
         group.add(ioShield);
 
         // Dissipadores VRM em L
-        const vrmTop = createWireBox(0.95, 0.26, 0.22, 0xf59e0b, 0.9);
-        vrmTop.position.set(-0.22, 0.17, -0.82);
-        const vrmLeft = createWireBox(0.22, 0.26, 0.78, 0xf59e0b, 0.9);
-        vrmLeft.position.set(-0.74, 0.17, -0.32);
+        const vrmTop = createWireBox(0.75, 0.24, 0.18, 0x7c3aed, 0.92);
+        vrmTop.position.set(-0.28, -0.05, -0.66);
+        const vrmLeft = createWireBox(0.18, 0.24, 0.65, 0x7c3aed, 0.92);
+        vrmLeft.position.set(-0.68, -0.05, -0.25);
         group.add(vrmTop, vrmLeft);
 
         // Soquete CPU + Cooler Giratório
-        const cpuSocket = createWireBox(0.68, 0.14, 0.68, 0x00f0ff, 0.95);
-        cpuSocket.position.set(-0.18, 0.11, -0.22);
+        const cpuSocket = createWireBox(0.56, 0.12, 0.56, 0xf59e0b, 0.95);
+        cpuSocket.position.set(-0.24, -0.11, -0.22);
         group.add(cpuSocket);
 
-        const coolerFan = new THREE.Group();
-        coolerFan.position.set(-0.18, 0.24, -0.22);
-        const fanRing = new THREE.Mesh(
-          new THREE.TorusGeometry(0.32, 0.03, 8, 24),
+        const coolerRing = new THREE.Mesh(
+          new THREE.TorusGeometry(0.26, 0.03, 8, 24),
           new THREE.MeshBasicMaterial({ color: 0x00f0ff })
         );
-        fanRing.rotation.x = Math.PI / 2;
-        coolerFan.add(fanRing);
+        coolerRing.rotation.x = Math.PI / 2;
+        coolerRing.position.set(-0.24, 0.06, -0.22);
+        group.add(coolerRing);
 
-        for (let b = 0; b < 6; b++) {
+        const fanBlades = new THREE.Group();
+        fanBlades.position.set(-0.24, 0.06, -0.22);
+        for (let b = 0; b < 4; b++) {
           const blade = new THREE.Mesh(
-            new THREE.BoxGeometry(0.56, 0.02, 0.07),
+            new THREE.BoxGeometry(0.44, 0.02, 0.06),
             new THREE.MeshBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.85 })
           );
-          blade.rotation.y = (b * Math.PI) / 3;
-          coolerFan.add(blade);
+          blade.rotation.y = (b * Math.PI) / 4;
+          fanBlades.add(blade);
         }
-        group.add(coolerFan);
+        group.add(fanBlades);
 
-        // 4 Slots DDR5 com 2 Pentes RAM Iluminados
-        for (let s = 0; s < 4; s++) {
-          const isPopulated = s === 1 || s === 3;
-          const ramStick = createWireBox(
-            0.07,
-            isPopulated ? 0.36 : 0.12,
-            0.96,
-            isPopulated ? 0x00f0ff : 0x64748b,
-            isPopulated ? 0.95 : 0.55
-          );
-          ramStick.position.set(0.45 + s * 0.15, isPopulated ? 0.22 : 0.1, -0.25);
+        // 2 Pentes de Memória RAM DDR5
+        for (let r = 0; r < 2; r++) {
+          const ramStick = createWireBox(0.06, 0.34, 0.72, 0x00f0ff, 0.95);
+          ramStick.position.set(0.35 + r * 0.18, 0.0, -0.22);
           group.add(ramStick);
         }
 
         // Slot SSD NVMe M.2
-        const nvmeDrive = new THREE.Mesh(
-          new THREE.BoxGeometry(0.76, 0.06, 0.24),
-          new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.45 })
-        );
-        nvmeDrive.add(createWireBox(0.76, 0.06, 0.24, 0x10b981, 0.95));
-        nvmeDrive.position.set(-0.15, 0.09, 0.34);
-        group.add(nvmeDrive);
+        const nvmeStick = createWireBox(0.62, 0.05, 0.18, 0x10b981, 0.95);
+        nvmeStick.position.set(-0.22, -0.14, 0.25);
+        group.add(nvmeStick);
 
-        // 2 Slots PCIe x16 + Chipset PCH
-        const pcie1 = createWireBox(1.18, 0.11, 0.12, 0xa855f7, 0.9);
-        pcie1.position.set(-0.28, 0.1, 0.62);
-        const pcie2 = createWireBox(1.18, 0.11, 0.12, 0xa855f7, 0.75);
-        pcie2.position.set(-0.28, 0.1, 0.84);
-        const pchChip = createWireBox(0.46, 0.12, 0.46, 0xf59e0b, 0.95);
-        pchChip.position.set(0.68, 0.1, 0.68);
-        group.add(pcie1, pcie2, pchChip);
+        // 2 Slots PCIe x16
+        for (let p = 0; p < 2; p++) {
+          const pcie = createWireBox(1.15, 0.09, 0.09, 0x00f0ff, 0.88);
+          pcie.position.set(-0.22, -0.12, 0.50 + p * 0.22);
+          group.add(pcie);
+        }
 
-        // Pulso de dados percorrendo o barramento
+        // Chipset PCH
+        const pchChip = createWireBox(0.36, 0.10, 0.36, 0xa855f7, 0.95);
+        pchChip.position.set(0.62, -0.12, 0.45);
+        group.add(pchChip);
+
+        // Pulso de dados percorrendo os barramentos
         const dataPulse = new THREE.Mesh(
-          new THREE.SphereGeometry(0.055, 8, 8),
+          new THREE.SphereGeometry(0.045, 10, 10),
           new THREE.MeshBasicMaterial({ color: 0x00f0ff })
         );
-        dataPulse.position.set(-0.18, 0.12, 0.22);
+        dataPulse.position.set(-0.24, -0.14, -0.22);
         group.add(dataPulse);
 
         return {
           group,
           update(t, speed) {
-            coolerFan.rotation.y = t * 5.2 * speed;
-            dataPulse.position.x = -0.18 + Math.sin(t * 3.5 * speed) * 0.65;
+            fanBlades.rotation.y = t * 5.2 * speed;
+            const cycle = (t * 1.4 * speed) % 1;
+            dataPulse.position.x = -0.24 + cycle * 0.82;
+            dataPulse.position.z = -0.22 + Math.sin(cycle * Math.PI) * 0.45;
           }
         };
       }
 
       // =========================================================================
-      // 3. ENGINE 3D UNIFICADA (1 ÚNICO CONTEXTO WEBGL COM SCISSOR RENDERING)
-      //    Renderiza Hero, Autoridade, Serviços, Simulador e Portfólio a 60 FPS
-      //    sem estourar o limite de contextos WebGL dos smartphones!
+      // 3. ENGINE 3D UNIFICADA EM PRIMEIRO PLANO (SCISSOR RENDERING MOBILE-SAFE)
+      //    Renderiza todos os palcos e ícones 3D em 1 único contexto WebGL
       // =========================================================================
       function initUnifiedForeground3DEngine() {
-        const fgCanvas = document.getElementById('foreground-3d-canvas');
-        if (!fgCanvas || typeof THREE === 'undefined') return;
+        const canvas = document.getElementById('foreground-3d-canvas');
+        if (!canvas || typeof THREE === 'undefined') return;
 
         try {
-          const renderer = new THREE.WebGLRenderer({
-            canvas: fgCanvas,
-            alpha: true,
-            antialias: true,
-            powerPreference: 'high-performance'
-          });
+          const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
           renderer.setClearColor(0x000000, 0);
           renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
           renderer.setSize(window.innerWidth, window.innerHeight);
-
-          window.addEventListener('resize', () => {
-            renderer.setSize(window.innerWidth, window.innerHeight);
-          });
+          renderer.setScissorTest(true);
 
           const viewports = [];
 
@@ -1864,15 +1855,15 @@
           if (heroStage) {
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(42, 1.5, 0.1, 50);
-            let targetZoom = 4.6;
-            camera.position.set(0, 0.35, targetZoom);
+            let zoomOffset = 0;
+            camera.position.set(0, 0.25, 4.9);
 
             const pivot = new THREE.Group();
             scene.add(pivot);
 
             const outerOrbit = new THREE.Mesh(
-              new THREE.TorusGeometry(1.75, 0.012, 8, 64),
-              new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.38 })
+              new THREE.TorusGeometry(1.48, 0.012, 8, 64),
+              new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.36 })
             );
             outerOrbit.rotation.x = Math.PI / 2.2;
             outerOrbit.rotation.y = 0.25;
@@ -1913,7 +1904,7 @@
               prevX = e.clientX;
               prevY = e.clientY;
               rotY += dx * 0.012;
-              rotX = Math.max(-0.65, Math.min(0.65, rotX + dy * 0.009));
+              rotX = Math.max(-0.55, Math.min(0.55, rotX + dy * 0.009));
             }, { passive: true });
 
             window.addEventListener('pointerup', () => { isDragging = false; });
@@ -1924,8 +1915,8 @@
             const pulseBtn = document.getElementById('hero-3d-pulse-btn');
             const turboBtn = document.getElementById('hero-3d-turbo-btn');
 
-            if (zoomInBtn) zoomInBtn.addEventListener('click', () => { targetZoom = Math.max(3.3, targetZoom - 0.45); });
-            if (zoomOutBtn) zoomOutBtn.addEventListener('click', () => { targetZoom = Math.min(6.2, targetZoom + 0.45); });
+            if (zoomInBtn) zoomInBtn.addEventListener('click', () => { zoomOffset = Math.max(-0.85, zoomOffset - 0.4); });
+            if (zoomOutBtn) zoomOutBtn.addEventListener('click', () => { zoomOffset = Math.min(1.4, zoomOffset + 0.4); });
             if (pulseBtn) {
               pulseBtn.addEventListener('click', () => {
                 pulseBoost = 1.0;
@@ -1954,12 +1945,20 @@
                 if (pulseBoost > 0) pulseBoost = Math.max(0, pulseBoost - 0.025);
                 switchScale += (1.0 - switchScale) * 0.14;
 
-                const pulseScale = switchScale * (1 + pulseBoost * 0.12);
+                // Ajuste responsivo de escala e distância para telas estreitas de smartphones
+                const aspect = camera.aspect || 1.5;
+                const responsiveFit = aspect < 1.55 ? Math.max(0.70, aspect / 1.55) : 0.94;
+                const baseZoom = aspect < 1.55 ? 5.35 : 4.85;
+                const desiredZ = baseZoom + zoomOffset;
+
+                const pulseScale = switchScale * responsiveFit * (1 + pulseBoost * 0.09);
                 pivot.scale.set(pulseScale, pulseScale, pulseScale);
+                outerOrbit.scale.set(responsiveFit, responsiveFit, responsiveFit);
+
                 pivot.rotation.y += (rotY - pivot.rotation.y) * 0.12;
                 pivot.rotation.x += (rotX - pivot.rotation.x) * 0.12;
                 outerOrbit.rotation.z += 0.006 * speed;
-                camera.position.z += (targetZoom - camera.position.z) * 0.1;
+                camera.position.z += (desiredZ - camera.position.z) * 0.12;
 
                 if (models[activeModelKey]) {
                   models[activeModelKey].update(clock, speed);
@@ -1974,13 +1973,12 @@
                 Object.keys(models).forEach((k) => {
                   models[k].group.visible = k === key;
                 });
-                const hex = HERO_DATA[key].colorHex;
-                outerOrbit.material.color.setHex(hex);
-                globalBgSceneColor = new THREE.Color(hex);
                 switchScale = 0.78;
-                pulseBoost = 0.45;
+                const colorHex = HERO_DATA[key] ? HERO_DATA[key].colorHex : 0x00f0ff;
+                outerOrbit.material.color.setHex(colorHex);
+                globalBgSceneColor = new THREE.Color(colorHex);
               },
-              isDragging() {
+              isInteracting() {
                 return isDragging;
               }
             };
@@ -1991,19 +1989,19 @@
           if (simStage) {
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(42, 2.2, 0.1, 40);
-            camera.position.set(0, 0.4, 4.4);
+            camera.position.set(0, 0.35, 4.7);
 
             const pivot = new THREE.Group();
             scene.add(pivot);
 
             const coreMesh = new THREE.Mesh(
-              new THREE.IcosahedronGeometry(0.68, 1),
+              new THREE.IcosahedronGeometry(0.62, 1),
               new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true })
             );
             pivot.add(coreMesh);
 
             const orbitRing = new THREE.Mesh(
-              new THREE.TorusGeometry(1.25, 0.012, 8, 48),
+              new THREE.TorusGeometry(1.15, 0.012, 8, 48),
               new THREE.MeshBasicMaterial({ color: 0x7c3aed, transparent: true, opacity: 0.55 })
             );
             orbitRing.rotation.x = Math.PI / 2.2;
@@ -2011,7 +2009,7 @@
 
             const satellites = [];
             for (let i = 0; i < 6; i++) {
-              const sat = createWireBox(0.28, 0.28, 0.28, i % 2 === 0 ? 0x00f0ff : 0x10b981, 0.95);
+              const sat = createWireBox(0.25, 0.25, 0.25, i % 2 === 0 ? 0x00f0ff : 0x10b981, 0.95);
               pivot.add(sat);
               satellites.push(sat);
             }
@@ -2041,6 +2039,9 @@
               update() {
                 t += 0.02;
                 if (!isDragging) rotY += 0.008;
+                const aspect = camera.aspect || 2.0;
+                const simScale = aspect < 1.9 ? Math.max(0.74, aspect / 1.9) : 0.95;
+                pivot.scale.set(simScale, simScale, simScale);
                 pivot.rotation.y = rotY;
                 coreMesh.rotation.x = t * 0.5;
 
@@ -2048,7 +2049,7 @@
                   sat.visible = idx < activeSatelliteCount;
                   if (sat.visible) {
                     const angle = t + (idx * Math.PI * 2) / Math.max(1, activeSatelliteCount);
-                    sat.position.set(Math.cos(angle) * 1.25, Math.sin(angle * 1.5) * 0.25, Math.sin(angle) * 1.25);
+                    sat.position.set(Math.cos(angle) * 1.15, Math.sin(angle * 1.5) * 0.22, Math.sin(angle) * 1.15);
                     sat.rotation.y = -t * 1.4;
                   }
                 });
@@ -2056,9 +2057,8 @@
             });
 
             simSceneController = {
-              setModuleCount(count, colorHex) {
+              setModuleCount(count) {
                 activeSatelliteCount = Math.max(1, Math.min(6, count));
-                if (colorHex) coreMesh.material.color.setHex(colorHex);
               }
             };
           }
@@ -2068,62 +2068,62 @@
             const type = stage.getAttribute('data-portfolio-3d');
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(40, 1.8, 0.1, 30);
-            camera.position.set(0, 0.35, 3.8);
+            camera.position.set(0, 0.32, 4.1);
 
             const pivot = new THREE.Group();
-            pivot.scale.set(0.76, 0.76, 0.76);
+            pivot.scale.set(0.72, 0.72, 0.72);
             scene.add(pivot);
 
             let extraAnimator = null;
 
             if (type === 'erp') {
-              const base = createWireBox(1.6, 0.08, 1.1, 0x00f0ff, 0.75);
-              base.position.y = -0.45;
-              pivot.add(base);
-
+              const baseGrid = createWireBox(1.8, 0.08, 1.2, 0x00f0ff, 0.6);
+              baseGrid.position.y = -0.55;
+              pivot.add(baseGrid);
               const bars = [];
-              const cols = [0x7c3aed, 0x00f0ff, 0x10b981, 0x38bdf8];
-              for (let i = 0; i < 4; i++) {
-                const bar = createWireBox(0.24, 0.85, 0.24, cols[i], 0.95);
-                bar.position.set(-0.48 + i * 0.32, 0, 0);
-                pivot.add(bar);
-                bars.push(bar);
-              }
-              extraAnimator = (t) => {
+              [0x7c3aed, 0x00f0ff, 0x10b981, 0x38bdf8].forEach((c, idx) => {
+                const b = createWireBox(0.24, 0.9, 0.24, c, 0.95);
+                b.position.set(-0.55 + idx * 0.37, -0.1, 0);
+                pivot.add(b);
+                bars.push(b);
+              });
+              extraAnimator = (tick) => {
                 bars.forEach((b, idx) => {
-                  const s = 0.5 + Math.abs(Math.sin(t * 2 + idx)) * 0.7;
-                  b.scale.y = s;
-                  b.position.y = -0.4 + (0.85 * s) / 2;
+                  b.scale.y = 0.5 + Math.abs(Math.sin(tick * 2 + idx)) * 0.8;
                 });
               };
             } else if (type === 'mobile') {
-              const phone = createWireBox(0.88, 1.55, 0.12, 0x10b981, 0.95);
-              const badge = createWireBox(0.55, 0.4, 0.05, 0x00f0ff, 0.9);
-              badge.position.set(0, 0.2, 0.14);
+              const phone = createWireBox(0.85, 1.55, 0.12, 0x10b981, 0.95);
+              pivot.add(phone);
               const ring = new THREE.Mesh(
                 new THREE.TorusGeometry(0.95, 0.015, 8, 36),
-                new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.5 })
+                new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.55 })
               );
               ring.rotation.x = Math.PI / 2.3;
-              pivot.add(phone, badge, ring);
+              pivot.add(ring);
+              extraAnimator = (tick) => {
+                ring.rotation.z = tick * 1.1;
+              };
             } else if (type === 'landing') {
-              for (let l = 0; l < 3; l++) {
-                const layer = createWireBox(1.5 - l * 0.35, 0.12, 0.95 - l * 0.2, l === 0 ? 0xa855f7 : 0x00f0ff, 0.9);
-                layer.position.y = 0.35 - l * 0.36;
-                pivot.add(layer);
-              }
-            } else {
-              const ssd = createWireBox(1.35, 0.12, 0.5, 0xf59e0b, 0.95);
-              ssd.position.set(0, -0.25, 0.2);
+              [0, 1, 2].forEach((layer) => {
+                const w = 1.65 - layer * 0.32;
+                const card = createWireBox(w, 0.95 - layer * 0.15, 0.05, layer === 0 ? 0x7c3aed : 0x00f0ff, 0.9);
+                card.position.z = -0.25 + layer * 0.28;
+                pivot.add(card);
+              });
+            } else if (type === 'hardware') {
+              const ssd = createWireBox(1.55, 0.12, 0.55, 0xf59e0b, 0.95);
+              ssd.position.y = -0.28;
+              pivot.add(ssd);
               const fan = new THREE.Mesh(
                 new THREE.TorusGeometry(0.45, 0.05, 8, 20),
                 new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true })
               );
               fan.rotation.x = Math.PI / 2;
-              fan.position.set(0, 0.25, -0.15);
-              pivot.add(ssd, fan);
-              extraAnimator = (t) => {
-                fan.rotation.z = t * 4;
+              fan.position.y = 0.28;
+              pivot.add(fan);
+              extraAnimator = (tick) => {
+                fan.rotation.z = tick * 4;
               };
             }
 
@@ -2137,7 +2137,7 @@
             });
             window.addEventListener('pointermove', (e) => {
               if (!isDragging) return;
-              rotY += (e.clientX - prevX) * 0.015;
+              rotY += (e.clientX - prevX) * 0.016;
               prevX = e.clientX;
             }, { passive: true });
             window.addEventListener('pointerup', () => { isDragging = false; });
@@ -2151,6 +2151,9 @@
               update() {
                 tick += 0.018;
                 if (!isDragging) rotY += 0.01;
+                const pAspect = camera.aspect || 1.8;
+                const pScale = pAspect < 1.65 ? Math.max(0.60, (pAspect / 1.65) * 0.74) : 0.74;
+                pivot.scale.set(pScale, pScale, pScale);
                 pivot.rotation.y = rotY;
                 pivot.rotation.x = 0.22;
                 if (extraAnimator) extraAnimator(tick);
@@ -2164,116 +2167,62 @@
             const parentCard = box.closest('.glass-card');
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 20);
-            camera.position.set(0, 0.25, 3.3);
+            camera.position.set(0, 0.25, 3.75);
 
             const pivot = new THREE.Group();
             scene.add(pivot);
 
-            let extraAnim = null;
+            let hovered = false;
+            if (parentCard) {
+              parentCard.addEventListener('mouseenter', () => { hovered = true; });
+              parentCard.addEventListener('mouseleave', () => { hovered = false; });
+            }
 
+            let customAnim = null;
             if (type === 'ads') {
-              const core = new THREE.Mesh(
-                new THREE.OctahedronGeometry(0.36, 0),
+              const oct = new THREE.Mesh(
+                new THREE.OctahedronGeometry(0.68, 0),
                 new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true })
               );
-              pivot.add(core);
-
-              const makeBracket = (dir) => {
-                const bGroup = new THREE.Group();
-                const topArm = createWireBox(0.55, 0.12, 0.14, 0x38bdf8, 0.95);
-                topArm.position.set(0, 0.2, 0);
-                topArm.rotation.z = dir * 0.68;
-
-                const botArm = createWireBox(0.55, 0.12, 0.14, 0x38bdf8, 0.95);
-                botArm.position.set(0, -0.2, 0);
-                botArm.rotation.z = -dir * 0.68;
-
-                bGroup.add(topArm, botArm);
-                bGroup.position.x = dir * 0.68;
-                return bGroup;
-              };
-
-              pivot.add(makeBracket(-1), makeBracket(1));
-              extraAnim = (t) => {
-                core.rotation.y = -t * 1.6;
-                core.rotation.x = t * 1.1;
-              };
+              const leftBracket = createWireBox(0.18, 0.85, 0.18, 0x38bdf8, 0.95);
+              leftBracket.position.x = -0.82;
+              const rightBracket = createWireBox(0.18, 0.85, 0.18, 0x38bdf8, 0.95);
+              rightBracket.position.x = 0.82;
+              pivot.add(oct, leftBracket, rightBracket);
+              customAnim = (t) => { oct.rotation.z = t * 1.2; };
             } else if (type === 'gestao') {
-              const barHeights = [0.55, 0.88, 1.22];
-              const barColors = [0x7c3aed, 0xa855f7, 0x00f0ff];
-              const bars = [];
-
-              barHeights.forEach((h, idx) => {
-                const barMesh = new THREE.Mesh(
-                  new THREE.BoxGeometry(0.28, h, 0.28),
-                  new THREE.MeshBasicMaterial({ color: barColors[idx], transparent: true, opacity: 0.45 })
-                );
-                barMesh.add(createWireBox(0.28, h, 0.28, barColors[idx], 0.98));
-                barMesh.position.set(-0.44 + idx * 0.44, -0.55 + h / 2, 0);
-                pivot.add(barMesh);
-                bars.push({ mesh: barMesh, baseH: h });
-              });
-
               const ring = new THREE.Mesh(
-                new THREE.TorusGeometry(0.95, 0.02, 8, 36),
-                new THREE.MeshBasicMaterial({ color: 0xa855f7, transparent: true, opacity: 0.65 })
+                new THREE.TorusGeometry(0.88, 0.03, 8, 32),
+                new THREE.MeshBasicMaterial({ color: 0xa855f7 })
               );
-              ring.rotation.x = Math.PI / 2.3;
+              ring.rotation.x = Math.PI / 3;
               pivot.add(ring);
-
-              extraAnim = (t) => {
-                ring.rotation.z = t * 1.3;
-                bars.forEach((b, i) => {
-                  const pulse = 0.85 + Math.abs(Math.sin(t * 2 + i * 0.8)) * 0.3;
-                  b.mesh.scale.y = pulse;
-                  b.mesh.position.y = -0.55 + (b.baseH * pulse) / 2;
-                });
-              };
+              [-0.36, 0, 0.36].forEach((xPos, idx) => {
+                const bar = createWireBox(0.22, 0.55 + idx * 0.28, 0.22, idx === 2 ? 0x00f0ff : 0xa855f7, 0.95);
+                bar.position.set(xPos, -0.1 + idx * 0.12, 0);
+                pivot.add(bar);
+              });
+              customAnim = (t) => { ring.rotation.y = t * 1.5; };
             } else {
-              const chipBody = new THREE.Mesh(
-                new THREE.BoxGeometry(1.05, 0.22, 1.05),
-                new THREE.MeshBasicMaterial({ color: 0x042f2e, transparent: true, opacity: 0.85 })
+              const chip = createWireBox(0.95, 0.26, 0.95, 0x10b981, 0.95);
+              const core = new THREE.Mesh(
+                new THREE.BoxGeometry(0.45, 0.34, 0.45),
+                new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true })
               );
-              chipBody.add(createWireBox(1.05, 0.22, 1.05, 0x10b981, 0.98));
-              pivot.add(chipBody);
-
-              const dieCore = createWireBox(0.5, 0.28, 0.5, 0x00f0ff, 0.98);
-              pivot.add(dieCore);
-
-              for (let p = -1; p <= 1; p++) {
-                const offset = p * 0.28;
-                const pinN = createWireBox(0.08, 0.08, 0.22, 0x10b981, 0.9);
-                pinN.position.set(offset, 0, -0.64);
-                const pinS = createWireBox(0.08, 0.08, 0.22, 0x10b981, 0.9);
-                pinS.position.set(offset, 0, 0.64);
-                const pinW = createWireBox(0.22, 0.08, 0.08, 0x10b981, 0.9);
-                pinW.position.set(-0.64, 0, offset);
-                const pinE = createWireBox(0.22, 0.08, 0.08, 0x10b981, 0.9);
-                pinE.position.set(0.64, 0, offset);
-                pivot.add(pinN, pinS, pinW, pinE);
-              }
-              pivot.rotation.x = 0.55;
+              pivot.add(chip, core);
             }
 
-            let isHovered = false;
-            if (parentCard) {
-              parentCard.addEventListener('pointerenter', () => { isHovered = true; });
-              parentCard.addEventListener('pointerleave', () => { isHovered = false; });
-            }
-
-            let tick = 0;
+            let t = 0;
             viewports.push({
               element: box,
               scene,
               camera,
               update() {
-                const speed = isHovered ? 2.4 : 1.0;
-                tick += 0.02 * speed;
-                pivot.rotation.y += 0.016 * speed;
-                if (type !== 'ecossistema') {
-                  pivot.rotation.x = Math.sin(tick * 0.6) * 0.2;
-                }
-                if (extraAnim) extraAnim(tick);
+                const mult = hovered ? 2.8 : 1.0;
+                t += 0.02 * mult;
+                pivot.rotation.y += 0.018 * mult;
+                pivot.rotation.x = 0.25;
+                if (customAnim) customAnim(t);
               }
             });
           });
@@ -2284,132 +2233,83 @@
             const parentCard = box.closest('.glass-card');
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 20);
-            camera.position.set(0, 0.25, 3.4);
+            camera.position.set(0, 0.25, 3.75);
 
             const pivot = new THREE.Group();
             scene.add(pivot);
 
-            let extraAnim = null;
+            let hovered = false;
+            if (parentCard) {
+              parentCard.addEventListener('mouseenter', () => { hovered = true; });
+              parentCard.addEventListener('mouseleave', () => { hovered = false; });
+            }
 
+            let customAnim = null;
             if (type === 'sites') {
-              const browserFrame = createWireBox(1.25, 0.85, 0.1, 0x00f0ff, 0.98);
-              const topBar = createWireBox(1.15, 0.14, 0.04, 0x38bdf8, 0.9);
-              topBar.position.set(0, 0.28, 0.08);
-              const ctaBlock = createWireBox(0.55, 0.24, 0.05, 0x10b981, 0.95);
-              ctaBlock.position.set(-0.22, -0.1, 0.1);
+              const win = createWireBox(1.15, 0.82, 0.08, 0x00f0ff, 0.95);
               const globe = new THREE.Mesh(
-                new THREE.SphereGeometry(0.42, 12, 10),
-                new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true, transparent: true, opacity: 0.65 })
+                new THREE.SphereGeometry(0.32, 10, 10),
+                new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true })
               );
-              globe.position.set(0.35, -0.08, -0.18);
-              pivot.add(browserFrame, topBar, ctaBlock, globe);
-
-              extraAnim = (t) => {
-                globe.rotation.y = -t * 1.4;
-                ctaBlock.position.z = 0.1 + Math.sin(t * 2.4) * 0.04;
-              };
+              globe.position.z = 0.28;
+              pivot.add(win, globe);
+              customAnim = (t) => { globe.rotation.y = t * 1.8; };
             } else if (type === 'sistemas') {
-              const racks = [];
-              for (let r = 0; r < 3; r++) {
-                const rack = new THREE.Mesh(
-                  new THREE.BoxGeometry(1.15, 0.24, 0.82),
-                  new THREE.MeshBasicMaterial({ color: 0x1e1035, transparent: true, opacity: 0.85 })
-                );
-                rack.add(createWireBox(1.15, 0.24, 0.82, r === 1 ? 0x00f0ff : 0xa855f7, 0.98));
-                rack.position.y = -0.38 + r * 0.38;
-                pivot.add(rack);
-                racks.push(rack);
-              }
-              const apiRing = new THREE.Mesh(
-                new THREE.TorusGeometry(0.95, 0.02, 8, 36),
-                new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.65 })
-              );
-              apiRing.rotation.x = Math.PI / 2.3;
-              pivot.add(apiRing);
-
-              extraAnim = (t) => {
-                apiRing.rotation.z = t * 1.5;
-                racks.forEach((rk, i) => {
-                  rk.position.x = Math.sin(t * 2 + i * 1.1) * 0.05;
-                });
-              };
+              [-0.38, 0, 0.38].forEach((yPos) => {
+                const srv = createWireBox(1.05, 0.22, 0.78, 0xa855f7, 0.95);
+                srv.position.y = yPos;
+                pivot.add(srv);
+              });
             } else if (type === 'apps') {
-              const phone = new THREE.Mesh(
-                new THREE.BoxGeometry(0.76, 1.38, 0.12),
-                new THREE.MeshBasicMaterial({ color: 0x042f2e, transparent: true, opacity: 0.88 })
-              );
-              phone.add(createWireBox(0.76, 1.38, 0.12, 0x10b981, 0.98));
-              const widget = createWireBox(0.52, 0.42, 0.05, 0x00f0ff, 0.95);
-              widget.position.set(0, 0.16, 0.12);
-              const pushRing = new THREE.Mesh(
-                new THREE.TorusGeometry(0.92, 0.02, 8, 36),
-                new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.65 })
-              );
-              pushRing.rotation.x = Math.PI / 2.2;
-              pivot.add(phone, widget, pushRing);
-
-              extraAnim = (t) => {
-                widget.position.z = 0.12 + Math.sin(t * 2.6) * 0.04;
-                pushRing.rotation.z = -t * 1.4;
-              };
-            } else {
-              const heatsink = createWireBox(1.18, 0.24, 1.18, 0xf59e0b, 0.95);
-              heatsink.position.y = -0.22;
-              pivot.add(heatsink);
-
-              const fanGroup = new THREE.Group();
-              fanGroup.position.y = 0.08;
-              const shroud = new THREE.Mesh(
-                new THREE.TorusGeometry(0.52, 0.04, 8, 28),
+              const phone = createWireBox(0.68, 1.18, 0.10, 0x10b981, 0.95);
+              const ring = new THREE.Mesh(
+                new THREE.TorusGeometry(0.75, 0.025, 8, 28),
                 new THREE.MeshBasicMaterial({ color: 0x00f0ff })
               );
-              shroud.rotation.x = Math.PI / 2;
-              fanGroup.add(shroud);
-
-              for (let b = 0; b < 6; b++) {
+              ring.rotation.x = Math.PI / 2.2;
+              pivot.add(phone, ring);
+            } else if (type === 'hardware') {
+              const sink = createWireBox(1.05, 0.24, 1.05, 0xf59e0b, 0.95);
+              sink.position.y = -0.2;
+              const rotor = new THREE.Group();
+              rotor.position.y = 0.14;
+              for (let b = 0; b < 4; b++) {
                 const blade = new THREE.Mesh(
-                  new THREE.BoxGeometry(0.92, 0.03, 0.11),
-                  new THREE.MeshBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.9 })
+                  new THREE.BoxGeometry(0.95, 0.04, 0.14),
+                  new THREE.MeshBasicMaterial({ color: 0xf59e0b })
                 );
-                blade.rotation.y = (b * Math.PI) / 3;
-                fanGroup.add(blade);
+                blade.rotation.y = (b * Math.PI) / 4;
+                rotor.add(blade);
               }
-              pivot.add(fanGroup);
-              pivot.rotation.x = 0.52;
-
-              extraAnim = (t) => {
-                fanGroup.rotation.y = t * 5.0;
-              };
+              pivot.add(sink, rotor);
+              customAnim = (t) => { rotor.rotation.y = t * 4.5; };
             }
 
-            let isHovered = false;
-            if (parentCard) {
-              parentCard.addEventListener('pointerenter', () => { isHovered = true; });
-              parentCard.addEventListener('pointerleave', () => { isHovered = false; });
-            }
-
-            let tick = 0;
+            let t = 0;
             viewports.push({
               element: box,
               scene,
               camera,
               update() {
-                const speed = isHovered ? 2.4 : 1.0;
-                tick += 0.02 * speed;
-                pivot.rotation.y += 0.016 * speed;
-                if (type !== 'hardware') {
-                  pivot.rotation.x = Math.sin(tick * 0.6) * 0.18;
-                }
-                if (extraAnim) extraAnim(tick);
+                const mult = hovered ? 2.8 : 1.0;
+                t += 0.02 * mult;
+                pivot.rotation.y += 0.018 * mult;
+                pivot.rotation.x = 0.24;
+                if (customAnim) customAnim(t);
               }
             });
           });
 
-          // Loop unificado de Scissor Rendering para todos os viewports 3D visíveis na tela
-          function animateUnifiedForeground3D() {
-            requestAnimationFrame(animateUnifiedForeground3D);
-            const canvasHeight = window.innerHeight;
-            const canvasWidth = window.innerWidth;
+          // Loop Unificado de Renderização Scissor (1 Contexto WebGL para toda a tela)
+          function renderAllViewports() {
+            requestAnimationFrame(renderAllViewports);
+
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            if (canvas.width !== Math.floor(width * renderer.getPixelRatio()) ||
+                canvas.height !== Math.floor(height * renderer.getPixelRatio())) {
+              renderer.setSize(width, height, false);
+            }
 
             renderer.setScissorTest(false);
             renderer.clear();
@@ -2417,317 +2317,280 @@
 
             for (let i = 0; i < viewports.length; i++) {
               const vp = viewports[i];
-              if (!vp.element) continue;
-
               const rect = vp.element.getBoundingClientRect();
-              if (
-                rect.bottom < 0 ||
-                rect.top > canvasHeight ||
-                rect.right < 0 ||
-                rect.left > canvasWidth ||
-                rect.width <= 0 ||
-                rect.height <= 0
-              ) {
+
+              // Pula renderização se estiver fora da janela visível
+              if (rect.bottom < 0 || rect.top > height || rect.right < 0 || rect.left > width || rect.width <= 0 || rect.height <= 0) {
                 continue;
               }
 
-              const width = Math.floor(rect.width);
-              const height = Math.floor(rect.height);
-              const left = Math.floor(rect.left);
-              const bottom = Math.floor(canvasHeight - rect.bottom);
-
-              renderer.setViewport(left, bottom, width, height);
-              renderer.setScissor(left, bottom, width, height);
-
-              vp.camera.aspect = width / height;
-              vp.camera.updateProjectionMatrix();
               vp.update();
 
+              const left = Math.max(0, rect.left);
+              const bottom = Math.max(0, height - rect.bottom);
+              const vpWidth = rect.width;
+              const vpHeight = rect.height;
+
+              if (vp.camera.aspect !== vpWidth / vpHeight) {
+                vp.camera.aspect = vpWidth / vpHeight;
+                vp.camera.updateProjectionMatrix();
+              }
+
+              renderer.setViewport(rect.left, height - rect.bottom, vpWidth, vpHeight);
+              renderer.setScissor(left, bottom, vpWidth, vpHeight);
               renderer.render(vp.scene, vp.camera);
             }
           }
 
-          animateUnifiedForeground3D();
+          renderAllViewports();
         } catch (err) {
-          console.error('Erro ao inicializar o motor 3D unificado:', err);
+          console.error('Erro ao iniciar engine 3D unificada:', err);
         }
       }
 
       // =========================================================================
-      // 4. CONTROLADORES DE UI, MENU MOBILE, SIMULADOR, MODAL E WHATSAPP
+      // 4. CONTROLADORES DE UI: HERO AUTO-ROTATE, SIMULADOR, PORTFÓLIO E CONTATO
       // =========================================================================
       function initUIControllers() {
         // Ano atual no rodapé
         const yearEl = document.getElementById('current-year');
-        if (yearEl) {
-          yearEl.textContent = new Date().getFullYear();
-        }
+        if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-        // Controle do Menu Mobile
+        // Menu Mobile
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         const iconOpen = document.getElementById('menu-icon-open');
         const iconClose = document.getElementById('menu-icon-close');
 
-        function toggleMobileMenu(forceClose = false) {
-          if (!mobileMenu) return;
-          const shouldClose = forceClose || !mobileMenu.classList.contains('hidden');
-          mobileMenu.classList.toggle('hidden', shouldClose);
-          if (iconOpen) iconOpen.classList.toggle('hidden', !shouldClose);
-          if (iconClose) iconClose.classList.toggle('hidden', shouldClose);
+        if (mobileMenuBtn && mobileMenu) {
+          mobileMenuBtn.addEventListener('click', () => {
+            const isHidden = mobileMenu.classList.toggle('hidden');
+            if (iconOpen) iconOpen.classList.toggle('hidden', !isHidden);
+            if (iconClose) iconClose.classList.toggle('hidden', isHidden);
+          });
+
+          document.querySelectorAll('.mobile-nav-link').forEach((link) => {
+            link.addEventListener('click', () => {
+              mobileMenu.classList.add('hidden');
+              if (iconOpen) iconOpen.classList.remove('hidden');
+              if (iconClose) iconClose.classList.add('hidden');
+            });
+          });
         }
 
-        if (mobileMenuBtn) {
-          mobileMenuBtn.addEventListener('click', () => toggleMobileMenu(false));
-        }
-
-        document.querySelectorAll('.mobile-nav-link').forEach((link) => {
-          link.addEventListener('click', () => toggleMobileMenu(true));
-        });
-
-        // Abas do Hero Studio 3D + Alternância Automática Inteligente (4,5s)
-        const HERO_TAB_ORDER = ['sites', 'sistemas', 'apps', 'hardware'];
-        const HERO_AUTO_INTERVAL_MS = 4500;
-        let currentHeroTabIndex = 0;
-        let heroCycleElapsedMs = 0;
-        let isHeroShowcaseHovered = false;
-        let isHeroShowcaseTouched = false;
-        let heroTouchResumeTimer = null;
+        // --- HERO SHOWCASE: ALTERNÂNCIA AUTOMÁTICA A CADA 4.5s ---
+        const heroKeys = ['sites', 'sistemas', 'apps', 'hardware'];
+        let currentHeroIdx = 0;
+        let heroAutoPaused = false;
+        let heroCycleStart = performance.now();
+        const HERO_CYCLE_DURATION = 4500;
 
         const heroShowcaseCard = document.getElementById('hero-showcase-card');
+        const heroTabBtns = Array.from(document.querySelectorAll('.hero-tab-btn'));
         const heroPanelContent = document.getElementById('hero-panel-content');
-        const heroTabs = document.querySelectorAll('.hero-tab-btn');
-        const heroShortcut = document.getElementById('hero-simulate-shortcut');
+        const heroBadge = document.getElementById('hero-3d-model-badge');
+        const heroKicker = document.getElementById('hero-panel-kicker');
+        const heroTitle = document.getElementById('hero-panel-title');
+        const heroM1Label = document.getElementById('hero-metric-1-label');
+        const heroM1Val = document.getElementById('hero-metric-1-val');
+        const heroM2Label = document.getElementById('hero-metric-2-label');
+        const heroM2Val = document.getElementById('hero-metric-2-val');
+        const heroStack = document.getElementById('hero-panel-stack');
+        const heroSimShortcut = document.getElementById('hero-simulate-shortcut');
 
-        function selectHeroTab(key, resetTimer = true) {
+        function activateHeroTab(key, resetTimer = true) {
           const data = HERO_DATA[key];
           if (!data) return;
 
-          const idx = HERO_TAB_ORDER.indexOf(key);
-          if (idx !== -1) currentHeroTabIndex = idx;
-          if (resetTimer) heroCycleElapsedMs = 0;
+          currentHeroIdx = heroKeys.indexOf(key);
+          if (resetTimer) heroCycleStart = performance.now();
 
-          heroTabs.forEach((btn) => {
-            const tabKey = btn.getAttribute('data-hero-tab');
-            const isActive = tabKey === key;
-            const tabCfg = HERO_DATA[tabKey] || data;
+          heroTabBtns.forEach((btn) => {
+            const btnKey = btn.getAttribute('data-hero-tab');
+            const isActive = btnKey === key;
+            const prog = btn.querySelector('.hero-tab-progress');
+
             btn.className = 'hero-tab-btn relative overflow-hidden px-2.5 py-2.5 rounded-xl font-display text-xs transition-all ' +
-              (isActive ? `font-bold ${data.tabClass}` : 'font-semibold bg-slate-900 text-slate-300 hover:text-white border border-slate-800');
+              (isActive
+                ? `font-bold ${data.tabClass}`
+                : 'font-semibold bg-slate-900 text-slate-300 hover:text-white border border-slate-800');
 
-            const bar = btn.querySelector('.hero-tab-progress');
-            if (bar) {
-              bar.className = `hero-tab-progress ${tabCfg.progressClass}`;
-              bar.style.width = isActive ? `${Math.min(100, (heroCycleElapsedMs / HERO_AUTO_INTERVAL_MS) * 100)}%` : '0%';
-              bar.style.opacity = isActive ? '1' : '0';
+            if (prog) {
+              prog.style.width = '0%';
+              prog.className = 'hero-tab-progress ' + (isActive ? data.progressClass : 'bg-cyanNeon');
             }
           });
 
           if (heroPanelContent) {
             heroPanelContent.classList.add('is-switching');
-            setTimeout(() => heroPanelContent.classList.remove('is-switching'), 160);
+            setTimeout(() => {
+              if (heroBadge) heroBadge.textContent = data.badge;
+              if (heroKicker) heroKicker.textContent = data.kicker;
+              if (heroTitle) heroTitle.textContent = data.title;
+              if (heroM1Label) heroM1Label.textContent = data.m1Label;
+              if (heroM1Val) heroM1Val.textContent = data.m1Val;
+              if (heroM2Label) heroM2Label.textContent = data.m2Label;
+              if (heroM2Val) heroM2Val.textContent = data.m2Val;
+              if (heroStack) heroStack.textContent = data.stack;
+              if (heroSimShortcut) heroSimShortcut.setAttribute('data-service-target', key);
+              heroPanelContent.classList.remove('is-switching');
+            }, 130);
           }
-
-          const badgeEl = document.getElementById('hero-3d-model-badge');
-          const kickerEl = document.getElementById('hero-panel-kicker');
-          const titleEl = document.getElementById('hero-panel-title');
-          const m1LabelEl = document.getElementById('hero-metric-1-label');
-          const m1ValEl = document.getElementById('hero-metric-1-val');
-          const m2LabelEl = document.getElementById('hero-metric-2-label');
-          const m2ValEl = document.getElementById('hero-metric-2-val');
-          const stackEl = document.getElementById('hero-panel-stack');
-
-          if (badgeEl) badgeEl.textContent = data.badge;
-          if (kickerEl) kickerEl.textContent = data.kicker;
-          if (titleEl) titleEl.textContent = data.title;
-          if (m1LabelEl) m1LabelEl.textContent = data.m1Label;
-          if (m1ValEl) m1ValEl.textContent = data.m1Val;
-          if (m2LabelEl) m2LabelEl.textContent = data.m2Label;
-          if (m2ValEl) m2ValEl.textContent = data.m2Val;
-          if (stackEl) stackEl.textContent = data.stack;
-          if (heroShortcut) heroShortcut.setAttribute('data-service-target', key);
 
           if (heroSceneController) {
             heroSceneController.setModel(key);
           }
         }
 
-        heroTabs.forEach((btn) => {
+        heroTabBtns.forEach((btn) => {
           btn.addEventListener('click', () => {
-            selectHeroTab(btn.getAttribute('data-hero-tab'), true);
+            const key = btn.getAttribute('data-hero-tab');
+            activateHeroTab(key, true);
           });
         });
 
-        // Pausa inteligente ao interagir com mouse/toque na vitrine do Hero
         if (heroShowcaseCard) {
-          heroShowcaseCard.addEventListener('pointerenter', (e) => {
-            if (e.pointerType === 'mouse') isHeroShowcaseHovered = true;
+          heroShowcaseCard.addEventListener('mouseenter', () => { heroAutoPaused = true; });
+          heroShowcaseCard.addEventListener('mouseleave', () => {
+            heroAutoPaused = false;
+            heroCycleStart = performance.now();
           });
-          heroShowcaseCard.addEventListener('pointerleave', (e) => {
-            if (e.pointerType === 'mouse') isHeroShowcaseHovered = false;
-          });
-          heroShowcaseCard.addEventListener('touchstart', () => {
-            clearTimeout(heroTouchResumeTimer);
-            isHeroShowcaseTouched = true;
-          }, { passive: true });
-          heroShowcaseCard.addEventListener('touchend', () => {
-            clearTimeout(heroTouchResumeTimer);
-            heroTouchResumeTimer = setTimeout(() => {
-              isHeroShowcaseTouched = false;
-            }, 1200);
-          }, { passive: true });
         }
 
-        // Loop suave de 4,5s com barra de progresso na aba ativa
-        let lastHeroCycleFrame = performance.now();
-        function runHeroAutoShowcaseLoop(now) {
-          requestAnimationFrame(runHeroAutoShowcaseLoop);
-          const delta = Math.min(100, now - lastHeroCycleFrame);
-          lastHeroCycleFrame = now;
+        function tickHeroAutoCycle(now) {
+          requestAnimationFrame(tickHeroAutoCycle);
+          const dragging = heroSceneController && heroSceneController.isInteracting();
+          if (heroAutoPaused || dragging) {
+            heroCycleStart = now;
+            return;
+          }
 
-          const isDragging3D = heroSceneController ? heroSceneController.isDragging() : false;
-          const isPaused = isHeroShowcaseHovered || isHeroShowcaseTouched || isDragging3D || document.hidden;
+          const elapsed = now - heroCycleStart;
+          const pct = Math.min(100, (elapsed / HERO_CYCLE_DURATION) * 100);
+          const activeBtn = heroTabBtns[currentHeroIdx];
+          if (activeBtn) {
+            const prog = activeBtn.querySelector('.hero-tab-progress');
+            if (prog) prog.style.width = `${pct}%`;
+          }
 
-          if (!isPaused) {
-            heroCycleElapsedMs += delta;
-            const progressPct = Math.min(100, (heroCycleElapsedMs / HERO_AUTO_INTERVAL_MS) * 100);
-
-            const activeKey = HERO_TAB_ORDER[currentHeroTabIndex];
-            const activeBtn = document.querySelector(`.hero-tab-btn[data-hero-tab="${activeKey}"]`);
-            if (activeBtn) {
-              const bar = activeBtn.querySelector('.hero-tab-progress');
-              if (bar) bar.style.width = `${progressPct}%`;
-            }
-
-            if (heroCycleElapsedMs >= HERO_AUTO_INTERVAL_MS) {
-              const nextIndex = (currentHeroTabIndex + 1) % HERO_TAB_ORDER.length;
-              selectHeroTab(HERO_TAB_ORDER[nextIndex], true);
-            }
+          if (elapsed >= HERO_CYCLE_DURATION) {
+            const nextIdx = (currentHeroIdx + 1) % heroKeys.length;
+            activateHeroTab(heroKeys[nextIdx], true);
           }
         }
-        requestAnimationFrame(runHeroAutoShowcaseLoop);
+        requestAnimationFrame(tickHeroAutoCycle);
 
-        // Estado do Simulador de Escopo
+        // --- SIMULADOR DE ESCOPO ---
         let currentSolution = 'sites';
         let currentPriority = 'Vender Mais & Escalar';
-        const selectedFeaturesMap = {};
+        const selectedFeaturesMap = {
+          sites: new Set(['design', 'wpp', 'seo']),
+          sistemas: new Set(['dash', 'auth', 'api']),
+          apps: new Set(['push', 'gps', 'admin']),
+          hardware: new Set(['ssd', 'termica', 'os'])
+        };
 
-        Object.keys(SIMULATOR_CONFIG).forEach((k) => {
-          selectedFeaturesMap[k] = new Set(
-            SIMULATOR_CONFIG[k].features.filter((f) => f.checked).map((f) => f.id)
-          );
-        });
-
-        const featuresContainer = document.getElementById('sim-features-container');
-        const solutionCards = document.querySelectorAll('.sim-solution-card');
-        const priorityBtns = document.querySelectorAll('.sim-priority-btn');
+        const simFeaturesContainer = document.getElementById('sim-features-container');
+        const simTimelineEl = document.getElementById('sim-timeline');
+        const simLevelEl = document.getElementById('sim-level');
+        const simArchEl = document.getElementById('sim-architecture');
+        const simBenefitsEl = document.getElementById('sim-benefits');
+        const simSummaryEl = document.getElementById('sim-summary-output');
+        const sim3dBadgeEl = document.getElementById('sim-3d-count-badge');
 
         function renderSimulatorFeatures() {
+          if (!simFeaturesContainer) return;
           const cfg = SIMULATOR_CONFIG[currentSolution];
-          if (!cfg || !featuresContainer) return;
-
-          featuresContainer.innerHTML = '';
           const activeSet = selectedFeaturesMap[currentSolution];
 
-          cfg.features.forEach((feat) => {
+          simFeaturesContainer.innerHTML = cfg.features.map((feat) => {
             const isChecked = activeSet.has(feat.id);
-            const label = document.createElement('button');
-            label.type = 'button';
-            label.className = `text-left p-3.5 rounded-2xl border transition-all flex items-start justify-between gap-3 ${
-              isChecked
-                ? 'border-cyanNeon bg-cyanNeon/10 text-white'
-                : 'border-slate-800 bg-slate-900/60 text-slate-300 hover:border-slate-700'
-            }`;
-
-            label.innerHTML = `
-              <div>
-                <span class="font-display font-bold text-xs sm:text-sm block text-white">${feat.name}</span>
-                <span class="text-[11px] text-slate-400 block mt-0.5">${feat.desc}</span>
-              </div>
-              <span class="w-5 h-5 rounded-md shrink-0 flex items-center justify-center text-xs font-bold ${
-                isChecked ? 'bg-cyanNeon text-obsidian' : 'border border-slate-600 text-transparent'
-              }">✓</span>
+            return `
+              <button type="button" data-feat-id="${feat.id}" class="sim-feat-btn text-left p-3.5 rounded-2xl border transition-all ${
+                isChecked
+                  ? 'border-cyanNeon bg-cyanNeon/10 text-white'
+                  : 'border-slate-800 bg-slate-900/60 text-slate-300 hover:border-slate-700'
+              }">
+                <div class="flex items-center justify-between gap-2 mb-1">
+                  <span class="font-display font-bold text-xs sm:text-sm">${feat.name}</span>
+                  <span class="w-5 h-5 rounded-md flex items-center justify-center text-xs font-bold ${
+                    isChecked ? 'bg-cyanNeon text-obsidian' : 'border border-slate-600 text-transparent'
+                  }">✓</span>
+                </div>
+                <p class="text-[11px] text-slate-400 leading-snug">${feat.desc}</p>
+              </button>
             `;
+          }).join('');
 
-            label.addEventListener('click', () => {
-              if (activeSet.has(feat.id)) {
-                activeSet.delete(feat.id);
+          simFeaturesContainer.querySelectorAll('.sim-feat-btn').forEach((btn) => {
+            btn.addEventListener('click', () => {
+              const fid = btn.getAttribute('data-feat-id');
+              if (activeSet.has(fid)) {
+                activeSet.delete(fid);
               } else {
-                activeSet.add(feat.id);
+                activeSet.add(fid);
               }
               renderSimulatorFeatures();
               updateSimulatorSummary();
             });
-
-            featuresContainer.appendChild(label);
           });
         }
 
         function updateSimulatorSummary() {
           const cfg = SIMULATOR_CONFIG[currentSolution];
-          if (!cfg) return;
-
           const activeSet = selectedFeaturesMap[currentSolution];
+
           let minDays = cfg.baseDays[0];
           let maxDays = cfg.baseDays[1];
           const chosenNames = [];
 
-          cfg.features.forEach((feat) => {
-            if (activeSet.has(feat.id)) {
-              minDays += feat.days[0];
-              maxDays += feat.days[1];
-              chosenNames.push(feat.name);
+          cfg.features.forEach((f) => {
+            if (activeSet.has(f.id)) {
+              minDays += f.days[0];
+              maxDays += f.days[1];
+              chosenNames.push(f.name);
             }
           });
 
-          if (currentPriority.includes('Urgência')) {
-            minDays = Math.max(1, Math.round(minDays * 0.75));
-            maxDays = Math.max(1, Math.round(maxDays * 0.8));
+          const unit = currentSolution === 'hardware' ? 'dias úteis (ou express)' : 'dias úteis';
+          const timelineText = `${minDays} a ${maxDays} ${unit}`;
+
+          if (simTimelineEl) simTimelineEl.textContent = timelineText;
+          if (simLevelEl) simLevelEl.textContent = cfg.level;
+          if (simArchEl) simArchEl.textContent = cfg.architecture;
+          if (simBenefitsEl) simBenefitsEl.textContent = cfg.benefits;
+
+          const moduleCount = Math.max(1, chosenNames.length);
+          if (sim3dBadgeEl) {
+            sim3dBadgeEl.textContent = `${moduleCount} MÓDULO${moduleCount > 1 ? 'S' : ''} 3D ATIVO${moduleCount > 1 ? 'S' : ''}`;
           }
-
-          const timelineText = currentSolution === 'hardware'
-            ? `${minDays} a ${maxDays} dia(s) útil(eis)`
-            : `${minDays} a ${maxDays} dias úteis`;
-
-          const timelineEl = document.getElementById('sim-timeline');
-          const levelEl = document.getElementById('sim-level');
-          const archEl = document.getElementById('sim-architecture');
-          const benefitsEl = document.getElementById('sim-benefits');
-          const summaryEl = document.getElementById('sim-summary-output');
-          const badge3dEl = document.getElementById('sim-3d-count-badge');
-
-          if (timelineEl) timelineEl.textContent = timelineText;
-          if (levelEl) levelEl.textContent = cfg.level;
-          if (archEl) archEl.textContent = cfg.architecture;
-          if (benefitsEl) benefitsEl.textContent = cfg.benefits;
-
-          const activeCount = Math.max(1, chosenNames.length);
-          if (badge3dEl) badge3dEl.textContent = `${activeCount} MÓDULO(S) 3D ATIVO(S)`;
           if (simSceneController) {
-            simSceneController.setModuleCount(activeCount, HERO_DATA[currentSolution].colorHex);
+            simSceneController.setModuleCount(moduleCount);
           }
 
-          const scopeText =
-            `• Serviço: ${cfg.title}\n` +
-            `• Recursos: ${chosenNames.length ? chosenNames.join(', ') : 'Escopo Base Essencial'}\n` +
+          const summaryText =
+            `• Solução: ${cfg.title}\n` +
+            `• Recursos: ${chosenNames.length ? chosenNames.join(', ') : 'Escopo Base'}\n` +
             `• Objetivo: ${currentPriority}\n` +
             `• Prazo Estimado: ${timelineText}`;
 
-          if (summaryEl) summaryEl.textContent = scopeText;
+          if (simSummaryEl) simSummaryEl.textContent = summaryText;
         }
 
-        function setSimulatorSolution(solKey) {
+        function selectSimulatorSolution(solKey) {
           if (!SIMULATOR_CONFIG[solKey]) return;
           currentSolution = solKey;
 
-          solutionCards.forEach((card) => {
+          document.querySelectorAll('.sim-solution-card').forEach((card) => {
             const isSelected = card.getAttribute('data-sim-solution') === solKey;
             const radio = card.querySelector('.sim-radio');
-            if (isSelected) {
-              card.className = 'sim-solution-card text-left p-4 rounded-2xl border border-cyanNeon bg-cyanNeon/10 transition-all';
-              if (radio) radio.className = 'sim-radio w-5 h-5 rounded-full bg-cyanNeon text-obsidian flex items-center justify-center text-xs font-bold';
-            } else {
-              card.className = 'sim-solution-card text-left p-4 rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-slate-700 transition-all';
-              if (radio) radio.className = 'sim-radio w-5 h-5 rounded-full border border-slate-600 text-slate-400 flex items-center justify-center text-xs';
+            card.className = 'sim-solution-card text-left p-4 rounded-2xl border transition-all ' +
+              (isSelected
+                ? 'border-cyanNeon bg-cyanNeon/10'
+                : 'border-slate-800 bg-slate-900/60 hover:border-slate-700');
+            if (radio) {
+              radio.className = 'sim-radio w-5 h-5 rounded-full flex items-center justify-center text-xs ' +
+                (isSelected ? 'bg-cyanNeon text-obsidian font-bold' : 'border border-slate-600 text-slate-400');
             }
           });
 
@@ -2735,63 +2598,61 @@
           updateSimulatorSummary();
         }
 
-        solutionCards.forEach((card) => {
+        document.querySelectorAll('.sim-solution-card').forEach((card) => {
           card.addEventListener('click', () => {
-            setSimulatorSolution(card.getAttribute('data-sim-solution'));
+            selectSimulatorSolution(card.getAttribute('data-sim-solution'));
           });
         });
 
-        priorityBtns.forEach((btn) => {
+        document.querySelectorAll('.sim-priority-btn').forEach((btn) => {
           btn.addEventListener('click', () => {
             currentPriority = btn.getAttribute('data-sim-priority');
-            priorityBtns.forEach((b) => {
+            document.querySelectorAll('.sim-priority-btn').forEach((b) => {
               const active = b === btn;
-              b.className = active
-                ? 'sim-priority-btn px-3.5 py-2.5 rounded-xl border border-cyanNeon bg-cyanNeon/10 text-cyanNeon font-mono text-xs font-semibold text-center transition-all'
-                : 'sim-priority-btn px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-900/70 text-slate-300 hover:border-slate-700 font-mono text-xs font-semibold text-center transition-all';
+              b.className = 'sim-priority-btn px-3.5 py-2.5 rounded-xl border font-mono text-xs font-semibold text-center transition-all ' +
+                (active
+                  ? 'border-cyanNeon bg-cyanNeon/10 text-cyanNeon'
+                  : 'border-slate-800 bg-slate-900/70 text-slate-300 hover:border-slate-700');
             });
             updateSimulatorSummary();
           });
         });
 
-        // Atalhos dos cards de serviço e do Hero para o Simulador
+        // Atalhos dos Cards de Serviços e do Hero para o Simulador
+        function jumpToSimulatorWithService(serviceKey) {
+          selectSimulatorSolution(serviceKey);
+          const simSection = document.getElementById('simulador');
+          if (simSection) simSection.scrollIntoView({ behavior: 'smooth' });
+          showToast('Solução carregada no simulador!');
+        }
+
         document.querySelectorAll('.select-service-btn').forEach((btn) => {
           btn.addEventListener('click', () => {
-            const target = btn.getAttribute('data-select-service');
-            setSimulatorSolution(target);
-            selectHeroTab(target);
-            const simSection = document.getElementById('simulador');
-            if (simSection) simSection.scrollIntoView({ behavior: 'smooth' });
-            showToast('Serviço selecionado no simulador!');
+            jumpToSimulatorWithService(btn.getAttribute('data-select-service'));
           });
         });
 
-        if (heroShortcut) {
-          heroShortcut.addEventListener('click', () => {
-            const target = heroShortcut.getAttribute('data-service-target') || 'sites';
-            setSimulatorSolution(target);
-            const simSection = document.getElementById('simulador');
-            if (simSection) simSection.scrollIntoView({ behavior: 'smooth' });
+        if (heroSimShortcut) {
+          heroSimShortcut.addEventListener('click', () => {
+            jumpToSimulatorWithService(heroSimShortcut.getAttribute('data-service-target') || 'sites');
           });
         }
 
-        // Copiar Resumo (document.execCommand fallback seguro em iframes)
-        const copyBtn = document.getElementById('copy-scope-btn');
-        if (copyBtn) {
-          copyBtn.addEventListener('click', () => {
-            const summaryEl = document.getElementById('sim-summary-output');
-            if (!summaryEl) return;
-            const tempTextarea = document.createElement('textarea');
-            tempTextarea.value = summaryEl.textContent;
-            document.body.appendChild(tempTextarea);
-            tempTextarea.select();
+        // Copiar Resumo (document.execCommand('copy') para compatibilidade em iframes)
+        const copyScopeBtn = document.getElementById('copy-scope-btn');
+        if (copyScopeBtn && simSummaryEl) {
+          copyScopeBtn.addEventListener('click', () => {
+            const tempArea = document.createElement('textarea');
+            tempArea.value = simSummaryEl.textContent;
+            document.body.appendChild(tempArea);
+            tempArea.select();
             try {
               document.execCommand('copy');
               showToast('Resumo do escopo copiado!');
             } catch (e) {
               showToast('Não foi possível copiar automaticamente.');
             }
-            document.body.removeChild(tempTextarea);
+            document.body.removeChild(tempArea);
           });
         }
 
@@ -2799,48 +2660,40 @@
         const applyScopeBtn = document.getElementById('apply-scope-btn');
         if (applyScopeBtn) {
           applyScopeBtn.addEventListener('click', () => {
-            const cfg = SIMULATOR_CONFIG[currentSolution];
-            const summaryEl = document.getElementById('sim-summary-output');
             const serviceSelect = document.getElementById('client-service');
             const detailsArea = document.getElementById('client-details');
-            const contactSection = document.getElementById('contato');
+            const cfg = SIMULATOR_CONFIG[currentSolution];
 
-            if (serviceSelect && cfg) serviceSelect.value = cfg.title;
-            if (detailsArea && summaryEl) {
-              detailsArea.value = `Olá Ronei! Simulei o seguinte escopo no site da Tech Pereira:\n\n${summaryEl.textContent}\n\nGostaria de receber uma proposta.`;
+            if (serviceSelect && cfg) {
+              for (let i = 0; i < serviceSelect.options.length; i++) {
+                if (serviceSelect.options[i].value.toLowerCase().includes(currentSolution === 'hardware' ? 'manutenção' : currentSolution)) {
+                  serviceSelect.selectedIndex = i;
+                  break;
+                }
+              }
             }
+            if (detailsArea && simSummaryEl) {
+              detailsArea.value = `Olá Ronei! Simulei o seguinte escopo no site:\n\n${simSummaryEl.textContent}`;
+            }
+
+            const contactSection = document.getElementById('contato');
             if (contactSection) contactSection.scrollIntoView({ behavior: 'smooth' });
-            showToast('Escopo transferido para o formulário de orçamento!');
+            showToast('Escopo preenchido! Agora informe seu nome e WhatsApp.');
           });
         }
 
-        // Inicializa estado padrão do simulador
-        setSimulatorSolution('sites');
+        // Inicializa o estado padrão do simulador
+        selectSimulatorSolution('sites');
 
-        // Modal de Estudos de Caso
+        // --- MODAL DE ESTUDOS DE CASO ---
         const caseModal = document.getElementById('case-modal');
-        let activeCaseServiceOption = '';
-
-        function openCaseModal(caseId) {
-          const item = CASE_STUDIES[caseId];
-          if (!item || !caseModal) return;
-
-          const tagEl = document.getElementById('modal-case-tag');
-          const titleEl = document.getElementById('modal-case-title');
-          const challengeEl = document.getElementById('modal-case-challenge');
-          const solutionEl = document.getElementById('modal-case-solution');
-          const resultsEl = document.getElementById('modal-case-results');
-
-          if (tagEl) tagEl.textContent = item.tag;
-          if (titleEl) titleEl.textContent = item.title;
-          if (challengeEl) challengeEl.textContent = item.challenge;
-          if (solutionEl) solutionEl.textContent = item.solution;
-          if (resultsEl) resultsEl.textContent = item.results;
-          activeCaseServiceOption = item.serviceOption;
-
-          caseModal.classList.remove('hidden');
-          caseModal.classList.add('flex');
-        }
+        const modalTag = document.getElementById('modal-case-tag');
+        const modalTitle = document.getElementById('modal-case-title');
+        const modalChallenge = document.getElementById('modal-case-challenge');
+        const modalSolution = document.getElementById('modal-case-solution');
+        const modalResults = document.getElementById('modal-case-results');
+        const modalRequestSimilar = document.getElementById('modal-request-similar');
+        let activeCaseStudy = null;
 
         function closeCaseModal() {
           if (!caseModal) return;
@@ -2850,36 +2703,49 @@
 
         document.querySelectorAll('.open-case-btn').forEach((btn) => {
           btn.addEventListener('click', () => {
-            openCaseModal(btn.getAttribute('data-case-id'));
+            const cid = btn.getAttribute('data-case-id');
+            const study = CASE_STUDIES[cid];
+            if (!study || !caseModal) return;
+            activeCaseStudy = study;
+
+            if (modalTag) modalTag.textContent = study.tag;
+            if (modalTitle) modalTitle.textContent = study.title;
+            if (modalChallenge) modalChallenge.textContent = study.challenge;
+            if (modalSolution) modalSolution.textContent = study.solution;
+            if (modalResults) modalResults.textContent = study.results;
+
+            caseModal.classList.remove('hidden');
+            caseModal.classList.add('flex');
           });
         });
 
-        const closeModalBtn = document.getElementById('close-case-modal');
-        const closeModalSecBtn = document.getElementById('modal-close-secondary');
-        const reqSimilarBtn = document.getElementById('modal-request-similar');
-
-        if (closeModalBtn) closeModalBtn.addEventListener('click', closeCaseModal);
-        if (closeModalSecBtn) closeModalSecBtn.addEventListener('click', closeCaseModal);
+        const closeBtn1 = document.getElementById('close-case-modal');
+        const closeBtn2 = document.getElementById('modal-close-secondary');
+        if (closeBtn1) closeBtn1.addEventListener('click', closeCaseModal);
+        if (closeBtn2) closeBtn2.addEventListener('click', closeCaseModal);
         if (caseModal) {
           caseModal.addEventListener('click', (e) => {
             if (e.target === caseModal) closeCaseModal();
           });
         }
-        if (reqSimilarBtn) {
-          reqSimilarBtn.addEventListener('click', () => {
+
+        if (modalRequestSimilar) {
+          modalRequestSimilar.addEventListener('click', () => {
             closeCaseModal();
-            const serviceSelect = document.getElementById('client-service');
-            const detailsArea = document.getElementById('client-details');
-            const contactSection = document.getElementById('contato');
-            if (serviceSelect && activeCaseServiceOption) serviceSelect.value = activeCaseServiceOption;
-            if (detailsArea) {
-              detailsArea.value = `Olá Ronei! Vi o estudo de caso "${document.getElementById('modal-case-title')?.textContent || ''}" no seu portfólio e gostaria de uma solução semelhante.`;
+            if (activeCaseStudy) {
+              const serviceSelect = document.getElementById('client-service');
+              const detailsArea = document.getElementById('client-details');
+              if (serviceSelect) serviceSelect.value = activeCaseStudy.serviceOption;
+              if (detailsArea) {
+                detailsArea.value = `Olá Ronei! Vi o estudo de caso "${activeCaseStudy.title}" no seu portfólio e gostaria de solicitar um orçamento semelhante.`;
+              }
             }
+            const contactSection = document.getElementById('contato');
             if (contactSection) contactSection.scrollIntoView({ behavior: 'smooth' });
           });
         }
 
-        // Envio do Formulário & WhatsApp
+        // --- FORMULÁRIO DE CONTATO & WHATSAPP ---
         function openWhatsAppWithText(text) {
           const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
           window.open(url, '_blank', 'noopener,noreferrer');
@@ -2889,47 +2755,59 @@
         if (contactForm) {
           contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const name = document.getElementById('client-name')?.value.trim() || '';
-            const phone = document.getElementById('client-whatsapp')?.value.trim() || '';
+            const name = (document.getElementById('client-name')?.value || '').trim();
+            const phone = (document.getElementById('client-whatsapp')?.value || '').trim();
             const service = document.getElementById('client-service')?.value || '';
-            const details = document.getElementById('client-details')?.value.trim() || '';
+            const details = (document.getElementById('client-details')?.value || '').trim();
 
-            const message =
+            if (!name || !phone || !details) {
+              showToast('Por favor, preencha todos os campos obrigatórios.');
+              return;
+            }
+
+            const msg =
               `Olá Ronei (Tech Pereira)! Gostaria de solicitar um orçamento:\n\n` +
-              `*Nome/Empresa:* ${name}\n` +
-              `*WhatsApp:* ${phone}\n` +
-              `*Serviço:* ${service}\n` +
-              `*Detalhes:* ${details}`;
+              `• *Nome/Empresa:* ${name}\n` +
+              `• *WhatsApp:* ${phone}\n` +
+              `• *Serviço:* ${service}\n` +
+              `• *Detalhes:* ${details}`;
 
-            showToast('Redirecionando para o WhatsApp da Tech Pereira...');
-            openWhatsAppWithText(message);
+            showToast('Redirecionando para o WhatsApp...');
+            openWhatsAppWithText(msg);
           });
         }
 
         const directWppBtn = document.getElementById('direct-whatsapp-btn');
         const floatingWppBtn = document.getElementById('floating-whatsapp-btn');
-        const defaultWppMsg = 'Olá Ronei (Tech Pereira)! Vim pelo seu site e gostaria de conversar sobre um projeto / serviço de TI.';
+        const quickMsg = 'Olá Ronei (Tech Pereira)! Vim pelo seu site e gostaria de conversar sobre um projeto / serviço de TI.';
 
-        if (directWppBtn) {
-          directWppBtn.addEventListener('click', () => openWhatsAppWithText(defaultWppMsg));
-        }
-        if (floatingWppBtn) {
-          floatingWppBtn.addEventListener('click', () => openWhatsAppWithText(defaultWppMsg));
-        }
+        if (directWppBtn) directWppBtn.addEventListener('click', () => openWhatsAppWithText(quickMsg));
+        if (floatingWppBtn) floatingWppBtn.addEventListener('click', () => openWhatsAppWithText(quickMsg));
 
-        // Efeito de brilho radial + perspectiva 3D nos cards Glassmorphism
+        // --- BRILHO INTERATIVO & PERSPECTIVA 3D NOS CARDS ---
+        const supportsHover = window.matchMedia('(hover: hover)').matches;
         document.querySelectorAll('.glass-card').forEach((card) => {
-          card.addEventListener('mousemove', (e) => {
+          card.addEventListener('pointermove', (e) => {
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             card.style.setProperty('--mouse-x', `${x}px`);
             card.style.setProperty('--mouse-y', `${y}px`);
+
+            if (supportsHover && card.id !== 'hero-showcase-card') {
+              const rotateY = ((x / rect.width) - 0.5) * 4;
+              const rotateX = (0.5 - (y / rect.height)) * 4;
+              card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            }
+          }, { passive: true });
+
+          card.addEventListener('pointerleave', () => {
+            card.style.transform = '';
           });
         });
 
-        // IntersectionObserver para revelar seções suavemente
-        const revealElements = document.querySelectorAll('.reveal-on-scroll');
+        // --- ANIMAÇÃO DE REVELAÇÃO AO ROLAR (COM GARANTIA DE VISIBILIDADE) ---
+        const revealEls = document.querySelectorAll('.reveal-on-scroll');
         if ('IntersectionObserver' in window) {
           const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
@@ -2940,16 +2818,16 @@
             });
           }, { threshold: 0.08 });
 
-          revealElements.forEach((el) => observer.observe(el));
+          revealEls.forEach((el) => observer.observe(el));
         }
 
-        // Garantia de segurança para nunca manter seções ocultas
+        // Trava de segurança: garante todas as seções visíveis após 1.2s
         setTimeout(() => {
-          revealElements.forEach((el) => el.classList.add('is-visible'));
-        }, 900);
+          revealEls.forEach((el) => el.classList.add('is-visible'));
+        }, 1200);
       }
 
-      // Inicialização Segura
+      // Inicialização Segura da Aplicação
       function bootstrapApp() {
         initGlobalBackground3D();
         initUnifiedForeground3DEngine();
