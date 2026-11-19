@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#050811" />
   <meta name="color-scheme" content="dark" />
   <title>Tech Pereira | Ronei Pereira — Sites, Sistemas Web, Apps & Manutenção TI</title>
-  <meta name="description" content="Ronei Pereira (Tech Pereira) — Formado em Análise e Desenvolvimento de Sistemas e Pós-Graduado em Gestão de Tecnologia. Criação de Sites, Sistemas Web, Apps Mobile e Manutenção de Computadores e Notebooks." />
+  <meta name="description" content="Ronei Pereira (Tech Pereira) — Criação de Sites, Landing Pages, Sistema Web, App Mobile e Manutenção de Computadores e Notebooks em Belo Horizonte - MG." />
 
   <!-- Fontes Google: Space Grotesk, Plus Jakarta Sans e JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -43,7 +43,7 @@
     };
   </script>
 
-  <!-- Three.js r128 para cenários e modelos 3D interativos -->
+  <!-- Three.js r128 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <style>
@@ -68,7 +68,7 @@
       min-height: 100%;
     }
 
-    /* Camada base em CSS puro para renderização instantânea no mobile (Zero tela branca) */
+    /* Camada base em CSS puro para renderização instantânea */
     #cyber-css-backdrop {
       position: fixed;
       inset: 0;
@@ -94,7 +94,7 @@
       pointer-events: none;
     }
 
-    /* Canvas 3D Unificado para todos os modelos e ícones interativos (1 contexto WebGL mobile-safe) */
+    /* Canvas 3D Unificado para elementos das seções inferiores */
     #foreground-3d-canvas {
       position: fixed;
       inset: 0;
@@ -112,7 +112,7 @@
       background-clip: text;
     }
 
-    /* Cards Glassmorphism com brilho dinâmico e perspectiva 3D */
+    /* Cards Glassmorphism com brilho dinâmico */
     .glass-card {
       background: linear-gradient(160deg, rgba(15, 23, 42, 0.78) 0%, rgba(8, 13, 26, 0.90) 100%);
       backdrop-filter: blur(16px);
@@ -152,12 +152,10 @@
       box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 240, 255, 0.12);
     }
 
-    /* Pop-out 3D interno nos cards */
     .tilt-3d-pop {
       transform: translateZ(18px);
     }
 
-    /* Palcos 3D Interativos */
     .stage-3d-grab {
       cursor: grab;
       touch-action: none;
@@ -181,27 +179,6 @@
       background-position: 100% 50%;
       transform: translateY(-2px);
       box-shadow: 0 0 34px rgba(0, 240, 255, 0.5);
-    }
-
-    /* Barra de progresso sutil na borda inferior da aba ativa do Hero */
-    .hero-tab-progress {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      height: 3px;
-      width: 0%;
-      border-radius: 9999px;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-    }
-
-    /* Transição suave do conteúdo textual ao alternar modelos 3D */
-    .hero-panel-fade {
-      transition: opacity 0.26s ease, transform 0.26s ease;
-    }
-    .hero-panel-fade.is-switching {
-      opacity: 0.45;
-      transform: translateY(3px);
     }
 
     /* Animação de revelação ao rolar */
@@ -248,10 +225,10 @@
   <!-- Canvas 3D Global de Fundo -->
   <canvas id="bg-3d-canvas" aria-hidden="true"></canvas>
 
-  <!-- Canvas 3D Unificado para Palcos Interativos e Ícones 3D (Scissor Rendering Mobile-Safe) -->
+  <!-- Canvas 3D Unificado para ícones e miniaturas das seções inferiores -->
   <canvas id="foreground-3d-canvas" aria-hidden="true"></canvas>
 
-  <!-- Toast de Notificação Customizado (Substitui alert/confirm) -->
+  <!-- Toast de Notificação Customizado -->
   <div id="toast-notification" class="fixed bottom-24 right-5 z-50 pointer-events-none opacity-0 translate-y-4 transition-all duration-300 max-w-sm">
     <div class="bg-slate-900/95 border border-cyanNeon/40 backdrop-blur-xl rounded-2xl px-4 py-3 shadow-2xl flex items-center gap-3">
       <span class="w-2.5 h-2.5 rounded-full bg-cyanNeon shrink-0"></span>
@@ -283,10 +260,9 @@
 
       <!-- Menu Desktop -->
       <nav class="hidden lg:flex items-center gap-7 text-sm font-medium text-slate-300">
-        <a href="#autoridade" class="hover:text-cyanNeon transition-colors">Formação & Autoridade</a>
         <a href="#servicos" class="hover:text-cyanNeon transition-colors">Serviços</a>
         <a href="#simulador" class="hover:text-cyanNeon transition-colors">Simulador de Escopo</a>
-        <a href="#portfolio" class="hover:text-cyanNeon transition-colors">Portfólio 3D</a>
+        <a href="#portfolio" class="hover:text-cyanNeon transition-colors">Portfólio</a>
         <a href="#processo" class="hover:text-cyanNeon transition-colors">Método</a>
       </nav>
 
@@ -310,10 +286,9 @@
 
     <!-- Menu Gaveta Mobile -->
     <div id="mobile-menu" class="hidden lg:hidden bg-deep/95 backdrop-blur-2xl border-b border-slate-800 px-4 pt-3 pb-6 space-y-2">
-      <a href="#autoridade" class="mobile-nav-link block px-4 py-3 rounded-xl text-slate-200 hover:bg-slate-800/70 hover:text-cyanNeon font-medium">Formação & Autoridade</a>
       <a href="#servicos" class="mobile-nav-link block px-4 py-3 rounded-xl text-slate-200 hover:bg-slate-800/70 hover:text-cyanNeon font-medium">Serviços Especializados</a>
       <a href="#simulador" class="mobile-nav-link block px-4 py-3 rounded-xl text-slate-200 hover:bg-slate-800/70 hover:text-cyanNeon font-medium">Simulador de Escopo</a>
-      <a href="#portfolio" class="mobile-nav-link block px-4 py-3 rounded-xl text-slate-200 hover:bg-slate-800/70 hover:text-cyanNeon font-medium">Portfólio 3D</a>
+      <a href="#portfolio" class="mobile-nav-link block px-4 py-3 rounded-xl text-slate-200 hover:bg-slate-800/70 hover:text-cyanNeon font-medium">Portfólio</a>
       <a href="#processo" class="mobile-nav-link block px-4 py-3 rounded-xl text-slate-200 hover:bg-slate-800/70 hover:text-cyanNeon font-medium">Processo de Trabalho</a>
       <div class="pt-2">
         <a href="#contato" class="mobile-nav-link block w-full text-center py-3.5 rounded-xl btn-neon-primary font-display text-sm">
@@ -324,206 +299,141 @@
   </header>
 
   <!-- CONTEÚDO PRINCIPAL -->
-  <main class="relative z-10 pt-24 sm:pt-28">
+  <main class="relative z-10 pt-20 sm:pt-24">
 
-    <!-- 1. HERO SECTION COM ESTÚDIO 3D INTERATIVO MULTI-MODELOS -->
-    <section id="inicio" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-16 lg:py-16">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+    <!-- 1. HERO SECTION — APRESENTAÇÃO PROFISSIONAL COM ELEMENTOS 3D INTEGRADOS -->
+    <section id="inicio" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-4 pb-14 lg:pb-16">
+      <div class="space-y-5 sm:space-y-6 text-center">
 
-        <!-- Coluna Esquerda: Proposta de Valor & Credenciais -->
-        <div class="lg:col-span-6 space-y-6">
-          <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-emeraldNeon/10 border border-emeraldNeon/30 text-emeraldNeon font-mono text-[11px] sm:text-xs tracking-wide">
+        <!-- Emblema Globo 3D Central -->
+        <div class="flex flex-col items-center gap-3">
+          <div id="hero-crest-3d" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-950/85 border border-cyanNeon/35 shadow-neon-cyan overflow-hidden backdrop-blur-xl"></div>
+
+          <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-emeraldNeon/10 border border-emeraldNeon/30 text-emeraldNeon font-mono text-[11px] sm:text-xs tracking-wide">
             <span class="w-2 h-2 rounded-full bg-emeraldNeon status-dot"></span>
-            ADS • PÓS-GRADUADO EM GESTÃO DE TECNOLOGIA | BELO HORIZONTE - MG
-          </div>
-
-          <h1 class="font-display font-bold text-3xl sm:text-5xl lg:text-[52px] leading-[1.12] tracking-tight text-white">
-            Engenharia Digital em <span class="text-gradient-tech">Sites, Sistemas, Apps</span> e Manutenção Especializada.
-          </h1>
-
-          <p class="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl">
-            Unindo a precisão técnica da <strong class="text-white font-semibold">Análise e Desenvolvimento de Sistemas</strong> à visão estratégica da <strong class="text-cyanNeon font-semibold">Pós-Graduação em Gestão de Tecnologia</strong> para criar soluções digitais de alta conversão e manter computadores e notebooks em performance máxima.
-          </p>
-
-          <!-- Botões de Ação -->
-          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
-            <a href="#simulador" class="btn-neon-primary px-6 py-4 rounded-2xl text-center font-display text-sm sm:text-base flex items-center justify-center gap-2">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-              Simular Meu Projeto Agora
-            </a>
-            <a href="#servicos" class="px-6 py-4 rounded-2xl bg-slate-900/80 hover:bg-slate-800/90 border border-slate-700/80 hover:border-cyanNeon/40 text-white font-semibold text-sm sm:text-base text-center transition-all">
-              Explorar Soluções ↓
-            </a>
-          </div>
-
-          <!-- 3 Pilares Rápidos -->
-          <div class="grid grid-cols-3 gap-3 sm:gap-5 pt-4 border-t border-slate-800/80">
-            <div>
-              <p class="font-display font-bold text-lg sm:text-2xl text-white">Full-Stack</p>
-              <p class="text-xs text-slate-400">Sites, Sistemas & Apps</p>
-            </div>
-            <div>
-              <p class="font-display font-bold text-lg sm:text-2xl text-cyanNeon">ADS + Pós</p>
-              <p class="text-xs text-slate-400">Engenharia & Gestão TI</p>
-            </div>
-            <div>
-              <p class="font-display font-bold text-lg sm:text-2xl text-emeraldNeon">Hardware Lab</p>
-              <p class="text-xs text-slate-400">Upgrades & Diagnóstico</p>
-            </div>
+            SOFTWARE SOB MEDIDA &amp; ASSISTÊNCIA HARDWARE | BELO HORIZONTE - MG
           </div>
         </div>
 
-        <!-- Coluna Direita: Estúdio 3D Interativo (Notebook, Sistema SaaS, Smartphone, Placa-Mãe) -->
-        <div class="lg:col-span-6">
-          <div id="hero-showcase-card" class="glass-card rounded-3xl p-4 sm:p-5 border border-cyanNeon/25 shadow-2xl overflow-hidden">
+        <h1 class="font-display font-bold tracking-tight text-white leading-[1.15] [text-wrap:balance] max-w-4xl mx-auto">
+          <span class="block text-3xl sm:text-5xl lg:text-[54px] text-white">
+            Criação de Sites, Landing Pages,
+          </span>
+          <span class="block text-3xl sm:text-5xl lg:text-[56px] text-gradient-tech mt-1.5">
+            Sistema Web e App Mobile
+          </span>
+        </h1>
 
-            <!-- Barra Superior de Controle 3D -->
-            <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-800/80">
-              <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-950/90 border border-cyanNeon/30 font-mono text-[10px] sm:text-[11px] text-cyanNeon">
-                <span class="w-2 h-2 rounded-full bg-cyanNeon animate-pulse"></span>
-                3D INTERATIVO • ARRASTE 360°
-              </div>
+        <p class="text-slate-300 text-base sm:text-lg max-w-3xl mx-auto leading-relaxed">
+          Soluções tecnológicas completas conduzidas por <strong class="text-white">Ronei Pereira</strong> para impulsionar vendas no ambiente digital e garantir máxima performance aos seus equipamentos.
+        </p>
 
-              <div class="flex items-center gap-1.5 sm:gap-2">
-                <!-- Zoom 3D -->
-                <div class="inline-flex items-center rounded-full bg-slate-950/90 border border-slate-700/80 px-1.5 py-1 font-mono text-xs">
-                  <button id="hero-3d-zoom-out" type="button" aria-label="Diminuir zoom 3D" class="w-6 h-6 rounded-full hover:bg-slate-800 text-slate-300 hover:text-cyanNeon transition-colors">−</button>
-                  <span class="px-1.5 text-[10px] text-slate-400">3D</span>
-                  <button id="hero-3d-zoom-in" type="button" aria-label="Aumentar zoom 3D" class="w-6 h-6 rounded-full hover:bg-slate-800 text-slate-300 hover:text-cyanNeon transition-colors">+</button>
-                </div>
-
-                <!-- Botão Pulso Energético -->
-                <button id="hero-3d-pulse-btn" type="button" class="px-3 py-1.5 rounded-full bg-cyanNeon/10 hover:bg-cyanNeon/20 border border-cyanNeon/40 font-mono text-[10px] sm:text-[11px] font-semibold text-cyanNeon transition-all">
-                  PULSO
-                </button>
-
-                <!-- Botão Modo Turbo -->
-                <button id="hero-3d-turbo-btn" type="button" class="px-3 py-1.5 rounded-full bg-violetNeon/15 hover:bg-violetNeon/25 border border-violetNeon/40 font-mono text-[10px] sm:text-[11px] font-semibold text-violet-300 transition-all">
-                  ⚡ TURBO: OFF
-                </button>
-              </div>
-            </div>
-
-            <!-- Viewport Exclusiva do Canvas 3D + Barra Inferior Dedicada (Zero sobreposição no mobile) -->
-            <div class="my-2 rounded-2xl bg-gradient-to-b from-slate-950/70 via-slate-900/35 to-slate-950/85 border border-slate-800/70 overflow-hidden">
-              <div id="hero-3d-stage" class="relative w-full h-52 sm:h-64 overflow-hidden stage-3d-grab"></div>
-              <div class="px-3 py-2 bg-slate-950/80 border-t border-slate-800/70 flex items-center justify-between gap-2">
-                <span class="font-mono text-[10px] text-slate-500 uppercase tracking-wider hidden sm:inline">VIEWPORT WEBGL</span>
-                <span id="hero-3d-model-badge" class="ml-auto px-2.5 py-0.5 rounded-md bg-slate-900/95 border border-slate-700/80 font-mono text-[10px] text-slate-300 truncate">
-                  MODELO: NOTEBOOK HOLOGRÁFICO 3D
-                </span>
-              </div>
-            </div>
-
-            <!-- Painel Inferior de Seleção de Serviço & Métricas -->
-            <div class="rounded-2xl bg-slate-950/85 border border-slate-800/90 p-3.5 sm:p-4 space-y-3.5">
-              <!-- Abas de Alternância dos 4 Modelos 3D com Barra de Progresso -->
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5" role="tablist">
-                <button type="button" data-hero-tab="sites" class="hero-tab-btn relative overflow-hidden px-2.5 py-2.5 rounded-xl font-display text-xs font-bold transition-all bg-cyanNeon text-obsidian shadow-neon-cyan">
-                  <span>Sites & Vendas</span>
-                  <span class="hero-tab-progress bg-obsidian/65" style="width: 0%;"></span>
-                </button>
-                <button type="button" data-hero-tab="sistemas" class="hero-tab-btn relative overflow-hidden px-2.5 py-2.5 rounded-xl font-display text-xs font-semibold transition-all bg-slate-900 text-slate-300 hover:text-white border border-slate-800">
-                  <span>Sistemas SaaS</span>
-                  <span class="hero-tab-progress bg-cyanNeon" style="width: 0%;"></span>
-                </button>
-                <button type="button" data-hero-tab="apps" class="hero-tab-btn relative overflow-hidden px-2.5 py-2.5 rounded-xl font-display text-xs font-semibold transition-all bg-slate-900 text-slate-300 hover:text-white border border-slate-800">
-                  <span>Apps Mobile</span>
-                  <span class="hero-tab-progress bg-obsidian/65" style="width: 0%;"></span>
-                </button>
-                <button type="button" data-hero-tab="hardware" class="hero-tab-btn relative overflow-hidden px-2.5 py-2.5 rounded-xl font-display text-xs font-semibold transition-all bg-slate-900 text-slate-300 hover:text-white border border-slate-800">
-                  <span>Hardware & PCs</span>
-                  <span class="hero-tab-progress bg-obsidian/65" style="width: 0%;"></span>
-                </button>
-              </div>
-
-              <!-- Informações Dinâmicas do Modelo Ativo -->
-              <div id="hero-panel-content" class="hero-panel-fade flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
-                <div class="space-y-1">
-                  <p id="hero-panel-kicker" class="font-mono text-[10px] sm:text-[11px] text-cyanNeon uppercase tracking-wider">
-                    ALTA CONVERSÃO & SEO 100/100
-                  </p>
-                  <h2 id="hero-panel-title" class="font-display font-bold text-base sm:text-lg text-white leading-snug">
-                    Sites & Landing Pages que transformam visitantes em clientes
+        <!-- Duas Frentes de Atuação com Palcos 3D Dedicados -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 text-left max-w-5xl mx-auto pt-1">
+          <!-- Card Frente 1: Desenvolvimento Digital -->
+          <div class="glass-card rounded-3xl p-6 sm:p-7 border border-cyanNeon/25 flex flex-col justify-between gap-5">
+            <div class="space-y-4">
+              <div class="flex items-start justify-between gap-4">
+                <div class="space-y-2">
+                  <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-cyanNeon/10 border border-cyanNeon/30">
+                    <span class="w-2 h-2 rounded-full bg-cyanNeon shrink-0"></span>
+                    <span class="font-mono text-[11px] text-cyanNeon uppercase tracking-wider font-semibold">Desenvolvimento Digital</span>
+                  </div>
+                  <h2 class="font-display font-bold text-xl sm:text-[22px] text-white leading-snug tilt-3d-pop">
+                    Presença Digital &amp; Sistemas Sob Medida
                   </h2>
                 </div>
 
-                <div class="flex items-center gap-2 shrink-0">
-                  <div class="px-3 py-2 rounded-xl bg-slate-900/95 border border-slate-800 text-center min-w-[88px]">
-                    <span id="hero-metric-1-label" class="block font-mono text-[9px] text-slate-400 uppercase">VELOCIDADE</span>
-                    <span id="hero-metric-1-val" class="font-display font-bold text-sm text-cyanNeon">&lt; 0.8s</span>
-                  </div>
-                  <div class="px-3 py-2 rounded-xl bg-slate-900/95 border border-slate-800 text-center min-w-[96px]">
-                    <span id="hero-metric-2-label" class="block font-mono text-[9px] text-slate-400 uppercase">IMPACTO</span>
-                    <span id="hero-metric-2-val" class="font-display font-bold text-sm text-emeraldNeon">+3.4x Leads</span>
-                  </div>
-                </div>
+                <!-- Miniatura 3D Multiplataforma -->
+                <div class="hero-pillar-3d w-16 h-16 sm:w-[72px] sm:h-[72px] shrink-0 rounded-2xl bg-slate-950/90 border border-cyanNeon/35 shadow-neon-cyan overflow-hidden tilt-3d-pop" data-hero-3d="digital"></div>
               </div>
 
-              <!-- Stack & Atalho para o Simulador -->
-              <div class="pt-2.5 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs">
-                <span id="hero-panel-stack" class="font-mono text-[11px] text-slate-400">
-                  Stack: Next.js • Tailwind • SEO Avançado • WhatsApp API
-                </span>
-                <button id="hero-simulate-shortcut" type="button" data-service-target="sites" class="font-display font-bold text-cyanNeon hover:text-white transition-colors inline-flex items-center gap-1">
-                  Simular este serviço →
-                </button>
-              </div>
+              <p class="text-slate-300 text-sm leading-relaxed">
+                Projetos exclusivos em <strong class="text-cyanNeon font-semibold">criação de sites, landing pages, sistema web e app mobile</strong> desenvolvidos com foco em conversão de clientes, SEO técnico e automação empresarial.
+              </p>
             </div>
 
+            <div class="pt-3.5 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2.5">
+              <div class="flex flex-wrap gap-1.5 font-mono text-[10px]">
+                <span class="px-2 py-1 rounded-md bg-slate-950/90 border border-slate-800 text-slate-300">Sites &amp; LPs</span>
+                <span class="px-2 py-1 rounded-md bg-slate-950/90 border border-slate-800 text-slate-300">Sistema Web</span>
+                <span class="px-2 py-1 rounded-md bg-slate-950/90 border border-slate-800 text-slate-300">App Mobile</span>
+              </div>
+              <button type="button" data-select-service="sites" class="select-service-btn font-mono text-xs text-cyanNeon hover:text-white font-semibold transition-colors">
+                Simular →
+              </button>
+            </div>
+          </div>
+
+          <!-- Card Frente 2: Suporte & Hardware -->
+          <div class="glass-card rounded-3xl p-6 sm:p-7 border border-amber-400/25 flex flex-col justify-between gap-5">
+            <div class="space-y-4">
+              <div class="flex items-start justify-between gap-4">
+                <div class="space-y-2">
+                  <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-400/30">
+                    <span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
+                    <span class="font-mono text-[11px] text-amber-300 uppercase tracking-wider font-semibold">Suporte &amp; Hardware</span>
+                  </div>
+                  <h2 class="font-display font-bold text-xl sm:text-[22px] text-white leading-snug tilt-3d-pop">
+                    Performance Física &amp; Revitalização TI
+                  </h2>
+                </div>
+
+                <!-- Miniatura 3D Hardware & Refrigeração -->
+                <div class="hero-pillar-3d w-16 h-16 sm:w-[72px] sm:h-[72px] shrink-0 rounded-2xl bg-slate-950/90 border border-amber-400/35 shadow-lg overflow-hidden tilt-3d-pop" data-hero-3d="hardware"></div>
+              </div>
+
+              <p class="text-slate-300 text-sm leading-relaxed">
+                <strong class="text-amber-300 font-semibold">Manutenção de computadores e notebooks</strong> com diagnóstico técnico preciso, upgrade de SSD NVMe e memória RAM, limpeza térmica e otimização completa do sistema.
+              </p>
+            </div>
+
+            <div class="pt-3.5 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2.5">
+              <div class="flex flex-wrap gap-1.5 font-mono text-[10px]">
+                <span class="px-2 py-1 rounded-md bg-slate-950/90 border border-slate-800 text-slate-300">PCs &amp; Notes</span>
+                <span class="px-2 py-1 rounded-md bg-slate-950/90 border border-slate-800 text-slate-300">SSD NVMe / RAM</span>
+                <span class="px-2 py-1 rounded-md bg-slate-950/90 border border-slate-800 text-slate-300">Térmica</span>
+              </div>
+              <button type="button" data-select-service="hardware" class="select-service-btn font-mono text-xs text-amber-300 hover:text-white font-semibold transition-colors">
+                Simular →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3.5 pt-2">
+          <a href="#simulador" class="btn-neon-primary px-8 py-4 rounded-2xl text-center font-display text-sm sm:text-base flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            Simular Meu Projeto Agora
+          </a>
+          <a href="#servicos" class="px-8 py-4 rounded-2xl bg-slate-900/85 hover:bg-slate-800/90 border border-slate-700/80 hover:border-cyanNeon/40 text-white font-semibold text-sm sm:text-base text-center transition-all">
+            Explorar Soluções ↓
+          </a>
+        </div>
+
+        <!-- 3 Pilares Rápidos -->
+        <div class="grid grid-cols-3 gap-4 sm:gap-8 pt-6 border-t border-slate-800/80 max-w-3xl mx-auto">
+          <div>
+            <p class="font-display font-bold text-base sm:text-2xl text-white">Sites &amp; LPs</p>
+            <p class="text-xs sm:text-sm text-slate-400">Alta Conversão &amp; SEO</p>
+          </div>
+          <div>
+            <p class="font-display font-bold text-base sm:text-2xl text-cyanNeon">Web &amp; App</p>
+            <p class="text-xs sm:text-sm text-slate-400">Sistema Web &amp; Mobile</p>
+          </div>
+          <div>
+            <p class="font-display font-bold text-base sm:text-2xl text-amber-300">PCs &amp; Notes</p>
+            <p class="text-xs sm:text-sm text-slate-400">Manutenção &amp; Upgrades</p>
           </div>
         </div>
 
       </div>
     </section>
 
-    <!-- 2. AUTORIDADE & FORMAÇÃO ACADÊMICA -->
-    <section id="autoridade" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 reveal-on-scroll">
-      <div class="max-w-3xl mb-10 space-y-3">
-        <span class="inline-block px-3 py-1 rounded-full bg-violetNeon/15 border border-violetNeon/35 font-mono text-xs text-violet-300 uppercase tracking-wider">
-          FORMAÇÃO ACADÊMICA & DIFERENCIAL ESTRATÉGICO
-        </span>
-        <p class="text-slate-300 text-base sm:text-lg leading-relaxed">
-          Cada projeto e atendimento técnico é conduzido diretamente por <strong class="text-white">Ronei Pereira</strong>, combinando rigor de engenharia de software, arquitetura de hardware e gestão orientada a retorno sobre investimento.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Card 1: ADS -->
-        <div class="glass-card rounded-3xl p-6 sm:p-7 space-y-4">
-          <div class="authority-3d-box w-16 h-16 rounded-2xl bg-cyanNeon/10 border border-cyanNeon/35 overflow-hidden shadow-neon-cyan tilt-3d-pop" data-auth-icon="ads"></div>
-          <span class="font-mono text-[11px] text-cyanNeon uppercase tracking-wider block">Graduação Superior</span>
-          <h3 class="font-display font-bold text-xl text-white tilt-3d-pop">Análise e Desenvolvimento de Sistemas</h3>
-          <p class="text-sm text-slate-300 leading-relaxed">
-            Código limpo, bancos de dados modelados para escalar, APIs seguras e interfaces responsivas projetadas para máxima velocidade em qualquer tela.
-          </p>
-        </div>
-
-        <!-- Card 2: Pós-Graduação -->
-        <div class="glass-card rounded-3xl p-6 sm:p-7 space-y-4">
-          <div class="authority-3d-box w-16 h-16 rounded-2xl bg-violetNeon/15 border border-violetNeon/35 overflow-hidden shadow-neon-violet tilt-3d-pop" data-auth-icon="gestao"></div>
-          <span class="font-mono text-[11px] text-violet-300 uppercase tracking-wider block">Especialização</span>
-          <h3 class="font-display font-bold text-xl text-white tilt-3d-pop">Pós-Graduado em Gestão de Tecnologia</h3>
-          <p class="text-sm text-slate-300 leading-relaxed">
-            Planejamento ágil, cronogramas previsíveis, governança de segurança da informação e foco absoluto em gerar vendas e produtividade para o seu negócio.
-          </p>
-        </div>
-
-        <!-- Card 3: Infraestrutura & Suporte -->
-        <div class="glass-card rounded-3xl p-6 sm:p-7 space-y-4">
-          <div class="authority-3d-box w-16 h-16 rounded-2xl bg-emeraldNeon/10 border border-emeraldNeon/35 overflow-hidden shadow-neon-emerald tilt-3d-pop" data-auth-icon="ecossistema"></div>
-          <span class="font-mono text-[11px] text-emeraldNeon uppercase tracking-wider block">Software + Hardware</span>
-          <h3 class="font-display font-bold text-xl text-white tilt-3d-pop">Ecossistema Tecnológico Completo</h3>
-          <p class="text-sm text-slate-300 leading-relaxed">
-            Do sistema em nuvem e aplicativo mobile até a otimização física de computadores e notebooks em Belo Horizonte e suporte remoto especializado.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. SEÇÃO DE SERVIÇOS (4 SOLUÇÕES COMPLETAS) -->
+    <!-- 2. SEÇÃO DE SERVIÇOS (4 SOLUÇÕES COMPLETAS) -->
     <section id="servicos" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 reveal-on-scroll">
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
         <div class="space-y-2.5">
@@ -644,7 +554,7 @@
           Monte o Escopo do Seu <span class="text-gradient-tech">Projeto ou Atendimento</span>
         </h2>
         <p class="text-sm sm:text-base text-slate-300">
-          Personalize os módulos desejados e visualize em tempo real a maquete 3D, a arquitetura recomendada e o prazo estimado.
+          Personalize os módulos desejados e visualize em tempo real a arquitetura recomendada e o prazo estimado.
         </p>
       </div>
 
@@ -748,9 +658,9 @@
                 </div>
               </div>
               <div class="p-3 rounded-2xl bg-slate-950/75 border border-slate-800/90 flex items-center gap-2.5">
-                <span class="text-violet-400 font-mono text-sm">🎓</span>
+                <span class="text-violet-400 font-mono text-sm">🎯</span>
                 <div>
-                  <p class="font-display font-bold text-xs text-white">ADS + Pós Gestão</p>
+                  <p class="font-display font-bold text-xs text-white">Atendimento Direto</p>
                   <p class="text-[11px] text-slate-400">Engenharia sem intermediários</p>
                 </div>
               </div>
@@ -764,28 +674,28 @@
             </div>
           </div>
 
-          <!-- Coluna Direita: Blueprint 3D Ao Vivo & Resumo Gerado -->
+          <!-- Coluna Direita: Diagnóstico & Resumo Gerado -->
           <div class="lg:col-span-5">
             <div class="h-full rounded-2xl bg-slate-950/90 border border-slate-800 p-5 flex flex-col justify-between space-y-4">
               <div class="space-y-4">
                 <div class="flex items-center justify-between">
                   <span class="font-mono text-[11px] text-cyanNeon uppercase tracking-wider">
-                    BLUEPRINT 3D & DIAGNÓSTICO EM TEMPO REAL
+                    DIAGNÓSTICO & ESCOPO EM TEMPO REAL
                   </span>
                   <span class="w-2.5 h-2.5 rounded-full bg-emeraldNeon status-dot"></span>
                 </div>
 
-                <!-- Maquete 3D Ao Vivo do Escopo (Enquadramento Mobile-Safe) -->
+                <!-- Maquete 3D Ao Vivo do Escopo -->
                 <div class="rounded-2xl bg-slate-900/80 border border-slate-800 overflow-hidden">
                   <div class="px-3 pt-2 flex items-center justify-between">
                     <span class="font-mono text-[10px] text-slate-400">
-                      MAQUETE 3D AO VIVO • ARRASTE
+                      MAQUETE DE MÓDULOS • ARRASTE
                     </span>
                   </div>
                   <div id="sim-3d-stage" class="relative w-full h-32 overflow-hidden stage-3d-grab"></div>
                   <div class="px-3 pb-2 flex justify-end">
                     <span id="sim-3d-count-badge" class="px-2.5 py-0.5 rounded-md bg-cyanNeon/10 border border-cyanNeon/30 font-mono text-[10px] text-cyanNeon">
-                      3 MÓDULOS 3D ATIVOS
+                      3 MÓDULOS ATIVOS
                     </span>
                   </div>
                 </div>
@@ -841,19 +751,19 @@
       </div>
     </section>
 
-    <!-- 5. PORTFÓLIO & ESTUDOS DE CASO EM 3D -->
+    <!-- 5. PORTFÓLIO & ESTUDOS DE CASO -->
     <section id="portfolio" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 reveal-on-scroll">
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
         <div class="space-y-2.5">
           <span class="inline-block px-3 py-1 rounded-full bg-violetNeon/15 border border-violetNeon/35 font-mono text-xs text-violet-300 uppercase tracking-wider">
-            PORTFÓLIO & ESTUDOS DE CASO 3D
+            PORTFÓLIO & ESTUDOS DE CASO
           </span>
           <h2 class="font-display font-bold text-3xl sm:text-4xl text-white">
             Engenharia Aplicada em <span class="text-gradient-tech">Projetos Reais</span>
           </h2>
         </div>
         <p class="text-sm text-slate-400 max-w-md">
-          Gire os modelos 3D em cada estudo de caso e clique para inspecionar o desafio, a solução técnica e os resultados alcançados.
+          Clique em cada projeto para inspecionar o desafio, a solução técnica implementada e os resultados alcançados.
         </p>
       </div>
 
@@ -869,7 +779,7 @@
               <div class="portfolio-3d-stage relative w-full h-36 my-1.5 overflow-hidden stage-3d-grab" data-portfolio-3d="erp"></div>
               <div class="px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between font-mono text-[10px]">
                 <span class="text-slate-300">O.S. 148 • SLA 99.2%</span>
-                <span class="text-cyanNeon">3D • ARRASTE</span>
+                <span class="text-cyanNeon">INTERATIVO</span>
               </div>
             </div>
 
@@ -904,7 +814,7 @@
               <div class="portfolio-3d-stage relative w-full h-36 my-1.5 overflow-hidden stage-3d-grab" data-portfolio-3d="mobile"></div>
               <div class="px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between font-mono text-[10px]">
                 <span class="text-slate-300">iOS & Android • ★ 4.9</span>
-                <span class="text-emeraldNeon">3D • ARRASTE</span>
+                <span class="text-emeraldNeon">INTERATIVO</span>
               </div>
             </div>
 
@@ -939,7 +849,7 @@
               <div class="portfolio-3d-stage relative w-full h-36 my-1.5 overflow-hidden stage-3d-grab" data-portfolio-3d="landing"></div>
               <div class="px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between font-mono text-[10px]">
                 <span class="text-slate-300">PageSpeed 100 • CPL -54%</span>
-                <span class="text-violet-300">3D • ARRASTE</span>
+                <span class="text-violet-300">INTERATIVO</span>
               </div>
             </div>
 
@@ -974,7 +884,7 @@
               <div class="portfolio-3d-stage relative w-full h-36 my-1.5 overflow-hidden stage-3d-grab" data-portfolio-3d="hardware"></div>
               <div class="px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between font-mono text-[10px]">
                 <span class="text-slate-300">NVMe 5.200 MB/s • 42°C</span>
-                <span class="text-amber-300">3D • ARRASTE</span>
+                <span class="text-amber-300">INTERATIVO</span>
               </div>
             </div>
 
@@ -1205,7 +1115,7 @@
     (function () {
       const WHATSAPP_NUMBER = '5531999999999';
 
-      // Utilitário de Toast Customizado (Sem alert/confirm)
+      // Utilitário de Toast Customizado
       let toastTimeout = null;
       function showToast(message) {
         const toastEl = document.getElementById('toast-notification');
@@ -1218,62 +1128,6 @@
           toastEl.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
         }, 3200);
       }
-
-      // Dados dos 4 modelos do Hero
-      const HERO_DATA = {
-        sites: {
-          badge: 'MODELO: NOTEBOOK HOLOGRÁFICO 3D',
-          kicker: 'ALTA CONVERSÃO & SEO 100/100',
-          title: 'Sites & Landing Pages que transformam visitantes em clientes',
-          m1Label: 'VELOCIDADE',
-          m1Val: '< 0.8s',
-          m2Label: 'IMPACTO',
-          m2Val: '+3.4x Leads',
-          stack: 'Stack: Next.js • Tailwind • SEO Avançado • WhatsApp API',
-          colorHex: 0x00f0ff,
-          tabClass: 'bg-cyanNeon text-obsidian shadow-neon-cyan',
-          progressClass: 'bg-obsidian/65'
-        },
-        sistemas: {
-          badge: 'MODELO: SISTEMA WEB / ERP 3D',
-          kicker: 'AUTOMAÇÃO EMPRESARIAL & CLOUD',
-          title: 'Sistemas Web & ERPs sob medida para escalar sua operação',
-          m1Label: 'UPTIME SLA',
-          m1Val: '99.9%',
-          m2Label: 'EFICIÊNCIA',
-          m2Val: '+68% Produtiv.',
-          stack: 'Stack: Node.js • PostgreSQL • Dashboards BI • APIs REST',
-          colorHex: 0x7c3aed,
-          tabClass: 'bg-violetNeon text-white shadow-neon-violet',
-          progressClass: 'bg-cyanNeon'
-        },
-        apps: {
-          badge: 'MODELO: SMARTPHONE HOLOGRÁFICO 3D',
-          kicker: 'EXPERIÊNCIA MOBILE ANDROID & iOS',
-          title: 'Aplicativos modernos na palma da mão dos seus clientes',
-          m1Label: 'FLUIDEZ UX',
-          m1Val: '60 FPS',
-          m2Label: 'ENGAJAMENTO',
-          m2Val: 'Push + GPS',
-          stack: 'Stack: React Native • PWA • Firebase • Notificações Push',
-          colorHex: 0x10b981,
-          tabClass: 'bg-emeraldNeon text-obsidian shadow-neon-emerald',
-          progressClass: 'bg-obsidian/65'
-        },
-        hardware: {
-          badge: 'MODELO: PLACA-MÃE ATX HOLOGRÁFICA 3D',
-          kicker: 'LABORATÓRIO DE HARDWARE & PERFORMANCE',
-          title: 'Upgrades NVMe, Limpeza Térmica e Manutenção de PCs e Notebooks',
-          m1Label: 'BOOT OS',
-          m1Val: '6.8 seg',
-          m2Label: 'GANHO REAL',
-          m2Val: '+850% Veloc.',
-          stack: 'Lab: SSD NVMe Gen4 • RAM Dual-Ch • Pasta Térmica • BH/MG',
-          colorHex: 0xf59e0b,
-          tabClass: 'bg-amber-400 text-obsidian shadow-lg',
-          progressClass: 'bg-obsidian/65'
-        }
-      };
 
       // Dados do Simulador de Escopo
       const SIMULATOR_CONFIG = {
@@ -1367,12 +1221,8 @@
         }
       };
 
-      // Estado Global de Cores & Controladores 3D
-      let globalBgSceneColor = null;
-      let heroSceneController = null;
       let simSceneController = null;
 
-      // Utilitário de Wireframe com EdgesGeometry
       function createWireBox(w, h, d, colorHex, opacity = 0.85) {
         const geo = new THREE.BoxGeometry(w, h, d);
         const edges = new THREE.EdgesGeometry(geo);
@@ -1433,14 +1283,12 @@
           camera.position.set(0, 3.2, 14);
           camera.lookAt(0, 0, -10);
 
-          // Grade Cibernética em Perspectiva
           const gridHelper = new THREE.GridHelper(90, 45, 0x00f0ff, 0x1e293b);
           gridHelper.position.y = -4.5;
           gridHelper.material.transparent = true;
           gridHelper.material.opacity = 0.24;
           bgScene.add(gridHelper);
 
-          // Campo de Partículas 3D Profundo (Pontinhos em Movimento Moderado)
           const bgStarCount = 320;
           const bgStarPos = new Float32Array(bgStarCount * 3);
           const bgStarVel = new Float32Array(bgStarCount * 3);
@@ -1501,10 +1349,6 @@
             }
             bgStarGeo.attributes.position.needsUpdate = true;
 
-            if (globalBgSceneColor) {
-              bgStarMat.color.lerp(globalBgSceneColor, 0.05);
-            }
-
             const scrollRatio = window.scrollY / Math.max(1, document.body.scrollHeight - window.innerHeight);
             camera.position.x += (pointerX * 1.4 - camera.position.x) * 0.04;
             camera.position.y += (3.2 - pointerY * 0.9 - scrollRatio * 1.8 - camera.position.y) * 0.04;
@@ -1514,477 +1358,185 @@
 
           animateGlobalBg();
         } catch (err) {
-          console.error('Fallback 2D ativado para fundo:', err);
           start2DFallbackParticles(canvas);
         }
       }
 
       // =========================================================================
-      // 2. CONSTRUTORES DOS 4 MODELOS 3D DETALHADOS DO HERO
-      // =========================================================================
-      function buildNotebook3DModel() {
-        const group = new THREE.Group();
-
-        // Base do notebook
-        const baseMesh = new THREE.Mesh(
-          new THREE.BoxGeometry(2.35, 0.10, 1.65),
-          new THREE.MeshBasicMaterial({ color: 0x061626, transparent: true, opacity: 0.85 })
-        );
-        baseMesh.position.set(0, -0.54, 0.22);
-        baseMesh.add(createWireBox(2.35, 0.10, 1.65, 0x00f0ff, 0.95));
-        group.add(baseMesh);
-
-        // Teclado retroiluminado & Trackpad
-        const kbWire = createWireBox(2.0, 0.02, 0.88, 0x38bdf8, 0.7);
-        kbWire.position.set(0, -0.48, 0.06);
-        group.add(kbWire);
-
-        const trackpad = createWireBox(0.64, 0.02, 0.38, 0x7c3aed, 0.9);
-        trackpad.position.set(0, -0.48, 0.76);
-        group.add(trackpad);
-
-        // Tampa articulada & Tela
-        const lidGroup = new THREE.Group();
-        lidGroup.position.set(0, -0.48, -0.56);
-        lidGroup.rotation.x = -0.22;
-
-        const screenFrame = new THREE.Mesh(
-          new THREE.BoxGeometry(2.35, 1.52, 0.08),
-          new THREE.MeshBasicMaterial({ color: 0x041220, transparent: true, opacity: 0.88 })
-        );
-        screenFrame.position.set(0, 0.76, 0);
-        screenFrame.add(createWireBox(2.35, 1.52, 0.08, 0x00f0ff, 0.95));
-        lidGroup.add(screenFrame);
-
-        // Display interno luminoso
-        const displayPlane = new THREE.Mesh(
-          new THREE.PlaneGeometry(2.12, 1.30),
-          new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.14, side: THREE.DoubleSide })
-        );
-        displayPlane.position.set(0, 0.76, 0.05);
-        lidGroup.add(displayPlane);
-
-        // Emblema hexagonal na tampa traseira (visível ao girar 360°)
-        const backEmblem = new THREE.Mesh(
-          new THREE.RingGeometry(0.17, 0.25, 6),
-          new THREE.MeshBasicMaterial({ color: 0x00f0ff, side: THREE.DoubleSide })
-        );
-        backEmblem.position.set(0, 0.76, -0.05);
-        lidGroup.add(backEmblem);
-
-        // Cards UI flutuantes na frente da tela
-        const floatingCards = new THREE.Group();
-        const card1 = createWireBox(0.88, 0.50, 0.03, 0x00f0ff, 0.9);
-        card1.position.set(-0.50, 0.84, 0.20);
-        const card2 = createWireBox(0.80, 0.66, 0.03, 0xa855f7, 0.9);
-        card2.position.set(0.50, 0.76, 0.25);
-        const ctaBar = new THREE.Mesh(
-          new THREE.BoxGeometry(0.70, 0.15, 0.03),
-          new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.65 })
-        );
-        ctaBar.position.set(-0.50, 0.42, 0.22);
-        floatingCards.add(card1, card2, ctaBar);
-        lidGroup.add(floatingCards);
-
-        group.add(lidGroup);
-
-        return {
-          group,
-          update(t, speed) {
-            floatingCards.position.z = Math.sin(t * 2.2 * speed) * 0.045;
-            backEmblem.rotation.z = t * 0.8 * speed;
-          }
-        };
-      }
-
-      function buildSystemERP3DModel() {
-        const group = new THREE.Group();
-
-        // Janela Principal do Sistema Web / ERP
-        const mainWin = new THREE.Mesh(
-          new THREE.BoxGeometry(2.4, 1.54, 0.08),
-          new THREE.MeshBasicMaterial({ color: 0x120b29, transparent: true, opacity: 0.86 })
-        );
-        mainWin.add(createWireBox(2.4, 1.54, 0.08, 0x8b5cf6, 0.95));
-        group.add(mainWin);
-
-        // Sidebar esquerda
-        const sidebar = createWireBox(0.48, 1.38, 0.04, 0x00f0ff, 0.8);
-        sidebar.position.set(-0.88, 0, 0.08);
-        group.add(sidebar);
-
-        // 3 Cards de KPI flutuantes
-        for (let i = 0; i < 3; i++) {
-          const kpi = createWireBox(0.52, 0.31, 0.05, i === 1 ? 0x10b981 : 0x00f0ff, 0.9);
-          kpi.position.set(-0.30 + i * 0.59, 0.48, 0.13);
-          group.add(kpi);
-        }
-
-        // Gráfico de Barras 3D Volumétrico Animado
-        const bars = [];
-        const barColors = [0x7c3aed, 0x00f0ff, 0x10b981, 0x38bdf8, 0xa855f7];
-        for (let i = 0; i < 5; i++) {
-          const barGeo = new THREE.BoxGeometry(0.16, 0.64, 0.16);
-          const barMat = new THREE.MeshBasicMaterial({ color: barColors[i], transparent: true, opacity: 0.65 });
-          const bar = new THREE.Mesh(barGeo, barMat);
-          bar.add(createWireBox(0.16, 0.64, 0.16, 0xffffff, 0.5));
-          bar.position.set(-0.50 + i * 0.26, -0.22, 0.16);
-          group.add(bar);
-          bars.push(bar);
-        }
-
-        // Donut Gauge Giratório à direita
-        const donut = new THREE.Mesh(
-          new THREE.TorusGeometry(0.25, 0.055, 10, 24),
-          new THREE.MeshBasicMaterial({ color: 0x10b981, wireframe: true })
-        );
-        donut.position.set(0.84, -0.20, 0.16);
-        group.add(donut);
-
-        // Cluster Traseiro de Banco de Dados Cloud (visível em 360°)
-        const dbCluster = new THREE.Group();
-        dbCluster.position.set(0, 0, -0.32);
-        for (let d = 0; d < 3; d++) {
-          const disc = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.42, 0.42, 0.13, 18),
-            new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true, transparent: true, opacity: 0.75 })
-          );
-          disc.position.y = -0.28 + d * 0.28;
-          dbCluster.add(disc);
-        }
-        group.add(dbCluster);
-
-        return {
-          group,
-          update(t, speed) {
-            bars.forEach((b, idx) => {
-              const s = 0.55 + Math.abs(Math.sin(t * 2.1 * speed + idx * 0.9)) * 0.72;
-              b.scale.y = s;
-              b.position.y = -0.54 + (0.64 * s) / 2;
-            });
-            donut.rotation.z = t * 1.4 * speed;
-            dbCluster.rotation.y = -t * 0.9 * speed;
-          }
-        };
-      }
-
-      function buildSmartphone3DModel() {
-        const group = new THREE.Group();
-
-        // Corpo fino do Smartphone (proporção equilibrada para telas mobile)
-        const bodyMesh = new THREE.Mesh(
-          new THREE.BoxGeometry(0.94, 1.78, 0.11),
-          new THREE.MeshBasicMaterial({ color: 0x041d18, transparent: true, opacity: 0.9 })
-        );
-        bodyMesh.add(createWireBox(0.94, 1.78, 0.11, 0x10b981, 0.95));
-        group.add(bodyMesh);
-
-        // Tela OLED & Dynamic Island
-        const screen = new THREE.Mesh(
-          new THREE.PlaneGeometry(0.84, 1.64),
-          new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.14, side: THREE.DoubleSide })
-        );
-        screen.position.z = 0.06;
-        group.add(screen);
-
-        const dynamicIsland = new THREE.Mesh(
-          new THREE.BoxGeometry(0.26, 0.055, 0.02),
-          new THREE.MeshBasicMaterial({ color: 0x00f0ff })
-        );
-        dynamicIsland.position.set(0, 0.71, 0.075);
-        group.add(dynamicIsland);
-
-        // Widgets & Grade de Ícones flutuando em camadas 3D
-        const uiLayer = new THREE.Group();
-        const heroWidget = createWireBox(0.70, 0.44, 0.035, 0x00f0ff, 0.92);
-        heroWidget.position.set(0, 0.34, 0.13);
-        uiLayer.add(heroWidget);
-
-        for (let r = 0; r < 2; r++) {
-          for (let c = 0; c < 2; c++) {
-            const appIcon = createWireBox(0.28, 0.28, 0.035, (r + c) % 2 === 0 ? 0x10b981 : 0xa855f7, 0.9);
-            appIcon.position.set(-0.19 + c * 0.38, -0.12 - r * 0.37, 0.15);
-            uiLayer.add(appIcon);
-          }
-        }
-        group.add(uiLayer);
-
-        // Módulo Traseiro de Câmera Tripla (visível em 360°)
-        const camIsland = createWireBox(0.38, 0.43, 0.045, 0x00f0ff, 0.95);
-        camIsland.position.set(-0.19, 0.55, -0.075);
-        group.add(camIsland);
-
-        const lensPositions = [[-0.26, 0.63], [-0.26, 0.47], [-0.12, 0.55]];
-        lensPositions.forEach(([lx, ly]) => {
-          const lens = new THREE.Mesh(
-            new THREE.RingGeometry(0.032, 0.06, 16),
-            new THREE.MeshBasicMaterial({ color: 0x10b981, side: THREE.DoubleSide })
-          );
-          lens.position.set(lx, ly, -0.102);
-          group.add(lens);
-        });
-
-        // Anel orbital de sinal GPS / Push
-        const signalRing = new THREE.Mesh(
-          new THREE.TorusGeometry(1.12, 0.014, 8, 48),
-          new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.45 })
-        );
-        signalRing.rotation.x = Math.PI / 2.4;
-        group.add(signalRing);
-
-        return {
-          group,
-          update(t, speed) {
-            uiLayer.position.z = Math.sin(t * 2.4 * speed) * 0.035;
-            signalRing.rotation.z = t * 0.9 * speed;
-          }
-        };
-      }
-
-      function buildMotherboard3DModel() {
-        const group = new THREE.Group();
-
-        // PCB Principal da Placa-Mãe ATX
-        const pcbMesh = new THREE.Mesh(
-          new THREE.BoxGeometry(2.25, 0.09, 1.72),
-          new THREE.MeshBasicMaterial({ color: 0x1a1205, transparent: true, opacity: 0.88 })
-        );
-        pcbMesh.position.y = -0.22;
-        pcbMesh.add(createWireBox(2.25, 0.09, 1.72, 0xf59e0b, 0.95));
-        group.add(pcbMesh);
-
-        // Painel Traseiro I/O Shield
-        const ioShield = createWireBox(0.24, 0.44, 0.72, 0x00f0ff, 0.9);
-        ioShield.position.set(-0.96, 0.04, -0.38);
-        group.add(ioShield);
-
-        // Dissipadores VRM em L
-        const vrmTop = createWireBox(0.75, 0.24, 0.18, 0x7c3aed, 0.92);
-        vrmTop.position.set(-0.28, -0.05, -0.66);
-        const vrmLeft = createWireBox(0.18, 0.24, 0.65, 0x7c3aed, 0.92);
-        vrmLeft.position.set(-0.68, -0.05, -0.25);
-        group.add(vrmTop, vrmLeft);
-
-        // Soquete CPU + Cooler Giratório
-        const cpuSocket = createWireBox(0.56, 0.12, 0.56, 0xf59e0b, 0.95);
-        cpuSocket.position.set(-0.24, -0.11, -0.22);
-        group.add(cpuSocket);
-
-        const coolerRing = new THREE.Mesh(
-          new THREE.TorusGeometry(0.26, 0.03, 8, 24),
-          new THREE.MeshBasicMaterial({ color: 0x00f0ff })
-        );
-        coolerRing.rotation.x = Math.PI / 2;
-        coolerRing.position.set(-0.24, 0.06, -0.22);
-        group.add(coolerRing);
-
-        const fanBlades = new THREE.Group();
-        fanBlades.position.set(-0.24, 0.06, -0.22);
-        for (let b = 0; b < 4; b++) {
-          const blade = new THREE.Mesh(
-            new THREE.BoxGeometry(0.44, 0.02, 0.06),
-            new THREE.MeshBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.85 })
-          );
-          blade.rotation.y = (b * Math.PI) / 4;
-          fanBlades.add(blade);
-        }
-        group.add(fanBlades);
-
-        // 2 Pentes de Memória RAM DDR5
-        for (let r = 0; r < 2; r++) {
-          const ramStick = createWireBox(0.06, 0.34, 0.72, 0x00f0ff, 0.95);
-          ramStick.position.set(0.35 + r * 0.18, 0.0, -0.22);
-          group.add(ramStick);
-        }
-
-        // Slot SSD NVMe M.2
-        const nvmeStick = createWireBox(0.62, 0.05, 0.18, 0x10b981, 0.95);
-        nvmeStick.position.set(-0.22, -0.14, 0.25);
-        group.add(nvmeStick);
-
-        // 2 Slots PCIe x16
-        for (let p = 0; p < 2; p++) {
-          const pcie = createWireBox(1.15, 0.09, 0.09, 0x00f0ff, 0.88);
-          pcie.position.set(-0.22, -0.12, 0.50 + p * 0.22);
-          group.add(pcie);
-        }
-
-        // Chipset PCH
-        const pchChip = createWireBox(0.36, 0.10, 0.36, 0xa855f7, 0.95);
-        pchChip.position.set(0.62, -0.12, 0.45);
-        group.add(pchChip);
-
-        // Pulso de dados percorrendo os barramentos
-        const dataPulse = new THREE.Mesh(
-          new THREE.SphereGeometry(0.045, 10, 10),
-          new THREE.MeshBasicMaterial({ color: 0x00f0ff })
-        );
-        dataPulse.position.set(-0.24, -0.14, -0.22);
-        group.add(dataPulse);
-
-        return {
-          group,
-          update(t, speed) {
-            fanBlades.rotation.y = t * 5.2 * speed;
-            const cycle = (t * 1.4 * speed) % 1;
-            dataPulse.position.x = -0.24 + cycle * 0.82;
-            dataPulse.position.z = -0.22 + Math.sin(cycle * Math.PI) * 0.45;
-          }
-        };
-      }
-
-      // =========================================================================
-      // 3. ENGINE 3D UNIFICADA EM PRIMEIRO PLANO (SCISSOR RENDERING MOBILE-SAFE)
-      //    Renderiza todos os palcos e ícones 3D em 1 único contexto WebGL
+      // 2. MOTOR 3D UNIFICADO (SCISSOR RENDERING) — GLOBO HERO, CARDS & PORTFÓLIO
       // =========================================================================
       function initUnifiedForeground3DEngine() {
         const canvas = document.getElementById('foreground-3d-canvas');
         if (!canvas || typeof THREE === 'undefined') return;
 
         try {
-          const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
+          const renderer = new THREE.WebGLRenderer({
+            canvas,
+            alpha: true,
+            antialias: true,
+            powerPreference: 'high-performance'
+          });
           renderer.setClearColor(0x000000, 0);
           renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-          renderer.setSize(window.innerWidth, window.innerHeight);
-          renderer.setScissorTest(true);
+          renderer.setSize(window.innerWidth, window.innerHeight, false);
 
           const viewports = [];
 
-          // --- A. PALCO 3D PRINCIPAL DO HERO ---
-          const heroStage = document.getElementById('hero-3d-stage');
-          if (heroStage) {
+          // --- 0. EMBLEMA GLOBO 3D CENTRAL DO HERO ---
+          const heroCrestEl = document.getElementById('hero-crest-3d');
+          if (heroCrestEl) {
             const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(42, 1.5, 0.1, 50);
-            let zoomOffset = 0;
-            camera.position.set(0, 0.25, 4.9);
+            const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 20);
+            camera.position.set(0, 0.12, 3.55);
+
+            const pivot = new THREE.Group();
+            pivot.rotation.z = 0.28; // Inclinação axial característica de globo
+            scene.add(pivot);
+
+            // Núcleo interno escuro semitransparente para dar nitidez à malha frontal do globo
+            const globeCore = new THREE.Mesh(
+              new THREE.SphereGeometry(0.71, 20, 14),
+              new THREE.MeshBasicMaterial({ color: 0x061526, transparent: true, opacity: 0.85 })
+            );
+
+            // Malha de meridianos e paralelos do Globo 3D
+            const globeWire = new THREE.Mesh(
+              new THREE.SphereGeometry(0.74, 18, 12),
+              new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true })
+            );
+
+            // Anel equatorial luminoso
+            const equatorRing = new THREE.Mesh(
+              new THREE.TorusGeometry(0.84, 0.02, 8, 44),
+              new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.85 })
+            );
+            equatorRing.rotation.x = Math.PI / 2;
+
+            // Órbita de conexão global + satélite de dados
+            const orbitGroup = new THREE.Group();
+            orbitGroup.rotation.x = Math.PI / 2.6;
+            orbitGroup.rotation.y = -0.35;
+
+            const orbitRing = new THREE.Mesh(
+              new THREE.TorusGeometry(1.04, 0.015, 8, 44),
+              new THREE.MeshBasicMaterial({ color: 0xa855f7, transparent: true, opacity: 0.75 })
+            );
+            const satelliteNode = new THREE.Mesh(
+              new THREE.SphereGeometry(0.065, 10, 10),
+              new THREE.MeshBasicMaterial({ color: 0x00f0ff })
+            );
+            satelliteNode.position.set(1.04, 0, 0);
+            orbitGroup.add(orbitRing, satelliteNode);
+
+            pivot.add(globeCore, globeWire, equatorRing);
+            scene.add(orbitGroup);
+
+            let t = 0;
+            viewports.push({
+              element: heroCrestEl,
+              scene,
+              camera,
+              update() {
+                t += 0.02;
+                globeWire.rotation.y = t * 0.85;
+                globeCore.rotation.y = t * 0.85;
+                equatorRing.rotation.z = -t * 0.6;
+                orbitGroup.rotation.z = t * 1.35;
+              }
+            });
+          }
+
+          // --- 0B. MINIATURAS 3D DOS CARDS PRINCIPAIS DO HERO ---
+          document.querySelectorAll('.hero-pillar-3d').forEach((box) => {
+            const type = box.getAttribute('data-hero-3d');
+            const parentCard = box.closest('.glass-card');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 20);
+            camera.position.set(0, 0.25, 3.75);
 
             const pivot = new THREE.Group();
             scene.add(pivot);
 
-            const outerOrbit = new THREE.Mesh(
-              new THREE.TorusGeometry(1.48, 0.012, 8, 64),
-              new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.36 })
-            );
-            outerOrbit.rotation.x = Math.PI / 2.2;
-            outerOrbit.rotation.y = 0.25;
-            scene.add(outerOrbit);
-
-            const models = {
-              sites: buildNotebook3DModel(),
-              sistemas: buildSystemERP3DModel(),
-              apps: buildSmartphone3DModel(),
-              hardware: buildMotherboard3DModel()
-            };
-
-            Object.keys(models).forEach((key) => {
-              models[key].group.visible = key === 'sites';
-              pivot.add(models[key].group);
-            });
-
-            let activeModelKey = 'sites';
-            let turboMode = false;
-            let pulseBoost = 0;
-            let switchScale = 1.0;
-            let isDragging = false;
-            let prevX = 0;
-            let prevY = 0;
-            let rotY = 0.35;
-            let rotX = 0.12;
-
-            heroStage.addEventListener('pointerdown', (e) => {
-              isDragging = true;
-              prevX = e.clientX;
-              prevY = e.clientY;
-            });
-
-            window.addEventListener('pointermove', (e) => {
-              if (!isDragging) return;
-              const dx = e.clientX - prevX;
-              const dy = e.clientY - prevY;
-              prevX = e.clientX;
-              prevY = e.clientY;
-              rotY += dx * 0.012;
-              rotX = Math.max(-0.55, Math.min(0.55, rotX + dy * 0.009));
-            }, { passive: true });
-
-            window.addEventListener('pointerup', () => { isDragging = false; });
-            window.addEventListener('pointercancel', () => { isDragging = false; });
-
-            const zoomInBtn = document.getElementById('hero-3d-zoom-in');
-            const zoomOutBtn = document.getElementById('hero-3d-zoom-out');
-            const pulseBtn = document.getElementById('hero-3d-pulse-btn');
-            const turboBtn = document.getElementById('hero-3d-turbo-btn');
-
-            if (zoomInBtn) zoomInBtn.addEventListener('click', () => { zoomOffset = Math.max(-0.85, zoomOffset - 0.4); });
-            if (zoomOutBtn) zoomOutBtn.addEventListener('click', () => { zoomOffset = Math.min(1.4, zoomOffset + 0.4); });
-            if (pulseBtn) {
-              pulseBtn.addEventListener('click', () => {
-                pulseBoost = 1.0;
-                showToast('Pulso de telemetria 3D ativado!');
-              });
-            }
-            if (turboBtn) {
-              turboBtn.addEventListener('click', () => {
-                turboMode = !turboMode;
-                turboBtn.textContent = turboMode ? '⚡ TURBO: ON' : '⚡ TURBO: OFF';
-                turboBtn.classList.toggle('bg-cyanNeon', turboMode);
-                turboBtn.classList.toggle('text-obsidian', turboMode);
-                showToast(turboMode ? 'Modo Turbo 3D ativado!' : 'Modo Turbo 3D desativado.');
-              });
+            let hovered = false;
+            if (parentCard) {
+              parentCard.addEventListener('mouseenter', () => { hovered = true; });
+              parentCard.addEventListener('mouseleave', () => { hovered = false; });
             }
 
-            let clock = 0;
+            let customAnim = null;
+
+            if (type === 'digital') {
+              // Ecossistema Web + Sistema + Mobile App em 3D
+              const browserFrame = createWireBox(1.14, 0.78, 0.07, 0x00f0ff, 0.95);
+              browserFrame.position.set(-0.08, 0.04, -0.08);
+
+              const systemLayer = createWireBox(0.76, 0.46, 0.05, 0xa855f7, 0.95);
+              systemLayer.position.set(-0.14, 0.06, 0.18);
+
+              const mobileFrame = createWireBox(0.42, 0.76, 0.07, 0x10b981, 0.98);
+              mobileFrame.position.set(0.46, -0.06, 0.24);
+              mobileFrame.rotation.y = -0.25;
+
+              const orbit = new THREE.Mesh(
+                new THREE.TorusGeometry(1.02, 0.018, 8, 36),
+                new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.5 })
+              );
+              orbit.rotation.x = Math.PI / 2.2;
+
+              pivot.add(browserFrame, systemLayer, mobileFrame, orbit);
+              customAnim = (t) => {
+                systemLayer.position.z = 0.18 + Math.sin(t * 2) * 0.04;
+                mobileFrame.position.y = -0.06 + Math.cos(t * 1.8) * 0.04;
+                orbit.rotation.z = t * 1.1;
+              };
+            } else if (type === 'hardware') {
+              // Placa-base + SSD NVMe + Turbina de Resfriamento 3D
+              const boardBase = createWireBox(1.12, 0.16, 0.96, 0xf59e0b, 0.95);
+              boardBase.position.y = -0.26;
+
+              const nvmeStick = createWireBox(0.72, 0.08, 0.24, 0x00f0ff, 0.95);
+              nvmeStick.position.set(0, -0.1, 0.34);
+
+              const shroudRing = new THREE.Mesh(
+                new THREE.TorusGeometry(0.44, 0.035, 8, 28),
+                new THREE.MeshBasicMaterial({ color: 0xf59e0b })
+              );
+              shroudRing.rotation.x = Math.PI / 2;
+              shroudRing.position.set(0, 0.18, -0.06);
+
+              const turbine = new THREE.Group();
+              turbine.position.set(0, 0.18, -0.06);
+              for (let b = 0; b < 4; b++) {
+                const blade = new THREE.Mesh(
+                  new THREE.BoxGeometry(0.78, 0.035, 0.12),
+                  new THREE.MeshBasicMaterial({ color: 0x38bdf8 })
+                );
+                blade.rotation.y = (b * Math.PI) / 4;
+                turbine.add(blade);
+              }
+
+              pivot.add(boardBase, nvmeStick, shroudRing, turbine);
+              customAnim = (t) => {
+                turbine.rotation.y = t * 4.8;
+              };
+            }
+
+            let t = 0;
             viewports.push({
-              element: heroStage,
+              element: box,
               scene,
               camera,
               update() {
-                const speed = (turboMode ? 2.6 : 1.0) + pulseBoost * 2.5;
-                clock += 0.016;
-                if (!isDragging) rotY += 0.007 * speed;
-                if (pulseBoost > 0) pulseBoost = Math.max(0, pulseBoost - 0.025);
-                switchScale += (1.0 - switchScale) * 0.14;
-
-                // Ajuste responsivo de escala e distância para telas estreitas de smartphones
-                const aspect = camera.aspect || 1.5;
-                const responsiveFit = aspect < 1.55 ? Math.max(0.70, aspect / 1.55) : 0.94;
-                const baseZoom = aspect < 1.55 ? 5.35 : 4.85;
-                const desiredZ = baseZoom + zoomOffset;
-
-                const pulseScale = switchScale * responsiveFit * (1 + pulseBoost * 0.09);
-                pivot.scale.set(pulseScale, pulseScale, pulseScale);
-                outerOrbit.scale.set(responsiveFit, responsiveFit, responsiveFit);
-
-                pivot.rotation.y += (rotY - pivot.rotation.y) * 0.12;
-                pivot.rotation.x += (rotX - pivot.rotation.x) * 0.12;
-                outerOrbit.rotation.z += 0.006 * speed;
-                camera.position.z += (desiredZ - camera.position.z) * 0.12;
-
-                if (models[activeModelKey]) {
-                  models[activeModelKey].update(clock, speed);
-                }
+                const mult = hovered ? 2.6 : 1.0;
+                t += 0.02 * mult;
+                pivot.rotation.y += 0.016 * mult;
+                pivot.rotation.x = 0.26;
+                if (customAnim) customAnim(t);
               }
             });
+          });
 
-            heroSceneController = {
-              setModel(key) {
-                if (!models[key]) return;
-                activeModelKey = key;
-                Object.keys(models).forEach((k) => {
-                  models[k].group.visible = k === key;
-                });
-                switchScale = 0.78;
-                const colorHex = HERO_DATA[key] ? HERO_DATA[key].colorHex : 0x00f0ff;
-                outerOrbit.material.color.setHex(colorHex);
-                globalBgSceneColor = new THREE.Color(colorHex);
-              },
-              isInteracting() {
-                return isDragging;
-              }
-            };
-          }
-
-          // --- B. MAQUETE 3D AO VIVO DO SIMULADOR DE ESCOPO ---
+          // --- A. MAQUETE DE MÓDULOS DO SIMULADOR DE ESCOPO ---
           const simStage = document.getElementById('sim-3d-stage');
           if (simStage) {
             const scene = new THREE.Scene();
@@ -2063,7 +1615,7 @@
             };
           }
 
-          // --- C. VITRINES 3D DOS 4 CARDS DO PORTFÓLIO ---
+          // --- B. MINIATURAS DOS 4 CARDS DO PORTFÓLIO ---
           document.querySelectorAll('.portfolio-3d-stage').forEach((stage) => {
             const type = stage.getAttribute('data-portfolio-3d');
             const scene = new THREE.Scene();
@@ -2161,73 +1713,7 @@
             });
           });
 
-          // --- D. ÍCONES 3D ANIMADOS NOS CARDS DE FORMAÇÃO & AUTORIDADE ---
-          document.querySelectorAll('.authority-3d-box').forEach((box) => {
-            const type = box.getAttribute('data-auth-icon');
-            const parentCard = box.closest('.glass-card');
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 20);
-            camera.position.set(0, 0.25, 3.75);
-
-            const pivot = new THREE.Group();
-            scene.add(pivot);
-
-            let hovered = false;
-            if (parentCard) {
-              parentCard.addEventListener('mouseenter', () => { hovered = true; });
-              parentCard.addEventListener('mouseleave', () => { hovered = false; });
-            }
-
-            let customAnim = null;
-            if (type === 'ads') {
-              const oct = new THREE.Mesh(
-                new THREE.OctahedronGeometry(0.68, 0),
-                new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true })
-              );
-              const leftBracket = createWireBox(0.18, 0.85, 0.18, 0x38bdf8, 0.95);
-              leftBracket.position.x = -0.82;
-              const rightBracket = createWireBox(0.18, 0.85, 0.18, 0x38bdf8, 0.95);
-              rightBracket.position.x = 0.82;
-              pivot.add(oct, leftBracket, rightBracket);
-              customAnim = (t) => { oct.rotation.z = t * 1.2; };
-            } else if (type === 'gestao') {
-              const ring = new THREE.Mesh(
-                new THREE.TorusGeometry(0.88, 0.03, 8, 32),
-                new THREE.MeshBasicMaterial({ color: 0xa855f7 })
-              );
-              ring.rotation.x = Math.PI / 3;
-              pivot.add(ring);
-              [-0.36, 0, 0.36].forEach((xPos, idx) => {
-                const bar = createWireBox(0.22, 0.55 + idx * 0.28, 0.22, idx === 2 ? 0x00f0ff : 0xa855f7, 0.95);
-                bar.position.set(xPos, -0.1 + idx * 0.12, 0);
-                pivot.add(bar);
-              });
-              customAnim = (t) => { ring.rotation.y = t * 1.5; };
-            } else {
-              const chip = createWireBox(0.95, 0.26, 0.95, 0x10b981, 0.95);
-              const core = new THREE.Mesh(
-                new THREE.BoxGeometry(0.45, 0.34, 0.45),
-                new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true })
-              );
-              pivot.add(chip, core);
-            }
-
-            let t = 0;
-            viewports.push({
-              element: box,
-              scene,
-              camera,
-              update() {
-                const mult = hovered ? 2.8 : 1.0;
-                t += 0.02 * mult;
-                pivot.rotation.y += 0.018 * mult;
-                pivot.rotation.x = 0.25;
-                if (customAnim) customAnim(t);
-              }
-            });
-          });
-
-          // --- E. ÍCONES 3D ANIMADOS NOS 4 CARDS DE SERVIÇOS ---
+          // --- C. ÍCONES ANIMADOS NOS 4 CARDS DE SERVIÇOS ---
           document.querySelectorAll('.service-3d-box').forEach((box) => {
             const type = box.getAttribute('data-service-3d');
             const parentCard = box.closest('.glass-card');
@@ -2300,7 +1786,7 @@
             });
           });
 
-          // Loop Unificado de Renderização Scissor (1 Contexto WebGL para toda a tela)
+          // Loop Unificado de Renderização Scissor
           function renderAllViewports() {
             requestAnimationFrame(renderAllViewports);
 
@@ -2319,7 +1805,6 @@
               const vp = viewports[i];
               const rect = vp.element.getBoundingClientRect();
 
-              // Pula renderização se estiver fora da janela visível
               if (rect.bottom < 0 || rect.top > height || rect.right < 0 || rect.left > width || rect.width <= 0 || rect.height <= 0) {
                 continue;
               }
@@ -2344,15 +1829,14 @@
 
           renderAllViewports();
         } catch (err) {
-          console.error('Erro ao iniciar engine 3D unificada:', err);
+          console.error('Erro ao iniciar renderização:', err);
         }
       }
 
       // =========================================================================
-      // 4. CONTROLADORES DE UI: HERO AUTO-ROTATE, SIMULADOR, PORTFÓLIO E CONTATO
+      // 3. CONTROLADORES DE UI: MENU MOBILE, SIMULADOR, PORTFÓLIO E CONTATO
       // =========================================================================
       function initUIControllers() {
-        // Ano atual no rodapé
         const yearEl = document.getElementById('current-year');
         if (yearEl) yearEl.textContent = new Date().getFullYear();
 
@@ -2377,108 +1861,6 @@
             });
           });
         }
-
-        // --- HERO SHOWCASE: ALTERNÂNCIA AUTOMÁTICA A CADA 4.5s ---
-        const heroKeys = ['sites', 'sistemas', 'apps', 'hardware'];
-        let currentHeroIdx = 0;
-        let heroAutoPaused = false;
-        let heroCycleStart = performance.now();
-        const HERO_CYCLE_DURATION = 4500;
-
-        const heroShowcaseCard = document.getElementById('hero-showcase-card');
-        const heroTabBtns = Array.from(document.querySelectorAll('.hero-tab-btn'));
-        const heroPanelContent = document.getElementById('hero-panel-content');
-        const heroBadge = document.getElementById('hero-3d-model-badge');
-        const heroKicker = document.getElementById('hero-panel-kicker');
-        const heroTitle = document.getElementById('hero-panel-title');
-        const heroM1Label = document.getElementById('hero-metric-1-label');
-        const heroM1Val = document.getElementById('hero-metric-1-val');
-        const heroM2Label = document.getElementById('hero-metric-2-label');
-        const heroM2Val = document.getElementById('hero-metric-2-val');
-        const heroStack = document.getElementById('hero-panel-stack');
-        const heroSimShortcut = document.getElementById('hero-simulate-shortcut');
-
-        function activateHeroTab(key, resetTimer = true) {
-          const data = HERO_DATA[key];
-          if (!data) return;
-
-          currentHeroIdx = heroKeys.indexOf(key);
-          if (resetTimer) heroCycleStart = performance.now();
-
-          heroTabBtns.forEach((btn) => {
-            const btnKey = btn.getAttribute('data-hero-tab');
-            const isActive = btnKey === key;
-            const prog = btn.querySelector('.hero-tab-progress');
-
-            btn.className = 'hero-tab-btn relative overflow-hidden px-2.5 py-2.5 rounded-xl font-display text-xs transition-all ' +
-              (isActive
-                ? `font-bold ${data.tabClass}`
-                : 'font-semibold bg-slate-900 text-slate-300 hover:text-white border border-slate-800');
-
-            if (prog) {
-              prog.style.width = '0%';
-              prog.className = 'hero-tab-progress ' + (isActive ? data.progressClass : 'bg-cyanNeon');
-            }
-          });
-
-          if (heroPanelContent) {
-            heroPanelContent.classList.add('is-switching');
-            setTimeout(() => {
-              if (heroBadge) heroBadge.textContent = data.badge;
-              if (heroKicker) heroKicker.textContent = data.kicker;
-              if (heroTitle) heroTitle.textContent = data.title;
-              if (heroM1Label) heroM1Label.textContent = data.m1Label;
-              if (heroM1Val) heroM1Val.textContent = data.m1Val;
-              if (heroM2Label) heroM2Label.textContent = data.m2Label;
-              if (heroM2Val) heroM2Val.textContent = data.m2Val;
-              if (heroStack) heroStack.textContent = data.stack;
-              if (heroSimShortcut) heroSimShortcut.setAttribute('data-service-target', key);
-              heroPanelContent.classList.remove('is-switching');
-            }, 130);
-          }
-
-          if (heroSceneController) {
-            heroSceneController.setModel(key);
-          }
-        }
-
-        heroTabBtns.forEach((btn) => {
-          btn.addEventListener('click', () => {
-            const key = btn.getAttribute('data-hero-tab');
-            activateHeroTab(key, true);
-          });
-        });
-
-        if (heroShowcaseCard) {
-          heroShowcaseCard.addEventListener('mouseenter', () => { heroAutoPaused = true; });
-          heroShowcaseCard.addEventListener('mouseleave', () => {
-            heroAutoPaused = false;
-            heroCycleStart = performance.now();
-          });
-        }
-
-        function tickHeroAutoCycle(now) {
-          requestAnimationFrame(tickHeroAutoCycle);
-          const dragging = heroSceneController && heroSceneController.isInteracting();
-          if (heroAutoPaused || dragging) {
-            heroCycleStart = now;
-            return;
-          }
-
-          const elapsed = now - heroCycleStart;
-          const pct = Math.min(100, (elapsed / HERO_CYCLE_DURATION) * 100);
-          const activeBtn = heroTabBtns[currentHeroIdx];
-          if (activeBtn) {
-            const prog = activeBtn.querySelector('.hero-tab-progress');
-            if (prog) prog.style.width = `${pct}%`;
-          }
-
-          if (elapsed >= HERO_CYCLE_DURATION) {
-            const nextIdx = (currentHeroIdx + 1) % heroKeys.length;
-            activateHeroTab(heroKeys[nextIdx], true);
-          }
-        }
-        requestAnimationFrame(tickHeroAutoCycle);
 
         // --- SIMULADOR DE ESCOPO ---
         let currentSolution = 'sites';
@@ -2562,7 +1944,7 @@
 
           const moduleCount = Math.max(1, chosenNames.length);
           if (sim3dBadgeEl) {
-            sim3dBadgeEl.textContent = `${moduleCount} MÓDULO${moduleCount > 1 ? 'S' : ''} 3D ATIVO${moduleCount > 1 ? 'S' : ''}`;
+            sim3dBadgeEl.textContent = `${moduleCount} MÓDULO${moduleCount > 1 ? 'S' : ''} ATIVO${moduleCount > 1 ? 'S' : ''}`;
           }
           if (simSceneController) {
             simSceneController.setModuleCount(moduleCount);
@@ -2618,7 +2000,7 @@
           });
         });
 
-        // Atalhos dos Cards de Serviços e do Hero para o Simulador
+        // Atalhos dos Cards de Serviços para o Simulador
         function jumpToSimulatorWithService(serviceKey) {
           selectSimulatorSolution(serviceKey);
           const simSection = document.getElementById('simulador');
@@ -2632,13 +2014,7 @@
           });
         });
 
-        if (heroSimShortcut) {
-          heroSimShortcut.addEventListener('click', () => {
-            jumpToSimulatorWithService(heroSimShortcut.getAttribute('data-service-target') || 'sites');
-          });
-        }
-
-        // Copiar Resumo (document.execCommand('copy') para compatibilidade em iframes)
+        // Copiar Resumo
         const copyScopeBtn = document.getElementById('copy-scope-btn');
         if (copyScopeBtn && simSummaryEl) {
           copyScopeBtn.addEventListener('click', () => {
@@ -2784,7 +2160,7 @@
         if (directWppBtn) directWppBtn.addEventListener('click', () => openWhatsAppWithText(quickMsg));
         if (floatingWppBtn) floatingWppBtn.addEventListener('click', () => openWhatsAppWithText(quickMsg));
 
-        // --- BRILHO INTERATIVO & PERSPECTIVA 3D NOS CARDS ---
+        // --- BRILHO INTERATIVO NOS CARDS ---
         const supportsHover = window.matchMedia('(hover: hover)').matches;
         document.querySelectorAll('.glass-card').forEach((card) => {
           card.addEventListener('pointermove', (e) => {
@@ -2794,7 +2170,7 @@
             card.style.setProperty('--mouse-x', `${x}px`);
             card.style.setProperty('--mouse-y', `${y}px`);
 
-            if (supportsHover && card.id !== 'hero-showcase-card') {
+            if (supportsHover) {
               const rotateY = ((x / rect.width) - 0.5) * 4;
               const rotateX = (0.5 - (y / rect.height)) * 4;
               card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
@@ -2806,7 +2182,7 @@
           });
         });
 
-        // --- ANIMAÇÃO DE REVELAÇÃO AO ROLAR (COM GARANTIA DE VISIBILIDADE) ---
+        // --- ANIMAÇÃO DE REVELAÇÃO AO ROLAR ---
         const revealEls = document.querySelectorAll('.reveal-on-scroll');
         if ('IntersectionObserver' in window) {
           const observer = new IntersectionObserver((entries) => {
@@ -2821,7 +2197,6 @@
           revealEls.forEach((el) => observer.observe(el));
         }
 
-        // Trava de segurança: garante todas as seções visíveis após 1.2s
         setTimeout(() => {
           revealEls.forEach((el) => el.classList.add('is-visible'));
         }, 1200);
